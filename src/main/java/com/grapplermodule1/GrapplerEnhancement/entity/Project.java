@@ -35,7 +35,6 @@ public class Project {
         this.teams = teams;
     }
 
-    // Getters and setters
 
     public Long getId() {
         return id;
