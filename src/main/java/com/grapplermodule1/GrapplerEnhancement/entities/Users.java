@@ -1,5 +1,8 @@
-package com.grapplermodule1.GrapplerEnhancement.entity;
+package com.grapplermodule1.GrapplerEnhancement.entities;
+
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -24,22 +27,19 @@ public class Users {
 
     @ManyToOne
     @JoinColumn(name = "reporting_id")
-    private Users reportingUser;
-
-    private String profilePicture;
+    private Users users;
 
     @OneToOne(mappedBy = "user")
     private Role role;
 
-    public String getProfilePicture() {
-        return profilePicture;
-    }
+    @OneToMany(mappedBy = "user")
+    private List<TeamMembers> teamMembers;
 
-    public void setProfilePicture(String profilePicture) {
-        this.profilePicture = profilePicture;
-    }
+    @OneToMany(mappedBy = "user")
+    private List<Ticket> ticket;
 
-
+    @OneToMany(mappedBy = "user")
+    private List<TicketAssignment> ticketAssignment;
 
     public Long getId() {
         return id;
@@ -81,16 +81,32 @@ public class Users {
         this.password = password;
     }
 
-    public Users getReportingUser() {
-        return reportingUser;
+    public Users getUsers() {
+        return users;
     }
 
-    public void setReportingUser(Users reportingUser) {
-        this.reportingUser = reportingUser;
+    public void setUsers(Users users) {
+        this.users = users;
     }
 
+    public Role getRole() {
+        return role;
+    }
 
+    public void setRole(Role role) {
+        this.role = role;
+    }
 
+    @Override
+    public String toString() {
+        return "Users{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", designation='" + designation + '\'' +
+                ", password='" + password + '\'' +
+                ", users=" + users +
+                ", role=" + role +
+                '}';
+    }
 }
-
-

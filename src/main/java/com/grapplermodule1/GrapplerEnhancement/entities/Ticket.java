@@ -1,26 +1,31 @@
-package com.grapplermodule1.GrapplerEnhancement.entity;
+package com.grapplermodule1.GrapplerEnhancement.entities;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
-@Table(name = "Ticket")
+@Table(name = "ticket")
 public class Ticket {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ticket_id")
+    @Column(nullable = false, name = "ticket_id")
     private Long id;
 
     @Column(name = "name")
     private String name;
 
-     @ManyToOne
-     @JoinColumn(name = "project_id")
-     private Project project;
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    private Project project;
 
-     @ManyToOne
-     @JoinColumn(name = "creator_id")
-     private  Users users;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private Users user;
+
+    @OneToMany(mappedBy = "ticket")
+    private List<TicketAssignment> ticketAssignment;
 
     public Long getId() {
         return id;
@@ -46,11 +51,11 @@ public class Ticket {
         this.project = project;
     }
 
-    public Users getUsers() {
-        return users;
+    public Users getUser() {
+        return user;
     }
 
-    public void setUsers(Users users) {
-        this.users = users;
+    public void setUser(Users user) {
+        this.user = user;
     }
 }

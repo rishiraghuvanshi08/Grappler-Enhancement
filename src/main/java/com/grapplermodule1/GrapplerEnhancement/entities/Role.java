@@ -1,17 +1,16 @@
-package com.grapplermodule1.GrapplerEnhancement.entity;
+package com.grapplermodule1.GrapplerEnhancement.entities;
 
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "Role")
+@Table(name = "role")
 public class Role {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "role_id")
+    @Column(name = "role_id", nullable = false)
     private Long id;
 
-    @Column(name = "role")
     private String role;
 
     @OneToOne
@@ -42,6 +41,12 @@ public class Role {
         this.user = user;
     }
 
-
-
+    @Override
+    public String toString() {
+        return "Role{" +
+                "id=" + id +
+                ", role='" + role + '\'' +
+                ", user=" + user +
+                '}';
+    }
 }

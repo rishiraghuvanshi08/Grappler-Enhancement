@@ -1,24 +1,17 @@
-package com.grapplermodule1.GrapplerEnhancement.entity;
+package com.grapplermodule1.GrapplerEnhancement.entities;
 
+import jakarta.persistence.*;
+
+import java.util.List;
 import java.util.Set;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
-
 @Entity
-@Table(name = "Project")
+@Table(name = "project")
 public class Project {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "project_id")
+    @Column(nullable = false, name = "project_id")
     private Long id;
 
     @Column(name = "name")
@@ -28,13 +21,13 @@ public class Project {
     @JoinTable(name = "project_team",
             joinColumns = @JoinColumn(name = "project_id"),
             inverseJoinColumns = @JoinColumn(name = "team_id"))
-     private Set<Team> teams;
+    private Set<Team> teams;
 
-    public Project(String name, Set<Team> teams) {
-        this.name = name;
-        this.teams = teams;
-    }
+    @OneToMany(mappedBy = "project")
+    private List<Permission> permission;
 
+    @OneToMany(mappedBy = "project")
+    private List<Ticket> ticket;
 
     public Long getId() {
         return id;
@@ -60,5 +53,12 @@ public class Project {
         this.teams = teams;
     }
 
+    @Override
+    public String toString() {
+        return "Project{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", teams=" + teams +
+                '}';
+    }
 }
-
