@@ -11,39 +11,54 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
 
-    /*
+    /**
+     * For Getting List Of Users
      *
-     *
-     * */
+     * @return ResponseEntity<List<Users>>
+     */
     @GetMapping("/")
     public ResponseEntity<List<Users>> getAllUsers() {
         return null;
     }
 
     /**
-     * For
+     * For Create New User
      *
-     * @return
+     * @return ResponseEntity
      */
     @PostMapping("/")
     public ResponseEntity createUser(@RequestBody Users users) {
         return null;
     }
 
+    /**
+     * For getting User By Id
+     *
+     * @return ResponseEntity<Users>
+     */
     @GetMapping("/{userId}")
     public ResponseEntity<Users> getUserById(@PathVariable("userId") Long userId) {
         return null;
     }
 
+    /**
+     * For Update User By Id
+     *
+     * @return ResponseEntity
+     */
     @PutMapping("/{userId}")
     public ResponseEntity updateUserById(@PathVariable("userId") Long userId,
                                          @RequestBody Users user) {
         return null;
     }
 
+    /**
+     * For Delete User
+     *
+     * @return ResponseEntity
+     */
     @DeleteMapping("/{userId}")
     public ResponseEntity deleteUserById(@PathVariable("userId") Long userId) {
         return null;
     }
-
 }
