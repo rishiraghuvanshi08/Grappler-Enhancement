@@ -1,13 +1,25 @@
 package com.grapplermodule1.GrapplerEnhancement.controllers;
 
 import com.grapplermodule1.GrapplerEnhancement.entities.Users;
+import com.grapplermodule1.GrapplerEnhancement.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+    @Autowired
+    UserRepository userRepository;
 
     /**
      * For Getting List Of Users
@@ -15,9 +27,9 @@ public class UserController {
      * @return ResponseEntity<List<Users>>
      */
     @GetMapping("/")
-    @PreAuthorize("hasRole('USER')")
-    public String getAllUsers() {
-        return "dishikaa";
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<Users>> getAllUsers() {
+        return null;
     }
 
     /**
