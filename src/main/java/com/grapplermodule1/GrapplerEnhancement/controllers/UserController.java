@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -40,7 +41,6 @@ public class UserController {
      */
     @GetMapping("/{userId}")
     public ResponseEntity<Users> getUserById(@PathVariable("userId") Long userId) {
-
         return null;
     }
 
