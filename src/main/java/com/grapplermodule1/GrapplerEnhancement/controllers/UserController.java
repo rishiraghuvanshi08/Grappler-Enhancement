@@ -1,16 +1,17 @@
 package com.grapplermodule1.GrapplerEnhancement.controllers;
-
-import com.grapplermodule1.GrapplerEnhancement.entities.Permission;
 import com.grapplermodule1.GrapplerEnhancement.entities.Users;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
+
+    private static final Logger log = LoggerFactory.getLogger(UserController.class);
     /**
      * For Getting List Of Users
      *
@@ -18,6 +19,7 @@ public class UserController {
      */
     @GetMapping("/")
     public ResponseEntity<List<Users>> getAllUsers() {
+        log.info("inside getAllUsers");
         return null;
     }
 
@@ -38,6 +40,7 @@ public class UserController {
      */
     @GetMapping("/{userId}")
     public ResponseEntity<Users> getUserById(@PathVariable("userId") Long userId) {
+
         return null;
     }
 
