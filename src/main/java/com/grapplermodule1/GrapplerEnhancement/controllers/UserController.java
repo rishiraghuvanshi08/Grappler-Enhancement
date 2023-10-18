@@ -1,11 +1,9 @@
 package com.grapplermodule1.GrapplerEnhancement.controllers;
 
-import com.grapplermodule1.GrapplerEnhancement.entities.Permission;
 import com.grapplermodule1.GrapplerEnhancement.entities.Users;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -17,8 +15,9 @@ public class UserController {
      * @return ResponseEntity<List<Users>>
      */
     @GetMapping("/")
-    public ResponseEntity<List<Users>> getAllUsers() {
-        return null;
+    @PreAuthorize("hasRole('USER')")
+    public String getAllUsers() {
+        return "dishikaa";
     }
 
     /**
