@@ -1,5 +1,7 @@
-package com.grapplermodule1.GrapplerEnhancement.config;
-//import com.springboot.SpringBootRestAPI.service.UserService;
+package com.grapplermodule1.GrapplerEnhancement.cerebrus.config;
+
+import com.grapplermodule1.GrapplerEnhancement.cerebrus.jwtauthentication.JwtAuthenticationEntryPoint;
+import com.grapplermodule1.GrapplerEnhancement.cerebrus.jwtauthentication.JwtAuthenticationFilter;
 import com.grapplermodule1.GrapplerEnhancement.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -20,24 +22,36 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableMethodSecurity
 public class AuthenticationConfig {
+
+    @Autowired
+    private JwtAuthenticationEntryPoint point;
+    @Autowired
+    private JwtAuthenticationFilter filter;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
         httpSecurity
                 .csrf((c) -> c.disable())
                 .authorizeHttpRequests((authorize) ->
-                                authorize
-//                            .requestMatchers(HttpMethod.GET, "/company/getComp")
-//                            .hasRole("ADMIN")
-//                            .requestMatchers("/company/getEmp")
-//                            .hasRole("USER")
-//                                        .requestMatchers(HttpMethod.GET, "/users/")
-//                                        .permitAll()
-                                        .anyRequest()
-                                        .authenticated()
+                        authorize
+                                .requestMatchers("/auth/login").permitAll()
+                                .requestMatchers("/logout").permitAll()
+                                .anyRequest()
+                                .authenticated()
                 )
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(point))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .httpBasic(Customizer.withDefaults());
 
+        httpSecurity
+                .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
+
         return httpSecurity.build();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration builder) throws Exception {
+        return builder.getAuthenticationManager();
     }
 
     @Bean

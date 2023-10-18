@@ -1,4 +1,4 @@
-package com.grapplermodule1.GrapplerEnhancement.config;
+package com.grapplermodule1.GrapplerEnhancement.cerebrus.config;
 
 import com.grapplermodule1.GrapplerEnhancement.entities.Role;
 import com.grapplermodule1.GrapplerEnhancement.entities.Users;
@@ -10,27 +10,26 @@ import java.util.Collection;
 import java.util.List;
 
 public class UserDetailsConfig implements UserDetails {
-    Users users;
-    Role role;
+    private Users user;
 
     public UserDetailsConfig(Users users) {
         super();
-        this.users = users;
+        this.user = users;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(role.getRole());
+        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(user.getRole().getRole());
         return List.of(simpleGrantedAuthority);
     }
 
     @Override
     public String getPassword() {
-        return users.getPassword();
+        return user.getPassword();
     }
     @Override
     public String getUsername() {
-        return users.getName();
+        return user.getEmail();
     }
 
     @Override
