@@ -1,5 +1,6 @@
 package com.grapplermodule1.GrapplerEnhancement.entities;
 
+import com.grapplermodule1.GrapplerEnhancement.enums.PermissionType;
 import jakarta.persistence.*;
 
 @Entity
@@ -12,7 +13,8 @@ public class TicketAssignment {
     private Long id;
 
     @Column(name = "permission_type")
-    private String permission_type;
+    @Enumerated(EnumType.STRING)
+    private PermissionType permission_type;
 
     @ManyToOne
     @JoinColumn(name = "ticket_id")
@@ -30,11 +32,11 @@ public class TicketAssignment {
         this.id = id;
     }
 
-    public String getPermission_type() {
+    public PermissionType getPermission_type() {
         return permission_type;
     }
 
-    public void setPermission_type(String permission_type) {
+    public void setPermission_type(PermissionType permission_type) {
         this.permission_type = permission_type;
     }
 

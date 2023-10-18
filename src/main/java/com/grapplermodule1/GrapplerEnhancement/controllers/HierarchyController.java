@@ -20,8 +20,9 @@ public class HierarchyController {
         return null;
     }
 
-    @GetMapping("/team/{team_id}")
-    public ResponseEntity getTeamHierarchy(@PathVariable Long team_id) {
+    @GetMapping("/team/{teamId}")
+    public ResponseEntity getTeamHierarchy(@PathVariable("teamId") Long teamI
+                                           ) {
         return null;
     }
 

@@ -21,7 +21,7 @@ public class Ticket {
     private Project project;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "creator_id")
     private Users user;
 
     @OneToMany(mappedBy = "ticket")
