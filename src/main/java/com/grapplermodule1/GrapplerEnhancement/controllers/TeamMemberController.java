@@ -23,12 +23,14 @@ public class TeamMemberController {
     }
 
     @PostMapping("/{teamId}/add-new-member/{userId}")
-    public ResponseEntity addNewMember(@PathVariable("userId") Long userId, @PathVariable("teamId") Long teamId){
+    public ResponseEntity addNewMember(@PathVariable("userId") Long userId,
+                                       @PathVariable("teamId") Long teamId){
         return null;
     }
 
     @DeleteMapping("/{teamId}/delete-member/{memberId}")
-    public ResponseEntity deleteMember(@PathVariable("teamId") Long teamId, @PathVariable("memberId") Long memberId){
+    public ResponseEntity deleteMember(@PathVariable("teamId") Long teamId,
+                                       @PathVariable("memberId") Long memberId){
         return null;
     }
 
