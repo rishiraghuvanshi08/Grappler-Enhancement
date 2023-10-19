@@ -1,5 +1,6 @@
     package com.grapplermodule1.GrapplerEnhancement.entities;
     
+    import com.fasterxml.jackson.annotation.JsonIgnore;
     import jakarta.persistence.*;
     
     import java.util.List;
@@ -24,20 +25,24 @@
     
         @Column(name = "password")
         private String password;
-    
+
         @ManyToOne
         @JoinColumn(name = "reporting_id")
         private Users users;
-    
+
+       @JsonIgnore
         @OneToOne(mappedBy = "user")
         private Role role;
-    
+
+        @JsonIgnore
         @OneToMany(mappedBy = "user")
         private List<TeamMembers> teamMembers;
-    
+
+        @JsonIgnore
         @OneToMany(mappedBy = "user")
         private List<Ticket> ticket;
-    
+
+        @JsonIgnore
         @OneToMany(mappedBy = "user")
         private List<TicketAssignment> ticketAssignment;
     
