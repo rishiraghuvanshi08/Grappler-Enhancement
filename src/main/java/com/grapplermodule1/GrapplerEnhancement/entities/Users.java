@@ -26,19 +26,27 @@
         @Column(name = "password")
         private String password;
 
+        @OneToMany(mappedBy = "user")
+        private List<Users> usersList;
+
+        @JsonIgnore
         @ManyToOne
         @JoinColumn(name = "reporting_id")
-        private Users users;
+        private Users user;
 
+        @JsonIgnore
         @OneToOne(mappedBy = "user")
         private Role role;
 
+        @JsonIgnore
         @OneToMany(mappedBy = "user")
         private List<TeamMembers> teamMembers;
 
+        @JsonIgnore
         @OneToMany(mappedBy = "user")
         private List<Ticket> ticket;
 
+        @JsonIgnore
         @OneToMany(mappedBy = "user")
         private List<TicketAssignment> ticketAssignment;
     
@@ -81,15 +89,47 @@
         public void setPassword(String password) {
             this.password = password;
         }
-    
-        public Users getUsers() {
-            return users;
+
+        public List<Users> getUsersList() {
+            return usersList;
         }
-    
-        public void setUsers(Users users) {
-            this.users = users;
+
+        public void setUsersList(List<Users> usersList) {
+            this.usersList = usersList;
         }
-    
+
+        public Users getUser() {
+            return user;
+        }
+
+        public void setUser(Users user) {
+            this.user = user;
+        }
+
+        public List<TeamMembers> getTeamMembers() {
+            return teamMembers;
+        }
+
+        public void setTeamMembers(List<TeamMembers> teamMembers) {
+            this.teamMembers = teamMembers;
+        }
+
+        public List<Ticket> getTicket() {
+            return ticket;
+        }
+
+        public void setTicket(List<Ticket> ticket) {
+            this.ticket = ticket;
+        }
+
+        public List<TicketAssignment> getTicketAssignment() {
+            return ticketAssignment;
+        }
+
+        public void setTicketAssignment(List<TicketAssignment> ticketAssignment) {
+            this.ticketAssignment = ticketAssignment;
+        }
+
         public Role getRole() {
             return role;
         }
@@ -97,7 +137,7 @@
         public void setRole(Role role) {
             this.role = role;
         }
-    
+
         @Override
         public String toString() {
             return "Users{" +
@@ -106,8 +146,12 @@
                     ", email='" + email + '\'' +
                     ", designation='" + designation + '\'' +
                     ", password='" + password + '\'' +
-                    ", users=" + users +
+                    ", usersList=" + usersList +
+                    ", user=" + user +
                     ", role=" + role +
+                    ", teamMembers=" + teamMembers +
+                    ", ticket=" + ticket +
+                    ", ticketAssignment=" + ticketAssignment +
                     '}';
         }
     }
