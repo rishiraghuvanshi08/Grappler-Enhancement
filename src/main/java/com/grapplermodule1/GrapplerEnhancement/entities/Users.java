@@ -1,8 +1,9 @@
     package com.grapplermodule1.GrapplerEnhancement.entities;
-    
     import com.fasterxml.jackson.annotation.JsonIgnore;
     import jakarta.persistence.*;
-    
+    import jakarta.validation.constraints.NotNull;
+    import lombok.Getter;
+
     import java.util.List;
     
     @Entity
@@ -13,7 +14,7 @@
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Column(name = "user_id")
         private Long id;
-    
+
         @Column(name = "name")
         private String name;
     
@@ -26,11 +27,16 @@
         @Column(name = "password")
         private String password;
 
+        @JsonIgnore
+        @OneToMany(mappedBy = "user")
+        private List<Users> usersList;
+
+        @JsonIgnore
         @ManyToOne
         @JoinColumn(name = "reporting_id")
-        private Users users;
+        private Users user;
 
-       @JsonIgnore
+        @JsonIgnore
         @OneToOne(mappedBy = "user")
         private Role role;
 
@@ -85,15 +91,47 @@
         public void setPassword(String password) {
             this.password = password;
         }
-    
-        public Users getUsers() {
-            return users;
+
+        public List<Users> getUsersList() {
+            return usersList;
         }
-    
-        public void setUsers(Users users) {
-            this.users = users;
+
+        public void setUsersList(List<Users> usersList) {
+            this.usersList = usersList;
         }
-    
+
+        public Users getUser() {
+            return user;
+        }
+
+        public void setUser(Users user) {
+            this.user = user;
+        }
+
+        public List<TeamMembers> getTeamMembers() {
+            return teamMembers;
+        }
+
+        public void setTeamMembers(List<TeamMembers> teamMembers) {
+            this.teamMembers = teamMembers;
+        }
+
+        public List<Ticket> getTicket() {
+            return ticket;
+        }
+
+        public void setTicket(List<Ticket> ticket) {
+            this.ticket = ticket;
+        }
+
+        public List<TicketAssignment> getTicketAssignment() {
+            return ticketAssignment;
+        }
+
+        public void setTicketAssignment(List<TicketAssignment> ticketAssignment) {
+            this.ticketAssignment = ticketAssignment;
+        }
+
         public Role getRole() {
             return role;
         }
@@ -101,7 +139,7 @@
         public void setRole(Role role) {
             this.role = role;
         }
-    
+
         @Override
         public String toString() {
             return "Users{" +
@@ -110,8 +148,12 @@
                     ", email='" + email + '\'' +
                     ", designation='" + designation + '\'' +
                     ", password='" + password + '\'' +
-                    ", users=" + users +
+                    ", usersList=" + usersList +
+                    ", user=" + user +
                     ", role=" + role +
+                    ", teamMembers=" + teamMembers +
+                    ", ticket=" + ticket +
+                    ", ticketAssignment=" + ticketAssignment +
                     '}';
         }
     }

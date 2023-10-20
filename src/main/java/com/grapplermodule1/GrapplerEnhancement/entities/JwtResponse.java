@@ -15,7 +15,6 @@ public class JwtResponse {
 
     private String email;
 
-
     public String getJwtToken() {
         return jwtToken;
     }
