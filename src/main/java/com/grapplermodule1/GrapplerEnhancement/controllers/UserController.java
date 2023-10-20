@@ -103,7 +103,7 @@ public class UserController {
         }
         catch (UserNotFoundException e) {
             log.error("UUID {} UserNotFoundException In Get All Users API Exception {}", debugUuid, e);
-            return new ResponseEntity<>(new CustomResponse<>(HttpStatus.NOT_FOUND,e.getMessage(),null), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new CustomResponse<>(false,e.getMessage(),null), HttpStatus.NOT_FOUND);
         }
         catch (Exception e) {
             log.error("UUID {} Exception In Get User By Id API Exception {}", debugUuid, e);
