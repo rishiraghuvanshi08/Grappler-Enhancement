@@ -2,6 +2,7 @@ package com.grapplermodule1.GrapplerEnhancement.entities;
 
 import com.grapplermodule1.GrapplerEnhancement.enums.AccessLevel;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "permission")
@@ -14,14 +15,17 @@ public class Permission {
 
     @Column(name = "permission_type")
     @Enumerated(EnumType.STRING)
+    @NotNull(message = "Permission type is required")
     private AccessLevel permission_type;
 
     @ManyToOne
     @JoinColumn(name = "project_id")
+    @NotNull(message = "Project is required")
     private Project project;
 
     @ManyToOne
     @JoinColumn(name = "member_id")
+    @NotNull(message = "Team member is required")
     private TeamMembers teamMembers;
 
     public Long getId() {

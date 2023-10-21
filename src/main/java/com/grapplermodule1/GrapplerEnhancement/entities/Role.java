@@ -1,6 +1,7 @@
 package com.grapplermodule1.GrapplerEnhancement.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name = "role")
@@ -11,6 +12,7 @@ public class Role {
     @Column(name = "role_id", nullable = false)
     private Long id;
 
+    @NotEmpty(message = "Role name is required")
     private String role;
 
     @OneToOne
