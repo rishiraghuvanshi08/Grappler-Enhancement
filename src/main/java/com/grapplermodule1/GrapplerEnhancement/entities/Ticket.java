@@ -1,6 +1,7 @@
 package com.grapplermodule1.GrapplerEnhancement.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 
 import java.util.List;
 
@@ -14,6 +15,7 @@ public class Ticket {
     private Long id;
 
     @Column(name = "name")
+    @NotEmpty(message = "Ticket name is required")
     private String name;
 
     @ManyToOne

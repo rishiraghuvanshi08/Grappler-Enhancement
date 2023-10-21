@@ -2,6 +2,7 @@ package com.grapplermodule1.GrapplerEnhancement.entities;
 
 import com.grapplermodule1.GrapplerEnhancement.enums.PermissionType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "ticket_assignment")
@@ -14,6 +15,7 @@ public class TicketAssignment {
 
     @Column(name = "permission_type")
     @Enumerated(EnumType.STRING)
+    @NotNull(message = "Permission type is required")
     private PermissionType permission_type;
 
     @ManyToOne
@@ -22,6 +24,7 @@ public class TicketAssignment {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @NotNull(message = "User Id is required")
     private Users user;
 
     public Long getId() {

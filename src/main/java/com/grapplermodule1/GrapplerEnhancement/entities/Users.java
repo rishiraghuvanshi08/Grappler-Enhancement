@@ -2,7 +2,10 @@
     
     import com.fasterxml.jackson.annotation.JsonIgnore;
     import jakarta.persistence.*;
-    
+    import jakarta.validation.constraints.Email;
+    import jakarta.validation.constraints.NotEmpty;
+    import jakarta.validation.constraints.Size;
+
     import java.util.List;
     
     @Entity
@@ -15,19 +18,25 @@
         private Long id;
     
         @Column(name = "name")
+        @NotEmpty(message = "Name is required")
+        @Size(max = 255, message = "Name should not exceed 255 characters")
         private String name;
     
         @Column(name = "email")
+        @Email(message = "Email should be a valid email address")
+        @Size(max = 255, message = "Email should not exceed 255 characters")
         private String email;
     
         @Column(name = "designation")
+        @Size(max = 255, message = "Designation should not exceed 255 characters")
         private String designation;
     
         @Column(name = "password")
+        @NotEmpty(message = "Password is required")
         private String password;
 
         @OneToMany(mappedBy = "user")
-        private List<Users> usersList;
+        private List<Users> subordinates;
 
         @JsonIgnore
         @ManyToOne
@@ -90,12 +99,12 @@
             this.password = password;
         }
 
-        public List<Users> getUsersList() {
-            return usersList;
+        public List<Users> getSubordinates() {
+            return subordinates;
         }
 
-        public void setUsersList(List<Users> usersList) {
-            this.usersList = usersList;
+        public void setSubordinates(List<Users> subordinates) {
+            this.subordinates = subordinates;
         }
 
         public Users getUser() {
@@ -146,7 +155,7 @@
                     ", email='" + email + '\'' +
                     ", designation='" + designation + '\'' +
                     ", password='" + password + '\'' +
-                    ", usersList=" + usersList +
+                    ", subordinates=" + subordinates +
                     ", user=" + user +
                     ", role=" + role +
                     ", teamMembers=" + teamMembers +
