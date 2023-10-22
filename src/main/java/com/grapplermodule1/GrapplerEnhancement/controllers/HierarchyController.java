@@ -40,10 +40,8 @@ public class HierarchyController {
      * @return ResponseEntity<Users>
      */
     @GetMapping("/reporting")
-//    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getReportingHierarchy() {
         String debugUuid = UUID.randomUUID().toString();
-
         try {
             log.info("Get Reporting Hierarchy API Called, UUID {}", debugUuid);
             HierarchyDTO hierarchyDTO = hierarchyService.getReportingHierarchy();
@@ -51,25 +49,23 @@ public class HierarchyController {
             return new ResponseEntity<>(hierarchyDTO, HttpStatus.OK);
         }
         catch (UserNotFoundException e) {
-            log.error("UUID {} UserNotFoundException In Get Reporting Hierarchy API Exception {}", debugUuid, e);
+            log.error("UUID {} UserNotFoundException In Get Reporting Hierarchy API Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), null), HttpStatus.NOT_FOUND);
         }
         catch (Exception e) {
-            log.error("UUID {} Exception In Get Reporting Heirarchy API Exception {}", debugUuid, e);
+            log.error("UUID {} Exception In Get Reporting Hierarchy API Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     /**
-     * For Reporting Hierarchy From Paticular Users
+     * For Reporting Hierarchy From Particular Users
      * 
      * @return ResponseEntity<Users>
      */
     @GetMapping("/reporting/{userId}")
-//    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getReportingHierarchyById(@Valid @PathVariable("userId") Long userId) {
         String debugUuid = UUID.randomUUID().toString();
-
         try {
             log.info("Get Reporting Hierarchy By Id API Called, UUID {}", debugUuid);
             HierarchyDTO hierarchyDTO = hierarchyService.getReportingHierarchyById(userId);
@@ -77,11 +73,11 @@ public class HierarchyController {
             return new ResponseEntity<>(hierarchyDTO, HttpStatus.OK);
         }
         catch (UserNotFoundException e) {
-            log.error("UUID {} UserNotFoundException In Get Reporting Hierarchy By Id API Exception {}", debugUuid, e);
+            log.error("UUID {} UserNotFoundException In Get Reporting Hierarchy By Id API Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), null), HttpStatus.NOT_FOUND);
         }
         catch (Exception e) {
-            log.error("UUID {} Exception In Get Reporting Heirarchy By Id API Exception {}", debugUuid, e);
+            log.error("UUID {} Exception In Get Reporting Hierarchy By Id API Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -94,7 +90,6 @@ public class HierarchyController {
     @GetMapping("/team/{teamId}")
     public ResponseEntity<?> getTeamHierarchy(@Valid @PathVariable("teamId") Long teamId) {
         String debugUuid = UUID.randomUUID().toString();
-
         try {
             log.info("Get Team Hierarchy By Id API Called, UUID {}", debugUuid);
             List<TeamMembersDTO> optionalListOfUsers = hierarchyService.getTeamHierarchyById(teamId);
@@ -106,7 +101,7 @@ public class HierarchyController {
             return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), null), HttpStatus.NOT_FOUND);
         }
         catch (Exception e) {
-            log.error("UUID {} Exception In Get Team By Id API Exception {} ", debugUuid, e);
+            log.error("UUID {} Exception In Get Team By Id API Exception {} ", debugUuid, e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

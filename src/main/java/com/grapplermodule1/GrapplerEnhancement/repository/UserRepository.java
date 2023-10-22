@@ -25,20 +25,6 @@ public interface UserRepository extends JpaRepository<Users, Long> {
             "FROM Users e WHERE e.id = :userId")
     Optional<UsersDTO> findUserDtoById(Long userId);
 
-//    @Query(value = "SELECT u.user_id, u.name, u.designation, t.user_id AS t_id " +
-//            "FROM users u " +
-//            "LEFT JOIN (WITH RECURSIVE UserHierarchy AS (" +
-//            "SELECT e.user_id, e.name, e.designation, e.reporting_id " +
-//            "FROM users e " +
-//            "WHERE e.user_id = :userId " +
-//            "UNION ALL " +
-//            "SELECT s.user_id, s.name, s.designation, s.reporting_id " +
-//            "FROM users s " +
-//            "JOIN UserHierarchy u ON s.reporting_id = u.user_id)" +
-//            "SELECT user_id FROM UserHierarchy) t " +
-//            "ON u.user_id = t.user_id", nativeQuery = true)
-//    List<Object[]> findHierarchyDtoById(@Param("userId") Long userId);
-
     @Query(nativeQuery = true, value = "WITH RECURSIVE EmployeeHierarchy AS ("
             + "SELECT u.user_id AS user_id, u.name AS name, u.designation AS designation, u.reporting_id AS reporting_id, 1 AS level "
             + "FROM Users u "

@@ -34,12 +34,11 @@ public class HierarchyService {
      * @return HierarchyDTO
      */
     public HierarchyDTO getReportingHierarchy(){
-        String debugUuid = UUID.randomUUID().toString();
         final String designation = "CEO";
         try {
             Optional<Users> optionalUser = userRepository.findByDesignation(designation);
             if(optionalUser.isPresent()){
-                log.info("Get Reporting Hierarchy Service Called, UUID {}", debugUuid);
+                log.info("Get Reporting Hierarchy Service Called");
 
                 Users user = optionalUser.get();
 
@@ -52,15 +51,16 @@ public class HierarchyService {
                 }
 
                 hierarchyDTO.setSubordinates(hierarchyDTOList);
+                log.info("Get Reporting Hierarchy Service returning HierarchyDTO");
                 return hierarchyDTO;
             }
             else {
-                log.error("UUID {} Get Reporting Hierarchy Service Call UserNotFoundException", debugUuid);
+                log.error("Get Reporting Hierarchy Service Call UserNotFoundException");
                 throw new UserNotFoundException("User Not Found With Designation : CEO");
             }
         }
         catch (Exception e) {
-            log.info("UUID {} Exception In Get Reporting Hierarchy Exception {}", debugUuid, e);
+            log.error("Exception In Get Reporting Hierarchy Exception {}", e.getMessage());
             throw e;
         }
     }
@@ -71,11 +71,10 @@ public class HierarchyService {
      * @return HierarchyDTO
      */
     public HierarchyDTO getReportingHierarchyById(Long userId){
-        String debugUuid = UUID.randomUUID().toString();
         try {
             Optional<Users> optionalUser = userRepository.findById(userId);
             if (optionalUser.isPresent()) {
-                log.info("Get Reporting Hierarchy By Id Service Called, UUID {}", debugUuid);
+                log.info("Get Reporting Hierarchy By Id Service Called");
                 Users user = optionalUser.get();
 
                 HierarchyDTO hierarchyDTO = new HierarchyDTO(user.getName(), user.getDesignation());
@@ -87,14 +86,15 @@ public class HierarchyService {
                 }
 
                 hierarchyDTO.setSubordinates(hierarchyDTOList);
+                log.info("Get Reporting Hierarchy By Id Service returning HierarchyDTO");
                 return hierarchyDTO;
             } else {
-                log.error("UUID {} Get Reporting Hierarchy By Id Service Call UserNotFoundException", debugUuid);
+                log.error("Get Reporting Hierarchy By Id Service Call UserNotFoundException");
                 throw new UserNotFoundException("User Not Found With Id: " + userId);
             }
         }
         catch (Exception e) {
-            log.info("UUID {} Exception In Get Reporting Hierarchy By Id Exception {}", debugUuid, e);
+            log.error("Exception In Get Reporting Hierarchy By Id Exception {}", e.getMessage());
             throw e;
         }
     }
@@ -105,7 +105,6 @@ public class HierarchyService {
      * @return HierarchyDTO
      */
     private HierarchyDTO convertToDTO(Users user) {
-        String debugUuid = UUID.randomUUID().toString();
         try {
             HierarchyDTO dto = new HierarchyDTO(user.getName(), user.getDesignation());
 
@@ -119,7 +118,7 @@ public class HierarchyService {
             return dto;
         }
         catch (Exception e) {
-            log.info("UUID {} Exception In Convert To DTO Exception {}", debugUuid, e);
+            log.error("Exception In Convert To DTO Exception {}", e.getMessage());
             throw e;
         }
     }
@@ -132,19 +131,20 @@ public class HierarchyService {
     public List<TeamMembersDTO> getTeamHierarchyById(Long teamId){
         String debugUuid = UUID.randomUUID().toString();
         try {
+            log.info("Get Team Hierarchy By Id Service Called");
             Optional<List<TeamMembersDTO>> optionalListOfUsers = teamMemberRepository.findUsersByTeamId(teamId);
 
             if(optionalListOfUsers.isPresent() && !optionalListOfUsers.get().isEmpty()){
-                log.info("Get Team Hierarchy By Id Service Called, UUID {}", debugUuid);
+                log.info("Get Team Hierarchy By Id Service returning List of TeamMemberDTO");
                 return optionalListOfUsers.get();
             }
             else {
-                log.error("UUID {} Get Team Hierarchy By Id Service Call TeamNotFoundException", debugUuid);
+                log.error("Get Team Hierarchy By Id Service Call TeamNotFoundException");
                 throw new TeamNotFoundException("Team Not Found With Id : " + teamId);
             }
         }
         catch (Exception e) {
-            log.error("UUID {} Exception In Get Team Hierarchy By Id Service", debugUuid);
+            log.error("Exception In Get Team Hierarchy By Id Service Exception {}", e.getMessage());
             throw e;
         }
     }
