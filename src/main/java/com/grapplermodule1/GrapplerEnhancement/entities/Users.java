@@ -1,9 +1,12 @@
     package com.grapplermodule1.GrapplerEnhancement.entities;
     
+    import com.fasterxml.jackson.annotation.JsonBackReference;
     import com.fasterxml.jackson.annotation.JsonIgnore;
+    import com.fasterxml.jackson.annotation.JsonManagedReference;
     import jakarta.persistence.*;
     import jakarta.validation.constraints.Email;
     import jakarta.validation.constraints.NotEmpty;
+    import jakarta.validation.constraints.NotNull;
     import jakarta.validation.constraints.Size;
 
     import java.util.List;
@@ -16,35 +19,39 @@
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Column(name = "user_id")
         private Long id;
-    
+
         @Column(name = "name")
-        @NotEmpty(message = "Name is required")
+        @NotEmpty(groups = {PostValidation.class, PutValidation.class}, message = "Name is required")
         @Size(max = 255, message = "Name should not exceed 255 characters")
         private String name;
     
         @Column(name = "email")
-        @Email(message = "Email should be a valid email address")
+        @Email(groups = {PostValidation.class, PutValidation.class}, message = "Email should be a valid email address")
         @Size(max = 255, message = "Email should not exceed 255 characters")
         private String email;
     
         @Column(name = "designation")
         @Size(max = 255, message = "Designation should not exceed 255 characters")
+        @NotEmpty(groups = {PostValidation.class, PutValidation.class}, message = "Designation is required")
         private String designation;
     
         @Column(name = "password")
-        @NotEmpty(message = "Password is required")
+        @NotEmpty(groups = {PostValidation.class}, message = "Password is required")
         private String password;
 
-        @OneToMany(mappedBy = "user")
+        @JsonManagedReference
+        @OneToMany(mappedBy = "reportingUser")
         private List<Users> subordinates;
 
-        @JsonIgnore
+        @JsonBackReference
         @ManyToOne
         @JoinColumn(name = "reporting_id")
-        private Users user;
+        @NotNull(groups = {PostValidation.class, PutValidation.class}, message = "Reporting User ID is required")
+        private Users reportingUser;
 
-        @JsonIgnore
-        @OneToOne(mappedBy = "user")
+        @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+        @JsonManagedReference
+        @NotNull(groups = {PostValidation.class}, message = "Role is required")
         private Role role;
 
         @JsonIgnore
@@ -107,12 +114,12 @@
             this.subordinates = subordinates;
         }
 
-        public Users getUser() {
-            return user;
+        public Users getReportingUser() {
+            return reportingUser;
         }
 
-        public void setUser(Users user) {
-            this.user = user;
+        public void setReportingUser(Users reportingUser) {
+            this.reportingUser = reportingUser;
         }
 
         public List<TeamMembers> getTeamMembers() {
@@ -147,20 +154,4 @@
             this.role = role;
         }
 
-        @Override
-        public String toString() {
-            return "Users{" +
-                    "id=" + id +
-                    ", name='" + name + '\'' +
-                    ", email='" + email + '\'' +
-                    ", designation='" + designation + '\'' +
-                    ", password='" + password + '\'' +
-                    ", subordinates=" + subordinates +
-                    ", user=" + user +
-                    ", role=" + role +
-                    ", teamMembers=" + teamMembers +
-                    ", ticket=" + ticket +
-                    ", ticketAssignment=" + ticketAssignment +
-                    '}';
-        }
     }
