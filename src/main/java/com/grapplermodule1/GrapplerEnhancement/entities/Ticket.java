@@ -26,7 +26,7 @@ public class Ticket {
     @JoinColumn(name = "creator_id")
     private Users user;
 
-    @OneToMany(mappedBy = "ticket")
+    @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
     private List<TicketAssignment> ticketAssignment;
 
     public Long getId() {

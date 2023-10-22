@@ -135,13 +135,28 @@ public class UserController {
     }
 
     /**
-     * For Delete User
+     * For Delete User By ID
      *
      * @return ResponseEntity
      */
     @DeleteMapping("/{userId}")
-    public ResponseEntity deleteUserById(@PathVariable("userId") Long userId) {
-        return null;
+    public ResponseEntity<?> deleteUserById(@PathVariable("userId") Long userId) {
+        String debugUuid = UUID.randomUUID().toString();
+        try {
+            log.info("UUID {} Inside Delete User By Id, User Id {} ", debugUuid, userId);
+            Boolean deleteUser = userService.deleteUser(userId);
+
+            log.info("UUID {} Delete User By Id Returning Boolean Value True in ResponseEntity ", debugUuid);
+            return new ResponseEntity<>(new CustomResponse<>(deleteUser, "User Deleted Successfully.", null), HttpStatus.OK);
+        }
+        catch (UserNotFoundException e) {
+            log.error("UUID {}, UserNotFoundException in Update User BY Id API, Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), null), HttpStatus.NOT_FOUND);
+        }
+        catch (Exception e) {
+            log.error("UUID {} Exception In Get User By Id API Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }

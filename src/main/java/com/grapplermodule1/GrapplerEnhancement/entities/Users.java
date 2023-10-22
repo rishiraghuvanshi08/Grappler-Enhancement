@@ -49,21 +49,21 @@
         @NotNull(groups = {PostValidation.class, PutValidation.class}, message = "Reporting User ID is required")
         private Users reportingUser;
 
-        @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+        @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
         @JsonManagedReference
         @NotNull(groups = {PostValidation.class}, message = "Role is required")
         private Role role;
 
         @JsonIgnore
-        @OneToMany(mappedBy = "user")
+        @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
         private List<TeamMembers> teamMembers;
 
         @JsonIgnore
-        @OneToMany(mappedBy = "user")
+        @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
         private List<Ticket> ticket;
 
         @JsonIgnore
-        @OneToMany(mappedBy = "user")
+        @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
         private List<TicketAssignment> ticketAssignment;
     
         public Long getId() {

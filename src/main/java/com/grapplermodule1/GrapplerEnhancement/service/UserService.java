@@ -10,7 +10,6 @@ import com.grapplermodule1.GrapplerEnhancement.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service("userService")
 public class UserService implements UserDetailsService {
@@ -117,6 +115,11 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    /**
+     * For Updating User Details
+     *
+     * @return Users
+     */
     public Users updateUserDetails(Long userId, Users user) {
         try {
             log.info("Update User Details Service Called, User Id {}", userId);
@@ -140,6 +143,32 @@ public class UserService implements UserDetailsService {
                 throw new UserNotFoundException("User Not Found With ID : " + userId);
             }
         } catch (Exception e) {
+            log.error("Exception in Update User Details Exception {}", e.getMessage());
+            throw e;
+        }
+    }
+
+    /**
+     * For Deleting A User
+     *
+     * @return Boolean
+     */
+    public Boolean deleteUser(Long userId) {
+        try {
+            log.info("Update User Details Service Called, User Id {}", userId);
+            Optional<Users> user = userRepository.findById(userId);
+
+            if(user.isPresent()){
+                userRepository.deleteById(userId);
+                log.info("Delete User Service Returning True User");
+                return true;
+            }
+            else {
+                log.error("Delete User throws UserNotFoundException");
+                throw new UserNotFoundException("User Not Found With ID : " + userId);
+            }
+        }
+        catch (Exception e) {
             log.error("Exception in Update User Details Exception {}", e.getMessage());
             throw e;
         }
