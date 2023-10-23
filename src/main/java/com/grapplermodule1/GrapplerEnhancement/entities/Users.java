@@ -146,7 +146,7 @@
                     ", email='" + email + '\'' +
                     ", designation='" + designation + '\'' +
                     ", password='" + password + '\'' +
-                    ", usersList=" + usersList +
+//                    ", usersList=" + usersList +
                     ", user=" + user +
                     ", role=" + role +
                     ", teamMembers=" + teamMembers +

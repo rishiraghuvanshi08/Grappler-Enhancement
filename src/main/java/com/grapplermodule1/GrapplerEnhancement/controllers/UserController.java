@@ -2,6 +2,7 @@ package com.grapplermodule1.GrapplerEnhancement.controllers;
 
 import com.grapplermodule1.GrapplerEnhancement.entities.Users;
 import com.grapplermodule1.GrapplerEnhancement.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,10 +29,15 @@ public class UserController {
      */
     @GetMapping("/")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<Users>> getAllUsers() {
-        return null;
+    public List<Users> getAllUsers() {
+        return userRepository.findAll();
     }
 
+    @GetMapping("/{id}")
+    public Users getById(@PathVariable Long id) {
+        Optional<Users> user = userRepository.findById(id);
+        return user.orElse(null);
+    }
     /**
      * For Create New User
      *
@@ -58,9 +64,14 @@ public class UserController {
      * @return ResponseEntity
      */
     @PutMapping("/{userId}")
-    public ResponseEntity updateUserById(@PathVariable("userId") Long userId,
+    public Users updateUserById(@PathVariable("userId") Long userId,
                                          @RequestBody Users user) {
-        return null;
+            Users update = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("Product not found"));
+//            update.setName(user.getName());
+//            update.setEmail(user.getEmail());
+            update.setPassword(passwordEncoder.encode(user.getPassword()));
+//            update.setDesignation(user.getDesignation());
+            return userRepository.save(update);
     }
 
     /**

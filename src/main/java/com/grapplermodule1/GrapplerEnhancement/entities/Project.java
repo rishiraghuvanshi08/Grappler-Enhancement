@@ -1,5 +1,6 @@
 package com.grapplermodule1.GrapplerEnhancement.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public class Project {
 
     @Column(name = "name")
     private String name;
-
+    @JsonIgnore
     @ManyToMany
     @JoinTable(name = "project_team",
             joinColumns = @JoinColumn(name = "project_id"),

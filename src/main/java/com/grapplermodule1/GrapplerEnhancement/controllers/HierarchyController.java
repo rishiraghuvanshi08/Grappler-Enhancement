@@ -19,16 +19,16 @@ public class HierarchyController {
     @Autowired
     private HierarchyService hierarchyService;
 
-    @GetMapping("/reporting/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public Users getReportingHierarchy(@PathVariable("id") Long id) {
-        return null;
-    }
-
-//    @GetMapping("/reporting/{userId}")
-//    public ResponseEntity getReportingHierarchyById(@PathVariable("userId") Long userId) {
+//    @GetMapping("/reporting/{id}")
+//    @PreAuthorize("hasRole('ADMIN')")
+//    public Users getReportingHierarchy(@PathVariable("id") Long id) {
 //        return null;
 //    }
+
+    @GetMapping("/reporting/{userId}")
+    public ResponseEntity getReportingHierarchyById(@PathVariable("userId") Long userId) {
+        return null;
+    }
 
     @GetMapping("/team/{teamId}")
     public ResponseEntity getTeamHierarchy(@PathVariable("teamId") Long teamId) {
