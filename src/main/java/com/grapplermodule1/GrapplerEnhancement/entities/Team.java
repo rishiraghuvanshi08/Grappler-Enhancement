@@ -1,9 +1,11 @@
 package com.grapplermodule1.GrapplerEnhancement.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "team")
@@ -18,7 +20,10 @@ public class Team {
     @NotEmpty(message = "Team name is required")
     private String name;
 
-    @OneToMany(mappedBy = "team")
+    @ManyToMany
+    private Set<Project> projectSet;
+
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     private List<TeamMembers> teamMembers;
 
     public Long getId() {

@@ -1,6 +1,7 @@
 package com.grapplermodule1.GrapplerEnhancement.controllers;
 
 import com.grapplermodule1.GrapplerEnhancement.customexception.CustomResponse;
+import com.grapplermodule1.GrapplerEnhancement.customexception.TeamMembersNotFoundException;
 import com.grapplermodule1.GrapplerEnhancement.customexception.TeamNotFoundException;
 import com.grapplermodule1.GrapplerEnhancement.customexception.UserNotFoundException;
 import com.grapplermodule1.GrapplerEnhancement.dtos.HierarchyDTO;
@@ -8,6 +9,7 @@ import com.grapplermodule1.GrapplerEnhancement.dtos.TeamMembersDTO;
 import com.grapplermodule1.GrapplerEnhancement.dtos.UsersDTO;
 import com.grapplermodule1.GrapplerEnhancement.entities.Users;
 import com.grapplermodule1.GrapplerEnhancement.service.HierarchyService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,8 +39,9 @@ public class HierarchyController {
     /**
      * For Reporting Hierarchy From Head (CEO)
      * 
-     * @return ResponseEntity<Users>
+     * @return ResponseEntity<?>
      */
+    @Operation(summary = "Get Reporting Hierarchy", description = "Returns Reporting Hierarchy From CEO")
     @GetMapping("/reporting")
     public ResponseEntity<?> getReportingHierarchy() {
         String debugUuid = UUID.randomUUID().toString();
@@ -61,7 +64,7 @@ public class HierarchyController {
     /**
      * For Reporting Hierarchy From Particular Users
      * 
-     * @return ResponseEntity<Users>
+     * @return ResponseEntity<?>
      */
     @GetMapping("/reporting/{userId}")
     public ResponseEntity<?> getReportingHierarchyById(@Valid @PathVariable("userId") Long userId) {
@@ -85,7 +88,7 @@ public class HierarchyController {
     /**
      * For Team Hierarchy By TeamId
      * 
-     * @return ResponseEntity
+     * @return ResponseEntity<?>
      */
     @GetMapping("/team/{teamId}")
     public ResponseEntity<?> getTeamHierarchy(@Valid @PathVariable("teamId") Long teamId) {
@@ -96,8 +99,12 @@ public class HierarchyController {
 
             return new ResponseEntity<>(optionalListOfUsers, HttpStatus.OK);
         }
+        catch (TeamMembersNotFoundException e) {
+            log.error("UUID {} TeamMembersNotFoundException In Get Team By Id API, Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), null), HttpStatus.NOT_FOUND);
+        }
         catch (TeamNotFoundException e) {
-            log.error("UUID {} TeamNotFoundException In Get Team By Id API, Exception {}", debugUuid, e);
+            log.error("UUID {} TeamNotFoundException In Get Team By Id API, Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), null), HttpStatus.NOT_FOUND);
         }
         catch (Exception e) {

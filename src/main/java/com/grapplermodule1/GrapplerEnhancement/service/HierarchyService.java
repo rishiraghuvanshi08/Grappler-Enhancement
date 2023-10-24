@@ -1,12 +1,14 @@
 package com.grapplermodule1.GrapplerEnhancement.service;
 
-import com.grapplermodule1.GrapplerEnhancement.controllers.HierarchyController;
+import com.grapplermodule1.GrapplerEnhancement.customexception.TeamMembersNotFoundException;
 import com.grapplermodule1.GrapplerEnhancement.customexception.TeamNotFoundException;
 import com.grapplermodule1.GrapplerEnhancement.customexception.UserNotFoundException;
 import com.grapplermodule1.GrapplerEnhancement.dtos.HierarchyDTO;
 import com.grapplermodule1.GrapplerEnhancement.dtos.TeamMembersDTO;
+import com.grapplermodule1.GrapplerEnhancement.entities.Team;
 import com.grapplermodule1.GrapplerEnhancement.entities.Users;
 import com.grapplermodule1.GrapplerEnhancement.repository.TeamMemberRepository;
+import com.grapplermodule1.GrapplerEnhancement.repository.TeamRepository;
 import com.grapplermodule1.GrapplerEnhancement.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,13 +20,16 @@ import java.util.*;
 @Service
 public class HierarchyService {
 
-    private static final Logger log = LoggerFactory.getLogger(HierarchyController.class);
+    private static final Logger log = LoggerFactory.getLogger(HierarchyService.class);
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    TeamMemberRepository teamMemberRepository;
+    private TeamMemberRepository teamMemberRepository;
+
+    @Autowired
+    private TeamRepository teamRepository;
 
     /**
      * For Getting Reporting Hierarchy From Top Level
@@ -40,7 +45,7 @@ public class HierarchyService {
 
                 Users user = optionalUser.get();
 
-                HierarchyDTO hierarchyDTO = new HierarchyDTO(user.getName(), user.getDesignation());
+                HierarchyDTO hierarchyDTO = new HierarchyDTO(user.getId(), user.getName(), user.getDesignation());
                 List<HierarchyDTO> hierarchyDTOList = new ArrayList<>();
 
                 for (Users eachUser : user.getSubordinates()) {
@@ -75,7 +80,7 @@ public class HierarchyService {
                 log.info("Get Reporting Hierarchy By Id Service Called");
                 Users user = optionalUser.get();
 
-                HierarchyDTO hierarchyDTO = new HierarchyDTO(user.getName(), user.getDesignation());
+                HierarchyDTO hierarchyDTO = new HierarchyDTO(user.getId(), user.getName(), user.getDesignation());
                 List<HierarchyDTO> hierarchyDTOList = new ArrayList<>();
 
                 for (Users eachUser : user.getSubordinates()) {
@@ -104,7 +109,7 @@ public class HierarchyService {
      */
     private HierarchyDTO convertToDTO(Users user) {
         try {
-            HierarchyDTO dto = new HierarchyDTO(user.getName(), user.getDesignation());
+            HierarchyDTO dto = new HierarchyDTO(user.getId(), user.getName(), user.getDesignation());
 
             List<Users> subordinates = user.getSubordinates();
             if (subordinates != null && !subordinates.isEmpty()) {
@@ -130,15 +135,23 @@ public class HierarchyService {
         String debugUuid = UUID.randomUUID().toString();
         try {
             log.info("Get Team Hierarchy By Id Service Called");
-            Optional<List<TeamMembersDTO>> optionalListOfUsers = teamMemberRepository.findUsersByTeamId(teamId);
 
-            if(optionalListOfUsers.isPresent() && !optionalListOfUsers.get().isEmpty()){
-                log.info("Get Team Hierarchy By Id Service returning List of TeamMemberDTO");
-                return optionalListOfUsers.get();
+            Optional<Team> optionalTeam = teamRepository.findById(teamId);
+            if (optionalTeam.isPresent()){
+                Optional<List<TeamMembersDTO>> optionalListOfMembers = teamMemberRepository.findUsersByTeamId(teamId);
+
+                if(optionalListOfMembers.isPresent() && !optionalListOfMembers.get().isEmpty()){
+                    log.info("Get Team Hierarchy By Id Service returning List of TeamMemberDTO");
+                    return optionalListOfMembers.get();
+                }
+                else {
+                    log.error("Get Team Hierarchy By Id Service Call TeamMemberNotFoundException");
+                    throw new TeamMembersNotFoundException("Team Members Not Found, Team Id : " + teamId);
+                }
             }
             else {
                 log.error("Get Team Hierarchy By Id Service Call TeamNotFoundException");
-                throw new TeamNotFoundException("Team Not Found With Id : " + teamId);
+                throw new TeamNotFoundException("Team Not Found With Team Id : " + teamId);
             }
         }
         catch (Exception e) {
