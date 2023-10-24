@@ -5,6 +5,7 @@ import com.grapplermodule1.GrapplerEnhancement.customexception.CustomExceptionHa
 import com.grapplermodule1.GrapplerEnhancement.customexception.UserNotFoundException;
 import com.grapplermodule1.GrapplerEnhancement.dtos.UsersDTO;
 import com.grapplermodule1.GrapplerEnhancement.entities.Role;
+import com.grapplermodule1.GrapplerEnhancement.entities.Team;
 import com.grapplermodule1.GrapplerEnhancement.entities.Users;
 import com.grapplermodule1.GrapplerEnhancement.repository.UserRepository;
 import org.slf4j.Logger;
@@ -139,7 +140,7 @@ public class UserService implements UserDetailsService {
                 return updatedUser;
             }
             else {
-                log.error("Updated User Details throws UserNotFoundException");
+                log.error("Update User Details throws UserNotFoundException");
                 throw new UserNotFoundException("User Not Found With ID : " + userId);
             }
         } catch (Exception e) {
@@ -155,7 +156,7 @@ public class UserService implements UserDetailsService {
      */
     public Boolean deleteUser(Long userId) {
         try {
-            log.info("Update User Details Service Called, User Id {}", userId);
+            log.info("Delete User Service Called, User Id {}", userId);
             Optional<Users> user = userRepository.findById(userId);
 
             if(user.isPresent()){
@@ -169,8 +170,9 @@ public class UserService implements UserDetailsService {
             }
         }
         catch (Exception e) {
-            log.error("Exception in Update User Details Exception {}", e.getMessage());
+            log.error("Exception in Delete User Exception {}", e.getMessage());
             throw e;
         }
     }
+
 }

@@ -1,5 +1,6 @@
 package com.grapplermodule1.GrapplerEnhancement.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.grapplermodule1.GrapplerEnhancement.enums.AccessLevel;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -18,11 +19,13 @@ public class Permission {
     @NotNull(message = "Permission type is required")
     private AccessLevel permission_type;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "project_id")
     @NotNull(message = "Project is required")
     private Project project;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "member_id")
     @NotNull(message = "Team member is required")
