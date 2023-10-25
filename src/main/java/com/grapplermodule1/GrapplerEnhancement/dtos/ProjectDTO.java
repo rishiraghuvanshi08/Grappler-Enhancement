@@ -1,5 +1,7 @@
 package com.grapplermodule1.GrapplerEnhancement.dtos;
 
+import java.util.List;
+
 public class ProjectDTO {
     private Long id;
     private String name;
@@ -12,11 +14,20 @@ public class ProjectDTO {
         this.id = id;
     }
 
-    public ProjectDTO(Long id, String name) {
-        this.id = id;
-        this.name = name;
+    public List<TeamDTO> getTeams() {
+        return teams;
     }
 
+    public void setTeams(List<TeamDTO> teams) {
+        this.teams = teams;
+    }
+
+    public ProjectDTO(Long id, String name, List<TeamDTO> teams) {
+        this.id = id;
+        this.name = name;
+        this.teams = teams;
+    }
+    private List<TeamDTO> teams;
     public String getName() {
         return name;
     }
