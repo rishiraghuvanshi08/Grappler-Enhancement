@@ -1,6 +1,8 @@
 package com.grapplermodule1.GrapplerEnhancement.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name = "role")
@@ -11,10 +13,12 @@ public class Role {
     @Column(name = "role_id", nullable = false)
     private Long id;
 
+    @NotEmpty(message = "Role name is required")
     private String role;
 
     @OneToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private Users user;
 
     public Long getId() {
@@ -41,12 +45,4 @@ public class Role {
         this.user = user;
     }
 
-    @Override
-    public String toString() {
-        return "Role{" +
-                "id=" + id +
-                ", role='" + role + '\'' +
-                ", user=" + user +
-                '}';
-    }
 }

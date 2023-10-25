@@ -1,17 +1,14 @@
 package com.grapplermodule1.GrapplerEnhancement.service;
-
 import com.grapplermodule1.GrapplerEnhancement.cerebrus.config.UserDetailsConfig;
-import com.grapplermodule1.GrapplerEnhancement.controllers.UserController;
-import com.grapplermodule1.GrapplerEnhancement.customxception.CustomExceptionHandler;
-import com.grapplermodule1.GrapplerEnhancement.customxception.UserNotFoundException;
-import com.grapplermodule1.GrapplerEnhancement.dto.UsersDTO;
+import com.grapplermodule1.GrapplerEnhancement.customexception.CustomExceptionHandler;
+import com.grapplermodule1.GrapplerEnhancement.customexception.UserNotFoundException;
+import com.grapplermodule1.GrapplerEnhancement.dtos.UsersDTO;
+import com.grapplermodule1.GrapplerEnhancement.entities.Role;
 import com.grapplermodule1.GrapplerEnhancement.entities.Users;
 import com.grapplermodule1.GrapplerEnhancement.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -45,47 +42,133 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public Optional<List<UsersDTO>> fetchAllUsers() {
+    /**
+     * For Fetching All Users
+     *
+     * @return List<UsersDTO>
+     */
+    public List<UsersDTO> fetchAllUsers() {
         try {
+            log.info("Fetch All Users Service Called");
             Optional<List<UsersDTO>> usersDTOS= userRepository.findAllUser();
-            if(usersDTOS.isPresent())
-            {
-                return  usersDTOS;
+            if(usersDTOS.isPresent()) {
+                log.info("Fetch All Users Service Returning UserDTO");
+                return usersDTOS.get();
             }
             else {
-                  throw new UserNotFoundException("User Not found");
+                log.error("Fetch All Users Service Call UserNotFoundException");
+                throw new UserNotFoundException("Users Not found.");
             }
         }
         catch (Exception e) {
+            log.info("Exception In Fetch All Users Exception {}", e.getMessage());
             throw  e;
         }
     }
 
-    public Boolean addUser(Users user) {
+    /**
+     * For Adding A New User
+     *
+     * @return Users
+     */
+    public Users addUser(Users user) {
         try {
-             user.setPassword(passwordEncoder.encode(user.getPassword()));
-             Users newUser = userRepository.save(user);
-            if (newUser != null) {
-                 return true;
-            } else {
-                return false;
-            }
-        } catch (Exception e) {
-            return false;
-        }
+            log.info("Add New User Service Called");
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
 
+            Role role = new Role();
+            role.setRole(user.getRole().getRole());
+
+            user.setRole(role);
+            role.setUser(user);
+
+            Users newUser = userRepository.save(user);
+
+            log.info("Add New User Service Returning New User");
+            return newUser;
+        } catch (Exception e) {
+            log.error("Exception In Add User Service Exception {}", e.getMessage());
+            throw e;
+        }
     }
 
-    public Optional<UsersDTO> fetchUserById(Long userId)  {
+    /**
+     * For Fetching User By ID
+     *
+     * @return Option<UsersDTO>
+     */
+    public UsersDTO fetchUserById(Long userId) {
         try {
+            log.info("Fetch User By ID Service Called, User Id {}", userId);
             Optional<UsersDTO> usersDTO = userRepository.findUserDtoById(userId);
             if (usersDTO.isPresent()) {
-                return usersDTO;
+                log.info("Fetch User By ID Service Returning UsersDTO");
+                return usersDTO.get();
             } else {
-                 log.info("Inside else block");
-                 throw new UserNotFoundException("User Not Found With id : " + userId);
+                log.error("Fetch User By Id throws UserNotFoundException");
+                throw new UserNotFoundException("User Not Found With ID : " + userId);
             }
         } catch (Exception e) {
+            log.error("Exception in Fetch User By Id Exception {}", e.getMessage());
+            throw e;
+        }
+    }
+
+    /**
+     * For Updating User Details
+     *
+     * @return Users
+     */
+    public Users updateUserDetails(Long userId, Users user) {
+        try {
+            log.info("Update User Details Service Called, User Id {}", userId);
+            Optional<Users> existingOptionalUser = userRepository.findById(userId);
+
+            if(existingOptionalUser.isPresent()){
+                Users existingUser = existingOptionalUser.get();
+
+                existingUser.setName(user.getName());
+                existingUser.setEmail(user.getEmail());
+                existingUser.setDesignation(user.getDesignation());
+                existingUser.setReportingUser(user.getReportingUser());
+
+                Users updatedUser = userRepository.save(existingUser);
+
+                log.info("Update User Details Service Returning Updated User");
+                return updatedUser;
+            }
+            else {
+                log.error("Updated User Details throws UserNotFoundException");
+                throw new UserNotFoundException("User Not Found With ID : " + userId);
+            }
+        } catch (Exception e) {
+            log.error("Exception in Update User Details Exception {}", e.getMessage());
+            throw e;
+        }
+    }
+
+    /**
+     * For Deleting A User
+     *
+     * @return Boolean
+     */
+    public Boolean deleteUser(Long userId) {
+        try {
+            log.info("Update User Details Service Called, User Id {}", userId);
+            Optional<Users> user = userRepository.findById(userId);
+
+            if(user.isPresent()){
+                userRepository.deleteById(userId);
+                log.info("Delete User Service Returning True User");
+                return true;
+            }
+            else {
+                log.error("Delete User throws UserNotFoundException");
+                throw new UserNotFoundException("User Not Found With ID : " + userId);
+            }
+        }
+        catch (Exception e) {
+            log.error("Exception in Update User Details Exception {}", e.getMessage());
             throw e;
         }
     }

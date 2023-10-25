@@ -3,8 +3,6 @@ package com.grapplermodule1.GrapplerEnhancement.cerebrus.config;
 import com.grapplermodule1.GrapplerEnhancement.cerebrus.jwtauthentication.JwtAuthenticationEntryPoint;
 import com.grapplermodule1.GrapplerEnhancement.cerebrus.jwtauthentication.JwtAuthenticationFilter;
 import com.grapplermodule1.GrapplerEnhancement.service.UserService;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +21,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 @Configuration
 @EnableMethodSecurity
-
 public class AuthenticationConfig {
 
     @Autowired
@@ -37,10 +34,10 @@ public class AuthenticationConfig {
                 .csrf((c) -> c.disable())
                 .authorizeHttpRequests((authorize) ->
                         authorize
+//                                .requestMatchers("/auth/login").permitAll()
                                 .requestMatchers("/**").permitAll()
-                                .requestMatchers("/").permitAll()
-                                .anyRequest()
-                                .authenticated()
+//                                .anyRequest()
+//                                .authenticated()
                 )
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(point))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
