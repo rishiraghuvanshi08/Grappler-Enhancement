@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HierarchyDTO {
+    private Long id;
     private String name;
     private String designation;
     private List<HierarchyDTO> subordinates = new ArrayList<>();
@@ -11,15 +12,25 @@ public class HierarchyDTO {
     public HierarchyDTO() {
     }
 
-    public HierarchyDTO(String name, String designation, List<HierarchyDTO> subordinates) {
+    public HierarchyDTO(Long id, String name, String designation, List<HierarchyDTO> subordinates) {
         this.name = name;
         this.designation = designation;
         this.subordinates = subordinates;
     }
 
-    public HierarchyDTO(String name, String designation) {
+    public HierarchyDTO(Long id, String name, String designation) {
+        this.id = id;
         this.name = name;
         this.designation = designation;
+    }
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public List<HierarchyDTO> getSubordinates() {

@@ -3,6 +3,8 @@
     import com.fasterxml.jackson.annotation.JsonBackReference;
     import com.fasterxml.jackson.annotation.JsonIgnore;
     import com.fasterxml.jackson.annotation.JsonManagedReference;
+    import com.grapplermodule1.GrapplerEnhancement.validations.PostValidation;
+    import com.grapplermodule1.GrapplerEnhancement.validations.PutValidation;
     import jakarta.persistence.*;
     import jakarta.validation.constraints.Email;
     import jakarta.validation.constraints.NotEmpty;
@@ -25,7 +27,7 @@
         @Size(max = 255, message = "Name should not exceed 255 characters")
         private String name;
     
-        @Column(name = "email")
+        @Column(name = "email", unique = true)
         @Email(groups = {PostValidation.class, PutValidation.class}, message = "Email should be a valid email address")
         @Size(max = 255, message = "Email should not exceed 255 characters")
         private String email;
@@ -54,8 +56,8 @@
         @NotNull(groups = {PostValidation.class}, message = "Role is required")
         private Role role;
 
+        @OneToMany(mappedBy = "user")
         @JsonIgnore
-        @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
         private List<TeamMembers> teamMembers;
 
         @JsonIgnore

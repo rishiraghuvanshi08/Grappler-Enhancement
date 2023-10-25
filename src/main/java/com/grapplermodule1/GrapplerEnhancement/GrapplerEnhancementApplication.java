@@ -1,4 +1,7 @@
 package com.grapplermodule1.GrapplerEnhancement;
+import com.grapplermodule1.GrapplerEnhancement.controllers.UserController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
@@ -18,7 +21,6 @@ import io.swagger.v3.oas.annotations.info.License;
 		)
 )
 public class GrapplerEnhancementApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(GrapplerEnhancementApplication.class, args);
 	}

@@ -2,8 +2,8 @@ package com.grapplermodule1.GrapplerEnhancement.controllers;
 import com.grapplermodule1.GrapplerEnhancement.customexception.CustomResponse;
 import com.grapplermodule1.GrapplerEnhancement.customexception.UserNotFoundException;
 import com.grapplermodule1.GrapplerEnhancement.dtos.UsersDTO;
-import com.grapplermodule1.GrapplerEnhancement.entities.PostValidation;
-import com.grapplermodule1.GrapplerEnhancement.entities.PutValidation;
+import com.grapplermodule1.GrapplerEnhancement.validations.PostValidation;
+import com.grapplermodule1.GrapplerEnhancement.validations.PutValidation;
 import com.grapplermodule1.GrapplerEnhancement.entities.Users;
 import com.grapplermodule1.GrapplerEnhancement.service.UserService;
 import jakarta.validation.Valid;
@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import com.grapplermodule1.GrapplerEnhancement.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -29,15 +27,12 @@ public class UserController {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
-    UserRepository userRepository;
-
-    @Autowired
     UserService userService;
 
     /**
      * For Getting List Of Users
      *
-     * @return ResponseEntity<List < UsersDTO>>
+     * @return ResponseEntity<?>
      */
     @GetMapping("/")
     public ResponseEntity<?> getAllUsers() {
@@ -70,7 +65,7 @@ public class UserController {
             log.info("Get Create User API Called, UUID {}", debugUuid);
             Users newUser = userService.addUser(user);
             if (newUser != null) {
-                return new ResponseEntity<>(new CustomResponse<>(true, "User Created With Id : " + newUser.getId(), newUser), HttpStatus.OK);
+                return new ResponseEntity<>(new CustomResponse<>(true, "User Created With Id : " + newUser.getId(), newUser), HttpStatus.CREATED);
             }
             else {
                 log.error("UUID {} User Not Created", debugUuid);
@@ -85,7 +80,7 @@ public class UserController {
     /**
      * For getting User By I'd
      *
-     * @return ResponseEntity<Users>
+     * @return ResponseEntity<?>
      */
     @GetMapping("/{userId}")
     public ResponseEntity<?> getUserById(@Valid @PathVariable("userId") Long userId) {
@@ -128,7 +123,7 @@ public class UserController {
             return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), null), HttpStatus.NOT_FOUND);
         }
         catch (Exception e) {
-            log.error("UUID {} Exception In Get User By Id API Exception {}", debugUuid, e.getMessage());
+            log.error("UUID {} Exception In Update User By Id API Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -149,7 +144,7 @@ public class UserController {
             return new ResponseEntity<>(new CustomResponse<>(deleteUser, "User Deleted Successfully.", null), HttpStatus.OK);
         }
         catch (UserNotFoundException e) {
-            log.error("UUID {}, UserNotFoundException in Update User BY Id API, Exception {}", debugUuid, e.getMessage());
+            log.error("UUID {}, UserNotFoundException in Delete User BY Id API, Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), null), HttpStatus.NOT_FOUND);
         }
         catch (Exception e) {
