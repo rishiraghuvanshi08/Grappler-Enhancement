@@ -1,4 +1,4 @@
-package com.grapplermodule1.GrapplerEnhancement.customException;
+package com.grapplermodule1.GrapplerEnhancement.customexception;
 
 public class ProjectNotFoundException extends RuntimeException{
     public ProjectNotFoundException(String message)

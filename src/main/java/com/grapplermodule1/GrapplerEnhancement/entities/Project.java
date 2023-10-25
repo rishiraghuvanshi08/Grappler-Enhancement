@@ -1,7 +1,9 @@
 package com.grapplermodule1.GrapplerEnhancement.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 
 import java.util.List;
 import java.util.Set;
@@ -15,9 +17,10 @@ public class Project {
     @Column(nullable = false, name = "project_id")
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
+    @NotEmpty(message = "Project name is required")
     private String name;
-    @JsonIgnore
+    @JsonManagedReference
     @ManyToMany
     @JoinTable(name = "project_team",
             joinColumns = @JoinColumn(name = "project_id"),

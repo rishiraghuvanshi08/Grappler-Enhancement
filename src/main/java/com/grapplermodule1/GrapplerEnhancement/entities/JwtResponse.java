@@ -16,7 +16,6 @@ public class JwtResponse {
     private String email;
 
     public JwtResponse(String token, String username) {
-
     }
 
 
