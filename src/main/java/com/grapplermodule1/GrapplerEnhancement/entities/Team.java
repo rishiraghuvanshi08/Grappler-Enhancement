@@ -1,5 +1,6 @@
 package com.grapplermodule1.GrapplerEnhancement.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
@@ -21,6 +22,7 @@ public class Team {
     private String name;
 
     @ManyToMany
+    @JsonBackReference
     private Set<Project> projectSet;
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)

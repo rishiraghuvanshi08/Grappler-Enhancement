@@ -1,21 +1,18 @@
 package com.grapplermodule1.GrapplerEnhancement.controllers;
 
 import com.grapplermodule1.GrapplerEnhancement.customexception.CustomResponse;
-import com.grapplermodule1.GrapplerEnhancement.customexception.ProjetcNotFoundException;
+import com.grapplermodule1.GrapplerEnhancement.customexception.ProjectNotFoundException;
 import com.grapplermodule1.GrapplerEnhancement.customexception.TicketNotFoundException;
 import com.grapplermodule1.GrapplerEnhancement.customexception.UserNotFoundException;
 import com.grapplermodule1.GrapplerEnhancement.dtos.TicketsDTO;
 import com.grapplermodule1.GrapplerEnhancement.entities.Ticket;
-import com.grapplermodule1.GrapplerEnhancement.entities.Users;
 import com.grapplermodule1.GrapplerEnhancement.service.TicketService;
-import com.grapplermodule1.GrapplerEnhancement.validations.PostValidation;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,8 +40,8 @@ public class TicketController {
             List<TicketsDTO> ticketList = ticketService.fetchTicketsByProjectId(projectId);
             log.info("Get Tickets By Project Id, Returning Tickets in ResponseEntity, Project Id {} ", projectId);
             return new ResponseEntity<>(ticketList, HttpStatus.OK);
-        } catch (ProjetcNotFoundException e) {
-            log.error("UUID {}, ProjetcNotFoundException in Get Tickets BY Project Id API, Exception {}", debugUuid, e.getMessage());
+        } catch (ProjectNotFoundException e) {
+            log.error("UUID {}, ProjectNotFoundException in Get Tickets BY Project Id API, Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), null), HttpStatus.NOT_FOUND);
         } catch (TicketNotFoundException e) {
             log.error("UUID {}, TicketNotFoundException in Get Tickets BY Project Id API, Exception {}", debugUuid, e.getMessage());
@@ -91,8 +88,8 @@ public class TicketController {
             log.info("Create Ticket By Project Id, Returning Tickets in ResponseEntity, Project Id {} ", ticket.getProjectId());
             return new ResponseEntity<>((new CustomResponse<>(true, "Ticket Created Successfully With Id :"+addedTicket.getId(), null)) ,HttpStatus.OK);
 
-        } catch (ProjetcNotFoundException e) {
-            log.error("UUID {}, ProjetcNotFoundException in Create Tickets BY Project Id API, Exception {}", debugUuid, e.getMessage());
+        } catch (ProjectNotFoundException e) {
+            log.error("UUID {}, ProjectNotFoundException in Create Tickets BY Project Id API, Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), null), HttpStatus.NOT_FOUND);
         }
         catch (UserNotFoundException e) {

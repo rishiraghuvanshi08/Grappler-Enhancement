@@ -1,11 +1,9 @@
 package com.grapplermodule1.GrapplerEnhancement.service;
 
-import com.grapplermodule1.GrapplerEnhancement.controllers.TicketController;
-import com.grapplermodule1.GrapplerEnhancement.customexception.ProjetcNotFoundException;
+import com.grapplermodule1.GrapplerEnhancement.customexception.ProjectNotFoundException;
 import com.grapplermodule1.GrapplerEnhancement.customexception.TicketNotFoundException;
 import com.grapplermodule1.GrapplerEnhancement.customexception.UserNotFoundException;
 import com.grapplermodule1.GrapplerEnhancement.dtos.TicketsDTO;
-import com.grapplermodule1.GrapplerEnhancement.dtos.UsersDTO;
 import com.grapplermodule1.GrapplerEnhancement.entities.Project;
 import com.grapplermodule1.GrapplerEnhancement.entities.Ticket;
 import com.grapplermodule1.GrapplerEnhancement.entities.Users;
@@ -44,7 +42,8 @@ public class TicketService {
             log.info("Fetch Tickets By Project Id Service Called, Project Id {}", projectId);
                 Optional<Project> project = projectRepository.findById(projectId);
             if (project.isEmpty()) {
-                throw new ProjetcNotFoundException("Project Not Found With Id :" + projectId);
+                log.info("Fetch Tickets By Project Throws ProjectNotFoundException, Project Id {}", projectId);
+                throw new ProjectNotFoundException("Project Not Found With Id :" + projectId);
             }
             Optional<List<TicketsDTO>> listOfTickets = ticketRepository.findByProjectId(projectId);
             if (listOfTickets.isPresent() && !listOfTickets.get().isEmpty()) {
@@ -71,6 +70,7 @@ public class TicketService {
             log.info("Fetch Tickets By userId Id Service Called, userId Id {}", userId);
             Optional<Users> usersDTO = userRepository.findById(userId);
             if (usersDTO.isEmpty()) {
+                log.error("Fetch Tickets By User Id throws UserNotFoundException");
                 throw new UserNotFoundException("User Not Found With Id :" + userId);
             }
             Optional<List<TicketsDTO>> listOfTickets = ticketRepository.findByUserId(userId);
@@ -93,7 +93,7 @@ public class TicketService {
             log.info("Create Ticket By Project Id Service Called, Project Id {}", ticket.getCreatorId());
             Optional<Project> project = projectRepository.findById(ticket.getProjectId());
             if (project.isEmpty()) {
-                throw new ProjetcNotFoundException("Project Not Found With Id :" + ticket.getProjectId());
+                throw new ProjectNotFoundException("Project Not Found With Id :" + ticket.getProjectId());
             }
 
             Optional<Users> usersDTO = userRepository.findById(ticket.getCreatorId());

@@ -1,7 +1,7 @@
 package com.grapplermodule1.GrapplerEnhancement.service;
 
 import com.grapplermodule1.GrapplerEnhancement.customexception.CustomPermissionException;
-import com.grapplermodule1.GrapplerEnhancement.customexception.ProjetcNotFoundException;
+import com.grapplermodule1.GrapplerEnhancement.customexception.ProjectNotFoundException;
 import com.grapplermodule1.GrapplerEnhancement.customexception.UserNotFoundException;
 import com.grapplermodule1.GrapplerEnhancement.entities.Project;
 import com.grapplermodule1.GrapplerEnhancement.entities.TeamMembers;
@@ -37,7 +37,7 @@ public class PermissionService {
      */
     public PermissionType getMemberPermission(Long memberId, Long projectId) {
         try {
-            log.info("Fetch Member Permission By memberId and projectId Service Called, memberId Id and projectId {}", memberId, projectId);
+            log.info("Fetch Member Permission By memberId and projectId Service Called, memberId {} Id and projectId {}", memberId, projectId);
 
             Optional<TeamMembers> teamMembers = teamMemberRepository.findById(memberId);
             if (teamMembers.isEmpty()) {
@@ -46,14 +46,14 @@ public class PermissionService {
             }
             Optional<Project> project = projectRepository.findById(projectId);
             if (project.isEmpty()) {
-                log.error("Fetch Member Permission By memberId and projectId Service throws ProjetcNotFoundException");
-                throw new ProjetcNotFoundException("Project Not Found With Id :" + projectId);
+                log.error("Fetch Member Permission By memberId and projectId Service throws ProjectNotFoundException");
+                throw new ProjectNotFoundException("Project Not Found With Id :" + projectId);
             }
 
-            PermissionType permissonType = permissionRepository.findPermissionTypeByMemberIdAndProjectId(memberId, projectId);
-            if (permissonType != null) {
-                log.info("getMemberPermission Service Returning permissonType");
-                return permissonType;
+            PermissionType permissionType = permissionRepository.findPermissionTypeByMemberIdAndProjectId(memberId, projectId);
+            if (permissionType != null) {
+                log.info("getMemberPermission Service Returning permissionType");
+                return permissionType;
             } else {
                 log.error("Fetch Member Permission By memberId and projectId Service throws CustomPermissionException");
                 throw new CustomPermissionException("Member With Id :" + memberId + " Is Not Associated With  Project Id :" + projectId);
@@ -72,7 +72,7 @@ public class PermissionService {
     public int updatePermissionToMember(Long memberId, Long projectId,
                                      PermissionType permissionType) {
         try {
-            log.info("Update Member Permission By memberId and projectId Service Called, memberId Id and projectId {}", memberId, projectId);
+            log.info("Update Member Permission By memberId and projectId Service Called, member {} Id and projectId {}", memberId, projectId);
             Optional<TeamMembers> teamMembers = teamMemberRepository.findById(memberId);
             if (teamMembers.isEmpty()) {
                 log.error("Update Member Permission By memberId and projectId Service throws UserNotFoundException");
@@ -80,8 +80,8 @@ public class PermissionService {
             }
             Optional<Project> project = projectRepository.findById(projectId);
             if (project.isEmpty()) {
-                log.error("Update Member Permission By memberId and projectId Service throws ProjetcNotFoundException");
-                throw new ProjetcNotFoundException("Project Not Found With Id :" + projectId);
+                log.error("Update Member Permission By memberId and projectId Service throws ProjectNotFoundException");
+                throw new ProjectNotFoundException("Project Not Found With Id :" + projectId);
             }
             int updateStatus = permissionRepository.addPermissionTypeByMemberIdAndProjectId(memberId, projectId, permissionType);
             if (updateStatus > 0) {
