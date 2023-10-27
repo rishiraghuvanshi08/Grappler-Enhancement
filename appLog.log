@@ -225,3 +225,39 @@
 2023-10-27 11:10:58,561 [INFO] com.grapplermodule1.GrapplerEnhancement.service.HierarchyService [http-nio-8080-exec-3] Get Team Member By Id Called in Hierarchy Service
 2023-10-27 11:10:58,564 [INFO] com.grapplermodule1.GrapplerEnhancement.service.HierarchyService [http-nio-8080-exec-3] Get Team Member By Id returning List of TeamMemberDTO
 2023-10-27 11:10:58,564 [INFO] com.grapplermodule1.GrapplerEnhancement.service.HierarchyService [http-nio-8080-exec-3] Get All Teams API Returning Teams in ResponseEntity, UUID 3b127c04-f63b-4258-8a59-576f78b56211
+2023-10-27 12:34:57,180 [WARN] com.zaxxer.hikari.pool.HikariPool [HikariPool-1 housekeeper] HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=30m29s865ms170µs800ns).
+2023-10-27 12:46:47,415 [WARN] org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver [http-nio-8080-exec-6] Resolved [java.lang.RuntimeException: Invalid User Name or Password!]
+2023-10-27 12:54:12,586 [INFO] org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean [SpringApplicationShutdownHook] Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-10-27 12:54:12,590 [INFO] com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2023-10-27 12:54:12,597 [INFO] com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+2023-10-27 12:54:20,399 [INFO] com.grapplermodule1.GrapplerEnhancement.GrapplerEnhancementApplication [restartedMain] Starting GrapplerEnhancementApplication using Java 17.0.7 with PID 26376 (C:\Users\ASUS\IdeaProjects\Grappler-Enhancement\target\classes started by ASUS in C:\Users\ASUS\IdeaProjects\Grappler-Enhancement)
+2023-10-27 12:54:20,401 [INFO] com.grapplermodule1.GrapplerEnhancement.GrapplerEnhancementApplication [restartedMain] No active profile set, falling back to 1 default profile: "default"
+2023-10-27 12:54:20,474 [INFO] org.springframework.boot.devtools.env.DevToolsPropertyDefaultsPostProcessor [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-10-27 12:54:20,474 [INFO] org.springframework.boot.devtools.env.DevToolsPropertyDefaultsPostProcessor [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2023-10-27 12:54:21,532 [INFO] org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-10-27 12:54:21,636 [INFO] org.springframework.data.repository.config.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 94 ms. Found 6 JPA repository interfaces.
+2023-10-27 12:54:22,669 [INFO] org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain] Tomcat initialized with port(s): 8080 (http)
+2023-10-27 12:54:22,686 [INFO] org.apache.catalina.core.StandardService [restartedMain] Starting service [Tomcat]
+2023-10-27 12:54:22,687 [INFO] org.apache.catalina.core.StandardEngine [restartedMain] Starting Servlet engine: [Apache Tomcat/10.1.13]
+2023-10-27 12:54:22,821 [INFO] org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [restartedMain] Initializing Spring embedded WebApplicationContext
+2023-10-27 12:54:22,821 [INFO] org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 2346 ms
+2023-10-27 12:54:23,125 [INFO] org.hibernate.jpa.internal.util.LogHelper [restartedMain] HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-10-27 12:54:23,233 [INFO] org.hibernate.Version [restartedMain] HHH000412: Hibernate ORM core version 6.2.9.Final
+2023-10-27 12:54:23,238 [INFO] org.hibernate.cfg.Environment [restartedMain] HHH000406: Using bytecode reflection optimizer
+2023-10-27 12:54:23,482 [INFO] org.hibernate.bytecode.internal.BytecodeProviderInitiator [restartedMain] HHH000021: Bytecode provider name : bytebuddy
+2023-10-27 12:54:23,655 [INFO] org.springframework.orm.jpa.persistenceunit.SpringPersistenceUnitInfo [restartedMain] No LoadTimeWeaver setup: ignoring JPA class transformer
+2023-10-27 12:54:23,681 [INFO] com.zaxxer.hikari.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2023-10-27 12:54:23,993 [INFO] com.zaxxer.hikari.pool.HikariPool [restartedMain] HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@2d9a1f66
+2023-10-27 12:54:23,996 [INFO] com.zaxxer.hikari.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2023-10-27 12:54:24,365 [INFO] org.hibernate.bytecode.internal.BytecodeProviderInitiator [restartedMain] HHH000021: Bytecode provider name : bytebuddy
+2023-10-27 12:54:25,096 [INFO] org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator [restartedMain] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-10-27 12:54:25,236 [INFO] org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean [restartedMain] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-10-27 12:54:25,638 [INFO] org.springframework.data.jpa.repository.query.QueryEnhancerFactory [restartedMain] Hibernate is in classpath; If applicable, HQL parser will be used.
+2023-10-27 12:54:26,834 [WARN] org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-10-27 12:54:27,998 [INFO] org.springframework.security.web.DefaultSecurityFilterChain [restartedMain] Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@5685b5c5, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@772c18c3, org.springframework.security.web.context.SecurityContextHolderFilter@6dfe79b2, org.springframework.security.web.header.HeaderWriterFilter@38de205a, org.springframework.security.web.authentication.logout.LogoutFilter@1e2d3ab, com.grapplermodule1.GrapplerEnhancement.cerebrus.jwtauthentication.JwtAuthenticationFilter@420fb170, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@3eb3f769, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@2d59f2e3, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@2ad7f9bd, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@321fc41d, org.springframework.security.web.session.SessionManagementFilter@509760ef, org.springframework.security.web.access.ExceptionTranslationFilter@6c377a3e, org.springframework.security.web.access.intercept.AuthorizationFilter@28b9afab]
+2023-10-27 12:54:28,512 [INFO] org.springframework.boot.devtools.autoconfigure.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2023-10-27 12:54:28,559 [INFO] org.springframework.boot.web.embedded.tomcat.TomcatWebServer [restartedMain] Tomcat started on port(s): 8080 (http) with context path ''
+2023-10-27 12:54:28,573 [INFO] com.grapplermodule1.GrapplerEnhancement.GrapplerEnhancementApplication [restartedMain] Started GrapplerEnhancementApplication in 8.652 seconds (process running for 9.264)
+2023-10-27 12:55:31,677 [INFO] org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] [http-nio-8080-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-10-27 12:55:31,677 [INFO] org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-1] Initializing Servlet 'dispatcherServlet'
+2023-10-27 12:55:31,677 [INFO] org.springframework.web.servlet.DispatcherServlet [http-nio-8080-exec-1] Completed initialization in 0 ms
