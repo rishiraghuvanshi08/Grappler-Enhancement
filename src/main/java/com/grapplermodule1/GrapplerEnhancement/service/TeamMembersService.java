@@ -112,4 +112,43 @@ public class TeamMembersService {
             throw e;
         }
     }
+
+    /**
+     * For Deleting Team Member
+     *
+     * @return Boolean
+     */
+    public Boolean deleteTeamMember(Long teamId, Long userId) {
+        try {
+            log.info("Delete Team Member Service Called");
+            Optional<Team> optionalTeam = teamRepository.findById(teamId);
+
+            if(optionalTeam.isPresent()) {
+                Optional<Users> optionalUser = userRepository.findById(userId);
+
+                if (optionalUser.isPresent()) {
+                    Optional<TeamMembers> optionalTeamMember = teamMemberRepository.findByTeamIdAndUserId(teamId, userId);
+
+                    if (optionalTeamMember.isPresent()) {
+                        teamMemberRepository.deleteByTeamIdAndUserId(teamId, userId);
+                        return true;
+                    } else {
+                        log.error("Add Team Member Service throws UserNotFoundException");
+                        throw new MemberNotPresentInTeamException("User With Id : "+ userId +" is not Present in Team With ID : " + teamId);
+                    }
+                } else {
+                    log.error("Add Team Member Service throws TeamNotFoundException");
+                    throw new UserNotFoundException("User Not Found With ID : " + userId);
+                }
+            }
+            else {
+                log.error("Add Team Member Service throws MemberAlreadyPresentException");
+                throw new TeamNotFoundException("Team Not Found With Id : " + teamId);
+            }
+        }
+        catch (Exception e) {
+            log.error("Exception In Delete Team Member Exception {}", e.getMessage());
+            throw e;
+        }
+    }
 }

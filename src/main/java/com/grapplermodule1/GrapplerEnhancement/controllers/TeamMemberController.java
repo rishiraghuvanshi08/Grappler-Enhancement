@@ -124,10 +124,37 @@ public class TeamMemberController {
         }
     }
 
+    /**
+     * For Delete Member By Team ID and User ID
+     *
+     * @return ResponseEntity<?>
+     */
     @DeleteMapping("/{teamId}/delete-member/{userId}")
-    public ResponseEntity deleteMember(@PathVariable("teamId") Long teamId,
-                                       @PathVariable("memberId") Long memberId){
-        return null;
+    public ResponseEntity<?> deleteMember(@PathVariable("teamId") Long teamId,
+                                       @PathVariable("userId") Long userId){
+        String debugUuid = UUID.randomUUID().toString();
+        try {
+            log.info("Get Team Member Details API Called, UUID {}", debugUuid);
+            Boolean isDeleted = teamMembersService.deleteTeamMember(teamId, userId);
+
+            return new ResponseEntity<>(new CustomResponseMessage(isDeleted, "Member Is Deleted Successfully."), HttpStatus.OK);
+        }
+        catch (MemberNotPresentInTeamException e) {
+            log.error("UUID {} MemberNotPresentInTeamException In Delete Member API, Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), null), HttpStatus.NOT_FOUND);
+        }
+        catch (UserNotFoundException e) {
+            log.error("UUID {} UserNotFoundException In Add Delete API, Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), null), HttpStatus.NOT_FOUND);
+        }
+        catch (TeamNotFoundException e) {
+            log.error("UUID {} TeamNotFoundException In Delete Member API, Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), null), HttpStatus.NOT_FOUND);
+        }
+        catch (Exception e) {
+            log.error("UUID {} Exception In Delete Member API, Exception {} ", debugUuid, e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }

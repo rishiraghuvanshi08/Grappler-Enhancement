@@ -40,7 +40,7 @@ public class TeamMembers {
         this.permission = permission;
     }
 
-    @OneToMany(mappedBy = "teamMembers")
+    @OneToMany(mappedBy = "teamMembers", cascade = CascadeType.ALL)
     private List<Permission> permission;
 
     public Long getId() {
