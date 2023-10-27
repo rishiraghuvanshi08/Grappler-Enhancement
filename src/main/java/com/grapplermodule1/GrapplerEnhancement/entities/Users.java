@@ -60,11 +60,11 @@
         @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
         private List<TeamMembers> teamMembers;
 
-        @JsonBackReference
+        @JsonIgnore
         @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
         private List<Ticket> ticket;
 
-        @JsonBackReference
+        @JsonIgnore
         @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
         private List<TicketAssignment> ticketAssignment;
     
