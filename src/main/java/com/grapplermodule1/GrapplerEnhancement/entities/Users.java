@@ -29,6 +29,7 @@
     
         @Column(name = "email", unique = true)
         @Email(groups = {PostValidation.class, PutValidation.class}, message = "Email should be a valid email address")
+        @NotEmpty(groups = {PostValidation.class, PutValidation.class}, message = "Email is required")
         @Size(max = 255, message = "Email should not exceed 255 characters")
         private String email;
     
