@@ -1,6 +1,8 @@
 package com.grapplermodule1.GrapplerEnhancement.controllers;
 
 import com.grapplermodule1.GrapplerEnhancement.cerebrus.jwtauthentication.JwtHelper;
+import com.grapplermodule1.GrapplerEnhancement.customexception.CustomResponse;
+import com.grapplermodule1.GrapplerEnhancement.customexception.UserNotFoundException;
 import com.grapplermodule1.GrapplerEnhancement.entities.JwtRequest;
 import com.grapplermodule1.GrapplerEnhancement.entities.JwtResponse;
 import com.grapplermodule1.GrapplerEnhancement.entities.Users;
@@ -19,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -32,18 +36,27 @@ public class AuthController {
     @Autowired
     JwtHelper jwtHelper;
 
-//    private Logger logger = LoggerFactory.getLogger(AuthController.class);
+    private Logger log = LoggerFactory.getLogger(AuthController.class);
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest jwtRequest){
-        this.doAuthenticate(jwtRequest.getEmail(), jwtRequest.getPassword());
-
-        UserDetails userDetails = userService.loadUserByUsername(jwtRequest.getEmail());
-
-        String token = jwtHelper.generateToken(userDetails);
-
-        JwtResponse jwtResponse = new JwtResponse(token, userDetails.getUsername());
-        return new ResponseEntity<>(jwtResponse, HttpStatus.OK);
+    public ResponseEntity<?> login(@RequestBody JwtRequest jwtRequest) {
+        String debugUuid = UUID.randomUUID().toString();
+        try {
+            log.info("Auth Controller Login API Called, UUID {}", debugUuid);
+            this.doAuthenticate(jwtRequest.getEmail(), jwtRequest.getPassword());
+            UserDetails userDetails = userService.loadUserByUsername(jwtRequest.getEmail());
+            String token = jwtHelper.generateToken(userDetails);
+            JwtResponse jwtResponse = new JwtResponse(token, userDetails.getUsername());
+            return new ResponseEntity<>(jwtResponse, HttpStatus.OK);
+        }
+        catch (UserNotFoundException e) {
+            log.error("UUID {} UserNotFoundException Auth Controller Login API Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), null), HttpStatus.NOT_FOUND);
+        }
+        catch (Exception e) {
+            log.error("UUID {} Exception In Auth Controller Login API Exception {}", debugUuid, e.getMessage());
+            throw e;
+        }
     }
 
     private void doAuthenticate(String email, String password) {

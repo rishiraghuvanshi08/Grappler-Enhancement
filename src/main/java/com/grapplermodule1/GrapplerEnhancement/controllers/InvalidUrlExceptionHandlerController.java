@@ -25,7 +25,8 @@ public class InvalidUrlExceptionHandlerController {
 
     @RequestMapping("/**")
     public ResponseEntity<CustomResponse<String>> handleInvalidUrl() {
-        log.error("Invalid URL requested");
+        String debugUuid = UUID.randomUUID().toString();
+        log.info("InvalidUrlExceptionHandlerController handleInvalidUrl API Called, UUID {}", debugUuid);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomResponse<>(false, "Invalid URL requested", null));
     }
 
