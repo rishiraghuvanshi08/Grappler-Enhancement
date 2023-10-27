@@ -2,7 +2,7 @@ package com.grapplermodule1.GrapplerEnhancement.controllers;
 
 import com.grapplermodule1.GrapplerEnhancement.customexception.CustomPermissionException;
 import com.grapplermodule1.GrapplerEnhancement.customexception.CustomResponse;
-import com.grapplermodule1.GrapplerEnhancement.customexception.ProjetcNotFoundException;
+import com.grapplermodule1.GrapplerEnhancement.customexception.ProjectNotFoundException;
 import com.grapplermodule1.GrapplerEnhancement.customexception.UserNotFoundException;
 import com.grapplermodule1.GrapplerEnhancement.entities.Permission;
 import com.grapplermodule1.GrapplerEnhancement.enums.PermissionType;
@@ -43,8 +43,8 @@ public class PermissionController {
         } catch (UserNotFoundException e) {
             log.error("UUID {}, UserNotFoundException in getMemberPermission API, Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), null), HttpStatus.NOT_FOUND);
-        } catch (ProjetcNotFoundException e) {
-            log.error("UUID {}, ProjetcNotFoundException in getMemberPermission API, Exception {}", debugUuid, e.getMessage());
+        } catch (ProjectNotFoundException e) {
+            log.error("UUID {}, ProjectNotFoundException in getMemberPermission API, Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), null), HttpStatus.NOT_FOUND);
         } catch (CustomPermissionException e) {
             log.error("UUID {}, CustomPermissionException in getMemberPermission API, Exception {}", debugUuid, e.getMessage());
@@ -73,8 +73,8 @@ public class PermissionController {
         } catch (UserNotFoundException e) {
             log.error("UUID {}, UserNotFoundException in updatePermissionToMember API, Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), null), HttpStatus.NOT_FOUND);
-        } catch (ProjetcNotFoundException e) {
-            log.error("UUID {}, ProjetcNotFoundException in updatePermissionToMember API, Exception {}", debugUuid, e.getMessage());
+        } catch (ProjectNotFoundException e) {
+            log.error("UUID {}, ProjectNotFoundException in updatePermissionToMember API, Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), null), HttpStatus.NOT_FOUND);
         } catch (CustomPermissionException e) {
             log.error("UUID {}, CustomPermissionException in updatePermissionToMember API, Exception {}", debugUuid, e.getMessage());
