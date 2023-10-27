@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@CrossOrigin(origins="http://localhost:3000/")
 @RequestMapping("/users")
 public class UserController {
         private static final Logger log = LoggerFactory.getLogger(UserController.class);
@@ -77,7 +78,6 @@ public class UserController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
     /**
      * For getting User By I'd
      *
