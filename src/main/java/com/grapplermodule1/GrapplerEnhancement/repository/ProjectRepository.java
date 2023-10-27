@@ -17,4 +17,6 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     @Query("SELECT NEW com.grapplermodule1.GrapplerEnhancement.dtos.ProjectDTO(p.id, p.name) FROM Project p WHERE p.id = :projectId")
     Optional<ProjectDTO> findProjectById(Long projectId);
 
+
+
 }

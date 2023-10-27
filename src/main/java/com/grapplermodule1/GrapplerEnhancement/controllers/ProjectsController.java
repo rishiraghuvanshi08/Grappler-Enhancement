@@ -4,6 +4,7 @@ import com.grapplermodule1.GrapplerEnhancement.customexception.CustomResponse;
 import com.grapplermodule1.GrapplerEnhancement.customexception.DataNotPresent;
 import com.grapplermodule1.GrapplerEnhancement.customexception.DuplicateProjectName;
 import com.grapplermodule1.GrapplerEnhancement.customexception.ProjectNotFoundException;
+import com.grapplermodule1.GrapplerEnhancement.dtos.ProjectDTO;
 import com.grapplermodule1.GrapplerEnhancement.entities.Team;
 import com.grapplermodule1.GrapplerEnhancement.entities.Project;
 import com.grapplermodule1.GrapplerEnhancement.service.ProjectService;
@@ -23,6 +24,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/projects")
+@CrossOrigin(origins="http://localhost:3000/")
 public class ProjectsController {
 
     @Autowired
@@ -40,7 +42,7 @@ public class ProjectsController {
         String debugUuid = UUID.randomUUID().toString();
         try {
             log.info("Getting data of all Projects");
-            List<Project> projectList = projectService.getAllProjects();
+            List<ProjectDTO> projectList = projectService.getAllProjects();
             return new ResponseEntity<>(projectList, HttpStatus.OK);
         } catch (ProjectNotFoundException p) {
             log.error("Getting exception because there is no project in the list, UUID {}", debugUuid, p);
@@ -161,28 +163,15 @@ public class ProjectsController {
         }
     }
 
-    @GetMapping("/{id}/teams")
+    @GetMapping("/{projectId}/teams")
     public ResponseEntity<List<Team>> getAllTeams(@PathVariable Long id) {
         return null;
     }
-    
-    @GetMapping("/{id}/teams/{idTeam}")
-    public ResponseEntity getTeamById(@PathVariable Long id, @PathVariable Long idTeam) {
-        return null;
-    }
 
-    @PostMapping("/{id}/teams")
+
+    @PostMapping("/{projectId}/teams/{teamId}")
     public ResponseEntity create(@RequestBody Team team, @PathVariable Long id) {
         return null;
     }
 
-    @DeleteMapping("/{id}/teams/{teamId}")
-    public ResponseEntity deletedByIdPost(@PathVariable Long id, @PathVariable Long teamId) {
-        return null;
-    }
-
-    @PutMapping("/{id}/teams/{teamId}")
-    public ResponseEntity updateByTeamId(@PathVariable Long id, @PathVariable Long teamId, @RequestBody Team team) {
-        return null;
-    }
 }

@@ -5,6 +5,7 @@ import java.util.List;
 public class ProjectDTO {
     private Long id;
     private String name;
+    private List<TeamDTO> teams;
 
     public Long getId() {
         return id;
@@ -13,6 +14,7 @@ public class ProjectDTO {
     public void setId(Long id) {
         this.id = id;
     }
+
 
     public List<TeamDTO> getTeams() {
         return teams;
@@ -27,7 +29,10 @@ public class ProjectDTO {
         this.name = name;
         this.teams = teams;
     }
-    private List<TeamDTO> teams;
+    public ProjectDTO(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
     public String getName() {
         return name;
     }

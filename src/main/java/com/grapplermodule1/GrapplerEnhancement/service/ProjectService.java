@@ -1,18 +1,16 @@
 package com.grapplermodule1.GrapplerEnhancement.service;
 
-import com.grapplermodule1.GrapplerEnhancement.customexception.CustomResponse;
 import com.grapplermodule1.GrapplerEnhancement.customexception.DataNotPresent;
 import com.grapplermodule1.GrapplerEnhancement.customexception.DuplicateProjectName;
 import com.grapplermodule1.GrapplerEnhancement.customexception.ProjectNotFoundException;
+import com.grapplermodule1.GrapplerEnhancement.dtos.ProjectDTO;
+import com.grapplermodule1.GrapplerEnhancement.dtos.TeamDTO;
 import com.grapplermodule1.GrapplerEnhancement.entities.Project;
-import com.grapplermodule1.GrapplerEnhancement.entities.Users;
 import com.grapplermodule1.GrapplerEnhancement.repository.ProjectRepository;
-import jakarta.persistence.EntityNotFoundException;
+import com.grapplermodule1.GrapplerEnhancement.repository.TeamRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,18 +23,27 @@ public class ProjectService {
     @Autowired
     private ProjectRepository projectRepository;
 
+    @Autowired
+    private TeamService teamService;
+
+    @Autowired
+    private TeamRepository teamRepository;
     private static final Logger log = LoggerFactory.getLogger(ProjectService.class);
 
     /**Getting the list of users
      * @return List **/
-    public List<Project> getAllProjects() {
+    public List<ProjectDTO> getAllProjects() {
         String debugUuid = UUID.randomUUID().toString();
         try {
             log.info("Getting List of all Projects");
-            List<Project> projectList = projectRepository.findAll();
-            if(!projectList.isEmpty()){
+            List<ProjectDTO> projectDTOList = projectRepository.findListOfProjects();
+//            List<TeamDTO> teamDTOList = teamService.getAllTeams();
+            if(!projectDTOList.isEmpty()){
                 log.info("Got List of all Projects that is present in db");
-                return projectRepository.findAll();
+                projectDTOList.forEach(projectDTO -> {
+                    projectDTO.setTeams(getTeamList(projectDTO.getId()));
+                });
+                return projectDTOList;
             }
             else{
                 log.info("Throws exception because there no project found with uuid", debugUuid);
@@ -47,6 +54,31 @@ public class ProjectService {
             throw  e;
         }
     }
+
+    /**
+     * For Getting List Of Teams
+     *
+     * @return List<TeamDTO>
+     */
+    public List<TeamDTO> getTeamList(Long teamId) {
+        try {
+            log.info("Get Team By Id Called in Hierarchy Service");
+            List<TeamDTO> listOfTeams = teamRepository.searchTeamById(teamId);
+            listOfTeams.forEach(ls->{
+                ls.setTeamMembers(teamService.getMembersList(ls.getId()));
+            });
+
+            if(!listOfTeams.isEmpty()){
+                log.info("Get Team Member By Id returning List of TeamMemberDTO");
+            }
+            return listOfTeams;
+        }
+        catch (Exception e) {
+            log.error("Exception In Get Members List Service in Hiearachy Service Exception {}", e.getMessage());
+            throw e;
+        }
+    }
+
     /**
      * For Adding A New Project
      *
