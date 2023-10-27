@@ -6,8 +6,6 @@ import com.grapplermodule1.GrapplerEnhancement.customexception.TeamNotFoundExcep
 import com.grapplermodule1.GrapplerEnhancement.customexception.UserNotFoundException;
 import com.grapplermodule1.GrapplerEnhancement.dtos.HierarchyDTO;
 import com.grapplermodule1.GrapplerEnhancement.dtos.TeamMembersDTO;
-import com.grapplermodule1.GrapplerEnhancement.dtos.UsersDTO;
-import com.grapplermodule1.GrapplerEnhancement.entities.Users;
 import com.grapplermodule1.GrapplerEnhancement.service.HierarchyService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -20,13 +18,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import io.swagger.annotations.Api;
-
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
-@Api(value = "Hierarchy Management", tags = "Hierarchy Management")
+//@(value = "Hierarchy Management", tags = "Hierarchy Management")
 @RestController
 @RequestMapping("/hierarchy")
 public class HierarchyController {

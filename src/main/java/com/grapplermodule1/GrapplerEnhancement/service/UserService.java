@@ -1,5 +1,4 @@
 package com.grapplermodule1.GrapplerEnhancement.service;
-
 import com.grapplermodule1.GrapplerEnhancement.cerebrus.config.UserDetailsConfig;
 import com.grapplermodule1.GrapplerEnhancement.customexception.CustomExceptionHandler;
 import com.grapplermodule1.GrapplerEnhancement.customexception.UserNotFoundException;
@@ -96,7 +95,7 @@ public class UserService implements UserDetailsService {
     /**
      * For Fetching User By ID
      *
-     * @return Option<UsersDTO>
+     * @return UsersDTO
      */
     public UsersDTO fetchUserById(Long userId) {
         try {

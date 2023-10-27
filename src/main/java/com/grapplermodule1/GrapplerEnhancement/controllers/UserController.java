@@ -24,7 +24,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
+        private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     UserService userService;

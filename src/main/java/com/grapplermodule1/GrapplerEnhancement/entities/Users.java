@@ -56,15 +56,15 @@
         @NotNull(groups = {PostValidation.class}, message = "Role is required")
         private Role role;
 
-        @OneToMany(mappedBy = "user")
-        @JsonIgnore
+
+        @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
         private List<TeamMembers> teamMembers;
 
-        @JsonIgnore
+        @JsonBackReference
         @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
         private List<Ticket> ticket;
 
-        @JsonIgnore
+        @JsonBackReference
         @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
         private List<TicketAssignment> ticketAssignment;
     

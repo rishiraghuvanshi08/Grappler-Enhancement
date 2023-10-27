@@ -1,5 +1,8 @@
 package com.grapplermodule1.GrapplerEnhancement.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.grapplermodule1.GrapplerEnhancement.enums.PermissionType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -19,12 +22,15 @@ public class TicketAssignment {
     private PermissionType permission_type;
 
     @ManyToOne
+    @JsonManagedReference
     @JoinColumn(name = "ticket_id")
     private Ticket ticket;
+
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     @NotNull(message = "User Id is required")
+    @JsonManagedReference
     private Users user;
 
     public Long getId() {
