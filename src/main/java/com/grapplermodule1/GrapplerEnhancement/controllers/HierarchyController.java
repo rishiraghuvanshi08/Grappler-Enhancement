@@ -43,7 +43,6 @@ public class HierarchyController {
         try {
             log.info("Get Reporting Hierarchy API Called, UUID {}", debugUuid);
             HierarchyDTO hierarchyDTO = hierarchyService.getReportingHierarchy();
-
             return new ResponseEntity<>(hierarchyDTO, HttpStatus.OK);
         }
         catch (UserNotFoundException e) {

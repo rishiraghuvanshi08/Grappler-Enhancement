@@ -7,12 +7,14 @@ import com.grapplermodule1.GrapplerEnhancement.customexception.UserNotFoundExcep
 import com.grapplermodule1.GrapplerEnhancement.entities.Permission;
 import com.grapplermodule1.GrapplerEnhancement.enums.PermissionType;
 import com.grapplermodule1.GrapplerEnhancement.service.PermissionService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.UUID;
 
 @RestController
@@ -60,10 +62,10 @@ public class PermissionController {
      *
      * @return ResponseEntity
      */
-    @PostMapping("/{memberId}/update-permissions/{projectId}")
+    @PutMapping("/{memberId}/update-permissions/{projectId}")
     public ResponseEntity updatePermissionToMember(@PathVariable("memberId") Long memberId,
-                                                @PathVariable("projectId") Long projectId,
-                                                @RequestBody Permission permission) {
+                                                   @PathVariable("projectId") Long projectId,
+                                                   @RequestBody Permission permission) {
         String debugUuid = UUID.randomUUID().toString();
         try {
             log.info("UUID {} updatePermissionToMember By memberId and projectId, memberId {} ", debugUuid, memberId);
