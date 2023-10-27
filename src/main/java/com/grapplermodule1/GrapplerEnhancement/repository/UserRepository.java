@@ -25,15 +25,15 @@ public interface UserRepository extends JpaRepository<Users, Long> {
             "FROM Users e WHERE e.id = :userId")
     Optional<UsersDTO> findUserDtoById(Long userId);
 
-    @Query(nativeQuery = true, value = "WITH RECURSIVE EmployeeHierarchy AS ("
-            + "SELECT u.user_id AS user_id, u.name AS name, u.designation AS designation, u.reporting_id AS reporting_id, 1 AS level "
-            + "FROM Users u "
-            + "WHERE u.reporting_id IS NULL " // Start from the top-level managers
-            + "UNION ALL "
-            + "SELECT u.user_id AS user_id, u.name AS name, u.designation AS designation, u.reporting_id AS reporting_id, eh.level + 1 AS level "
-            + "FROM Users u "
-            + "INNER JOIN EmployeeHierarchy eh ON u.reporting_id = eh.user_id) "
-            + "SELECT user_id, name AS name, designation AS designation, reporting_id AS reporting_id, level FROM EmployeeHierarchy")
-    List<HierarchyDTO> findHierarchy();
+//    @Query(nativeQuery = true, value = "WITH RECURSIVE EmployeeHierarchy AS ("
+//            + "SELECT u.user_id AS user_id, u.name AS name, u.designation AS designation, u.reporting_id AS reporting_id, 1 AS level "
+//            + "FROM Users u "
+//            + "WHERE u.reporting_id IS NULL " // Start from the top-level managers
+//            + "UNION ALL "
+//            + "SELECT u.user_id AS user_id, u.name AS name, u.designation AS designation, u.reporting_id AS reporting_id, eh.level + 1 AS level "
+//            + "FROM Users u "
+//            + "INNER JOIN EmployeeHierarchy eh ON u.reporting_id = eh.user_id) "
+//            + "SELECT user_id, name AS name, designation AS designation, reporting_id AS reporting_id, level FROM EmployeeHierarchy")
+//    List<HierarchyDTO> findHierarchy();
 
 }

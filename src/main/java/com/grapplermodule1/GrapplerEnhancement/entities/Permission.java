@@ -2,6 +2,7 @@ package com.grapplermodule1.GrapplerEnhancement.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.grapplermodule1.GrapplerEnhancement.enums.AccessLevel;
+import com.grapplermodule1.GrapplerEnhancement.enums.PermissionType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -17,7 +18,7 @@ public class Permission {
     @Column(name = "permission_type")
     @Enumerated(EnumType.STRING)
     @NotNull(message = "Permission type is required")
-    private AccessLevel permission_type;
+    private PermissionType permission_type;
 
     @JsonIgnore
     @ManyToOne
@@ -39,11 +40,11 @@ public class Permission {
         this.id = id;
     }
 
-    public AccessLevel getPermission_type() {
+    public PermissionType getPermission_type() {
         return permission_type;
     }
 
-    public void setPermission_type(AccessLevel permission_type) {
+    public void setPermission_type(PermissionType permission_type) {
         this.permission_type = permission_type;
     }
 

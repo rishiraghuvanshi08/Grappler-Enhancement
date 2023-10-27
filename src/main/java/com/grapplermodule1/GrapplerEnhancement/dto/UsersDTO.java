@@ -1,4 +1,4 @@
-package com.grapplermodule1.GrapplerEnhancement.dtos;
+package com.grapplermodule1.GrapplerEnhancement.dto;
 
 public class UsersDTO {
 
@@ -6,6 +6,7 @@ public class UsersDTO {
     private String name;
     private String email;
     private String designation;
+
 
     public  Long getId() {
         return id;
@@ -39,8 +40,7 @@ public class UsersDTO {
         this.designation = designation;
     }
 
-    public UsersDTO() {
-    }
+
 
     public UsersDTO(Long id, String name, String email, String designation) {
         this.id = id;
