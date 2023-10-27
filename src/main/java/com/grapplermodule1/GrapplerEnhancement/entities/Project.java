@@ -1,5 +1,7 @@
 package com.grapplermodule1.GrapplerEnhancement.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 
@@ -20,15 +22,19 @@ public class Project {
     private String name;
 
     @ManyToMany
+    @JsonManagedReference
     @JoinTable(name = "project_team",
             joinColumns = @JoinColumn(name = "project_id"),
             inverseJoinColumns = @JoinColumn(name = "team_id"))
     private Set<Team> teams;
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project",cascade = CascadeType.ALL)
+    @JsonBackReference
     private List<Permission> permission;
 
-    @OneToMany(mappedBy = "project")
+
+    @OneToMany(mappedBy = "project",cascade = CascadeType.ALL)
+    @JsonBackReference
     private List<Ticket> ticket;
 
     public Long getId() {
@@ -55,12 +61,4 @@ public class Project {
         this.teams = teams;
     }
 
-    @Override
-    public String toString() {
-        return "Project{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", teams=" + teams +
-                '}';
-    }
 }

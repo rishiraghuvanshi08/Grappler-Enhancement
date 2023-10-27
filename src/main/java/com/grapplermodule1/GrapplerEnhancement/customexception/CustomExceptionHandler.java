@@ -33,4 +33,9 @@ public class CustomExceptionHandler {
         return new ResponseEntity<>("Invalid input provided.", HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> handleException(Exception ex) {
+        return new ResponseEntity<>(new CustomResponse<>(false, ex.getMessage(), null), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
 }

@@ -1,6 +1,8 @@
 package com.grapplermodule1.GrapplerEnhancement.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -14,17 +16,16 @@ public class TeamMembers {
     @Column(nullable = false, name = "member_id")
     private Long id;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "team_id")
+    @JsonIgnore
     private Team team;
 
-    @JsonIgnore
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private Users user;
 
-    @OneToMany(mappedBy = "teamMembers", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "teamMembers",cascade = CascadeType.ALL)
     private List<Permission> permission;
 
     public Long getId() {

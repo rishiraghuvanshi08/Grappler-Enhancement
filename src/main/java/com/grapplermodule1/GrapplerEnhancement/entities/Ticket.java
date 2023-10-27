@@ -1,5 +1,8 @@
 package com.grapplermodule1.GrapplerEnhancement.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 
@@ -19,14 +22,18 @@ public class Ticket {
     private String name;
 
     @ManyToOne
+    @JsonManagedReference
     @JoinColumn(name = "project_id")
     private Project project;
 
     @ManyToOne
+    @JsonManagedReference
     @JoinColumn(name = "creator_id")
     private Users user;
 
     @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
+    @JsonBackReference
+    @JsonIgnore
     private List<TicketAssignment> ticketAssignment;
 
     public Long getId() {

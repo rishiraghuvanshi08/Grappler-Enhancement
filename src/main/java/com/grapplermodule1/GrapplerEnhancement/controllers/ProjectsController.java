@@ -39,7 +39,7 @@ public class ProjectsController {
     public ResponseEntity<List<Team>> getAllTeams(@PathVariable Long id) {
         return null;
     }
-
+    
     @GetMapping("/{id}/teams/{idTeam}")
     public ResponseEntity getTeamById(@PathVariable Long id, @PathVariable Long idTeam) {
         return null;
