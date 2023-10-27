@@ -53,7 +53,7 @@ public class TeamController {
     }
 
     /**
-     * For Getting Team By Id
+     * For Getting Team By ID
      *
      * @return ResponseEntity<?>
      */

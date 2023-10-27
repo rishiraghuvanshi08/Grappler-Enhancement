@@ -845,3 +845,5 @@
 2023-10-27 16:29:04,247 [ERROR] com.grapplermodule1.GrapplerEnhancement.service.HierarchyService [http-nio-8080-exec-1] UUID 49c6c25c-bba4-475f-ae06-04e25a0e641b Exception In Create Team API Exception User Not Found With ID : 78
 2023-10-27 16:29:12,358 [INFO] com.grapplermodule1.GrapplerEnhancement.service.HierarchyService [http-nio-8080-exec-3] Get Create User API Called, UUID bf30cb45-3877-4c58-a160-c1d906777c87
 2023-10-27 16:29:12,359 [INFO] com.grapplermodule1.GrapplerEnhancement.service.HierarchyService [http-nio-8080-exec-3] Create Team Service Called
+2023-10-27 17:04:14,712 [INFO] com.grapplermodule1.GrapplerEnhancement.controllers.AuthController [http-nio-8080-exec-7] Auth Controller Login API Called, UUID 5d42e957-1353-4f10-89d1-a8626f601618
+2023-10-27 17:04:26,345 [INFO] com.grapplermodule1.GrapplerEnhancement.controllers.AuthController [http-nio-8080-exec-9] Auth Controller Login API Called, UUID 62f74da7-918e-4be0-a758-fc49ab421f6b
