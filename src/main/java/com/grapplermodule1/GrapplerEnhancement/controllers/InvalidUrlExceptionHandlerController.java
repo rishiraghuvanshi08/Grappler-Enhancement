@@ -23,11 +23,12 @@ import java.util.UUID;
 public class InvalidUrlExceptionHandlerController {
     private static final Logger log = LoggerFactory.getLogger(InvalidUrlExceptionHandlerController.class);
 
-    @RequestMapping("/**")
-    public ResponseEntity<CustomResponse<String>> handleInvalidUrl() {
-        String debugUuid = UUID.randomUUID().toString();
-        log.info("InvalidUrlExceptionHandlerController handleInvalidUrl API Called, UUID {}", debugUuid);
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomResponse<>(false, "Invalid URL requested", null));
-    }
+//    @RequestMapping(value = {"/", "/swagger-ui/**", "/v2/api-docs"})
+//    public ResponseEntity<CustomResponse<String>> handleInvalidUrl() {
+//        String debugUuid = UUID.randomUUID().toString();
+//        log.info("InvalidUrlExceptionHandlerController handleInvalidUrl API Called, UUID {}", debugUuid);
+//        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CustomResponse<>(false, "Invalid URL requested", null));
+//    }
+
 
 }

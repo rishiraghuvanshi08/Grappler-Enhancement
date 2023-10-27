@@ -50,7 +50,7 @@ public class AuthController {
             return new ResponseEntity<>(jwtResponse, HttpStatus.OK);
         }
         catch (UserNotFoundException e) {
-            log.error("UUID {} UserNotFoundException Auth Controller Login API Exception {}", debugUuid, e.getMessage());
+            log.error("UUID {} UserNotFoundException In Auth Controller Login API Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), null), HttpStatus.NOT_FOUND);
         }
         catch (Exception e) {
