@@ -95,8 +95,16 @@ public class TeamController {
                 return new ResponseEntity<>(new CustomResponse<>(false, "Team Not Created. Please Try Again", null), HttpStatus.BAD_GATEWAY);
             }
         }
+        catch (UserNotFoundException e) {
+            log.error("UUID {} Exception In Create Team API Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.NOT_FOUND);
+        }
+        catch (DuplicateTeamName e) {
+            log.error("UUID {} Exception In Create Team API Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.CONFLICT);
+        }
         catch (Exception e) {
-            log.error("UUID {} Exception In Create User API Exception {}", debugUuid, e.getMessage());
+            log.error("UUID {} Exception In Create Team API Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

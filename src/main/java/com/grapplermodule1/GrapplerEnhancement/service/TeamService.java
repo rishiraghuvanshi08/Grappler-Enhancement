@@ -1,5 +1,6 @@
 package com.grapplermodule1.GrapplerEnhancement.service;
 
+import com.grapplermodule1.GrapplerEnhancement.customexception.DuplicateTeamName;
 import com.grapplermodule1.GrapplerEnhancement.customexception.TeamNotFoundException;
 import com.grapplermodule1.GrapplerEnhancement.customexception.UserNotFoundException;
 import com.grapplermodule1.GrapplerEnhancement.dtos.TeamDTO;
@@ -124,7 +125,21 @@ public class TeamService {
         try {
             log.info("Create Team Service Called");
 
+            Optional<Team> optionalTeam = teamRepository.findByName(team.getName());
+
+            if(optionalTeam.isPresent()){
+                log.error("Create Teams throws DuplicateTeamNameException");
+                throw new DuplicateTeamName("Team With Name " + team.getName() + " Is Already Present.");
+            }
+
             List<TeamMembers> teamMembersList = team.getTeamMembers();
+
+            teamMembersList.forEach(eachTeam -> {
+                Optional<UsersDTO> userDTO = userRepository.findUserDtoById(eachTeam.getUser().getId());
+                if(userDTO.isEmpty()) {
+                    throw new UserNotFoundException("User Not Found With ID : " + eachTeam.getUser().getId());
+                }
+            });
 
             teamMembersList.forEach(teamMembers -> {
                 teamMembers.setTeam(team);

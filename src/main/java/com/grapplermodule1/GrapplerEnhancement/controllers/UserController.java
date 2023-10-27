@@ -45,11 +45,11 @@ public class UserController {
             return new ResponseEntity<>(usersList, HttpStatus.OK);
         }
         catch (UserNotFoundException e) {
-            log.error("UUID {} UserNotFoundException In Get All Users API Exception {}", debugUuid, e);
+            log.error("UUID {} UserNotFoundException In Get All Users API Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), null), HttpStatus.NOT_FOUND);
         }
         catch (Exception e) {
-            log.error("UUID {} Exception In Get All Users API Exception {}", debugUuid, e);
+            log.error("UUID {} Exception In Get All Users API Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
