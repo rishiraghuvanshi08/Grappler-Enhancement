@@ -1,5 +1,6 @@
 package com.grapplermodule1.GrapplerEnhancement.controllers;
 import com.grapplermodule1.GrapplerEnhancement.customexception.CustomResponse;
+import com.grapplermodule1.GrapplerEnhancement.customexception.CustomResponseMessage;
 import com.grapplermodule1.GrapplerEnhancement.customexception.UserNotFoundException;
 import com.grapplermodule1.GrapplerEnhancement.dtos.UsersDTO;
 import com.grapplermodule1.GrapplerEnhancement.validations.PostValidation;
@@ -66,11 +67,11 @@ public class UserController {
             log.info("Get Create User API Called, UUID {}", debugUuid);
             Users newUser = userService.addUser(user);
             if (newUser != null) {
-                return new ResponseEntity<>(new CustomResponse<>(true, "User Created With Id : " + newUser.getId(), newUser), HttpStatus.CREATED);
+                return new ResponseEntity<>(new CustomResponseMessage(true, "User Created With Id : " + newUser.getId()), HttpStatus.CREATED);
             }
             else {
                 log.error("UUID {} User Not Created", debugUuid);
-                return new ResponseEntity<>(new CustomResponse<>(false, "User Not Created. Please Try Again", null), HttpStatus.BAD_GATEWAY);
+                return new ResponseEntity<>(new CustomResponseMessage(false, "User Not Created. Please Try Again"), HttpStatus.BAD_GATEWAY);
             }
         }
         catch (Exception e) {
@@ -95,7 +96,7 @@ public class UserController {
         }
         catch (UserNotFoundException e) {
             log.error("UUID {}, UserNotFoundException in Get User BY Id API, Exception {}", debugUuid, e.getMessage());
-            return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), null), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.NOT_FOUND);
         }
         catch (Exception e) {
             log.error("UUID {} Exception In Get User By Id API Exception {}", debugUuid, e.getMessage());
@@ -117,11 +118,11 @@ public class UserController {
             Users updatedUser = userService.updateUserDetails(userId, user);
 
             log.info("Update User By Id Returning User in ResponseEntity, Updated User Id {} ", updatedUser.getId());
-            return new ResponseEntity<>(new CustomResponse<>(true, "User Updation Successful.", updatedUser), HttpStatus.OK);
+            return new ResponseEntity<>(new CustomResponseMessage(true, "User Updated Successfully."), HttpStatus.OK);
         }
         catch (UserNotFoundException e) {
             log.error("UUID {}, UserNotFoundException in Update User BY Id API, Exception {}", debugUuid, e.getMessage());
-            return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), null), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.NOT_FOUND);
         }
         catch (Exception e) {
             log.error("UUID {} Exception In Update User By Id API Exception {}", debugUuid, e.getMessage());
@@ -142,11 +143,11 @@ public class UserController {
             Boolean deleteUser = userService.deleteUser(userId);
 
             log.info("UUID {} Delete User By Id Returning Boolean Value True in ResponseEntity ", debugUuid);
-            return new ResponseEntity<>(new CustomResponse<>(deleteUser, "User Deleted Successfully.", null), HttpStatus.OK);
+            return new ResponseEntity<>(new CustomResponseMessage(deleteUser, "User Deleted Successfully."), HttpStatus.OK);
         }
         catch (UserNotFoundException e) {
             log.error("UUID {}, UserNotFoundException in Delete User BY Id API, Exception {}", debugUuid, e.getMessage());
-            return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), null), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.NOT_FOUND);
         }
         catch (Exception e) {
             log.error("UUID {} Exception In Get User By Id API Exception {}", debugUuid, e.getMessage());
