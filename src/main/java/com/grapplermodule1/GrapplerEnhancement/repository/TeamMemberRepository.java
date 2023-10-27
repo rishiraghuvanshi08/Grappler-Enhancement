@@ -23,5 +23,13 @@ public interface TeamMemberRepository extends JpaRepository<TeamMembers, Long> {
             "WHERE tm.team.id = :teamId")
     Optional<List<TeamMembersDTO>> findUsersByTeamId(Long teamId);
 
+    @Query("SELECT NEW com.grapplermodule1.GrapplerEnhancement.dtos.TeamMembersDTO(u.id, u.name, u.email, u.designation) " +
+            "FROM Users u " +
+            "JOIN u.teamMembers tm " +
+            "WHERE tm.id = :memberId")
+    Optional<TeamMembersDTO> findUsersByTeamMemberId(Long memberId);
+
+    Optional<TeamMembers> findByTeamIdAndUserId(Long teamId, Long userId);
+
 
 }
