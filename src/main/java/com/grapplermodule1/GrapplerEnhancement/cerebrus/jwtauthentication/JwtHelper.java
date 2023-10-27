@@ -1,5 +1,7 @@
 package com.grapplermodule1.GrapplerEnhancement.cerebrus.jwtauthentication;
 
+import com.grapplermodule1.GrapplerEnhancement.cerebrus.config.UserDetailsConfig;
+import com.grapplermodule1.GrapplerEnhancement.entities.Users;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -49,6 +51,9 @@ public class JwtHelper {
     //generate token for user
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
+        UserDetailsConfig userDetailsConfig = (UserDetailsConfig) userDetails;
+        Users user = userDetailsConfig.getUser();
+        claims.put("role", user.getRole().getRole()); // Include the user's role in claims
         return doGenerateToken(claims, userDetails.getUsername());
     }
 

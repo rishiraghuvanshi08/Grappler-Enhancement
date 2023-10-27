@@ -21,4 +21,6 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
     @Query("SELECT NEW com.grapplermodule1.GrapplerEnhancement.dtos.TeamDTO(t.id, t.name) FROM Team t WHERE t.id = :teamId")
     List<TeamDTO> searchTeamById(Long teamId);
 
+    Optional<Team> findByName(String name);
+
 }

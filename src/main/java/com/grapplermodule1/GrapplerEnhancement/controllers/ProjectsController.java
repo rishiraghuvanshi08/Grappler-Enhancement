@@ -72,14 +72,14 @@ public class ProjectsController {
                 return new ResponseEntity<>(new CustomResponse<>(false, "Project Not Created. Please Try Again", null), HttpStatus.BAD_GATEWAY);
             }
         }catch (DataNotPresent dnp){
-            log.error("Getting exception while adding a new project with UUID {}", debugUuid, dnp.getMessage());
+            log.error("UUID {} Getting exception while adding a new project with Exception {}", debugUuid, dnp.getMessage());
             return new ResponseEntity<>(new CustomResponse<>(false, "Do not Pass Empty String, Please Fill the data Properly", null),HttpStatus.NO_CONTENT);
         }
         catch (DuplicateProjectName dp){
-            log.error("Getting exception while adding a new project with UUID {}", debugUuid, dp.getMessage());
+            log.error("UUID {} Getting exception while adding a new project with Exception {}", debugUuid, dp.getMessage());
             return new ResponseEntity<>(new CustomResponse<>(false, "Project name is already in use", null),HttpStatus.CONFLICT);
         }catch (Exception e) {
-            log.error("Getting exception while adding a new project with UUID {}", debugUuid, e.getMessage());
+            log.error("UUID {} Getting exception while adding a new project with Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponse<>(false, "Project Not Created", null), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -121,7 +121,7 @@ public class ProjectsController {
             log.info("Inside Delete Project By Id,UUID {} ", projectId);
             boolean project = projectService.deletedByProjectId(projectId);
             log.info("Delete Project By Id API called ,UUID {} ", projectId);
-            return new ResponseEntity<>(new CustomResponse<>(true, "Project Deleted Succesfully", project), HttpStatus.OK);
+            return new ResponseEntity<>(new CustomResponse<>(true, "Project Deleted Successfully", project), HttpStatus.OK);
         }catch (ProjectNotFoundException p){
             log.error("UUID {}, ProjectNotFoundException in Delete Project BY Id API, Exception {}", debugUuid, p.getMessage());
             return new ResponseEntity<>(new CustomResponse<>(false, p.getMessage(), false), HttpStatus.NOT_FOUND);
@@ -141,12 +141,12 @@ public class ProjectsController {
     public ResponseEntity<?> updateById(@Valid @PathVariable Long projectId, @RequestBody Project project) {
         String debugUuid = UUID.randomUUID().toString();
         try{
-            log.info("Inside Updating project with id in service with uuid{}, ", debugUuid);
+            log.info("Inside Updating project with id in service with UUID{}, ", debugUuid);
             Optional<Project> project1 = Optional.ofNullable(projectService.updateProjectById(projectId, project));
             return project1.map(value -> new ResponseEntity<>(new CustomResponse<>(true, "Update Project Details Successfully", value), HttpStatus.OK)).orElse(null);
 
         }catch (DuplicateProjectName dp){
-            log.error("Getting exception while Updating a new project with UUID {}", debugUuid, dp.getMessage());
+            log.error("UUID {} Getting exception while Updating a new project Exception {}", debugUuid, dp.getMessage());
             return new ResponseEntity<>(new CustomResponse<>(false, "Project name is already in use", null),HttpStatus.CONFLICT);
         }
         catch (ProjectNotFoundException p){
@@ -154,7 +154,7 @@ public class ProjectsController {
             return new ResponseEntity<>(new CustomResponse<>(false, p.getMessage(), false), HttpStatus.NOT_FOUND);
         }
         catch (DataNotPresent dnp){
-            log.error("Getting exception while adding a new project with UUID {}", debugUuid, dnp.getMessage());
+            log.error("UUID {} Getting exception while adding a new project Exception {}", debugUuid, dnp.getMessage());
             return new ResponseEntity<>(new CustomResponse<>(false, "Do not Pass Empty String, Please Fill the data Properly", null),HttpStatus.NO_CONTENT);
         }
         catch (Exception e) {
