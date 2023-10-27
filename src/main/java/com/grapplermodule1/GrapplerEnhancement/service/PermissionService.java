@@ -46,14 +46,14 @@ public class PermissionService {
             }
             Optional<Project> project = projectRepository.findById(projectId);
             if (project.isEmpty()) {
-                log.error("Fetch Member Permission By memberId and projectId Service throws ProjetcNotFoundException");
+                log.error("Fetch Member Permission By memberId and projectId Service throws ProjectNotFoundException");
                 throw new ProjetcNotFoundException("Project Not Found With Id :" + projectId);
             }
 
-            PermissionType permissonType = permissionRepository.findPermissionTypeByMemberIdAndProjectId(memberId, projectId);
-            if (permissonType != null) {
-                log.info("getMemberPermission Service Returning permissonType");
-                return permissonType;
+            PermissionType permissionType = permissionRepository.findPermissionTypeByMemberIdAndProjectId(memberId, projectId);
+            if (permissionType != null) {
+                log.info("getMemberPermission Service Returning permissionType");
+                return permissionType;
             } else {
                 log.error("Fetch Member Permission By memberId and projectId Service throws CustomPermissionException");
                 throw new CustomPermissionException("Member With Id :" + memberId + " Is Not Associated With  Project Id :" + projectId);
@@ -72,7 +72,7 @@ public class PermissionService {
     public int updatePermissionToMember(Long memberId, Long projectId,
                                      PermissionType permissionType) {
         try {
-            log.info("Update Member Permission By memberId and projectId Service Called, memberId Id and projectId {}", memberId, projectId);
+            log.info("Update Member Permission By memberId and projectId Service Called, memberId Id {} and projectId {}", memberId, projectId);
             Optional<TeamMembers> teamMembers = teamMemberRepository.findById(memberId);
             if (teamMembers.isEmpty()) {
                 log.error("Update Member Permission By memberId and projectId Service throws UserNotFoundException");
@@ -80,7 +80,7 @@ public class PermissionService {
             }
             Optional<Project> project = projectRepository.findById(projectId);
             if (project.isEmpty()) {
-                log.error("Update Member Permission By memberId and projectId Service throws ProjetcNotFoundException");
+                log.error("Update Member Permission By memberId and projectId Service throws ProjectNotFoundException");
                 throw new ProjetcNotFoundException("Project Not Found With Id :" + projectId);
             }
             int updateStatus = permissionRepository.addPermissionTypeByMemberIdAndProjectId(memberId, projectId, permissionType);

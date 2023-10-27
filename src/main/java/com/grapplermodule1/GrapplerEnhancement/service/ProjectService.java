@@ -37,7 +37,7 @@ public class ProjectService {
         try {
             log.info("Getting List of all Projects");
             List<ProjectDTO> projectDTOList = projectRepository.findListOfProjects();
-//            List<TeamDTO> teamDTOList = teamService.getAllTeams();
+
             if(!projectDTOList.isEmpty()){
                 log.info("Got List of all Projects that is present in db");
                 projectDTOList.forEach(projectDTO -> {
@@ -46,7 +46,7 @@ public class ProjectService {
                 return projectDTOList;
             }
             else{
-                log.info("Throws exception because there no project found with uuid", debugUuid);
+                log.info("Throws exception because there no project found with UUID {}", debugUuid);
                 throw new ProjectNotFoundException("Project not Found");
             }
         }catch (Exception e) {
@@ -74,7 +74,7 @@ public class ProjectService {
             return listOfTeams;
         }
         catch (Exception e) {
-            log.error("Exception In Get Members List Service in Hiearachy Service Exception {}", e.getMessage());
+            log.error("Exception In Get Members List Service in Hierarchy Service Exception {}", e.getMessage());
             throw e;
         }
     }
@@ -118,7 +118,7 @@ public class ProjectService {
                 return project.get();
             }
             else {
-                log.error("Throws exception because there no project found with uuid", debugUuid);
+                log.error("Throws exception because there no project found with UUID {}", debugUuid);
                 throw new ProjectNotFoundException("Project not Found");
             }
         }catch (Exception e){
@@ -137,11 +137,11 @@ public class ProjectService {
             log.info("Deleting project with id in service is called, project Id {}", projectId);
             Optional<Project> project = projectRepository.findById(projectId);
             if (project.isPresent()) {
-                log.info("Deleting project with id successfully in service with uuid{}, ", debugUuid);
+                log.info("Deleting project with id successfully in service with UUID {}, ", debugUuid);
                 projectRepository.deleteById(projectId);
                 return true;
             } else {
-                log.error("Throws exception because there no project found with uuid", debugUuid);
+                log.error("Throws exception because there no project found with UUID {}", debugUuid);
                 throw new ProjectNotFoundException("Project not Found");
             }
         }catch (Exception e){
