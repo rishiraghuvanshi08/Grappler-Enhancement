@@ -3,6 +3,7 @@ package com.grapplermodule1.GrapplerEnhancement.controllers;
 import com.grapplermodule1.GrapplerEnhancement.cerebrus.jwtauthentication.JwtHelper;
 import com.grapplermodule1.GrapplerEnhancement.entities.JwtRequest;
 import com.grapplermodule1.GrapplerEnhancement.entities.JwtResponse;
+import com.grapplermodule1.GrapplerEnhancement.entities.Users;
 import com.grapplermodule1.GrapplerEnhancement.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -12,9 +12,7 @@ import lombok.ToString;
 public class JwtResponse {
 
     private String jwtToken;
-
     private String email;
-
 
     public String getJwtToken() {
         return jwtToken;
@@ -31,4 +29,6 @@ public class JwtResponse {
     public void setEmail(String email) {
         this.email = email;
     }
+
+
 }

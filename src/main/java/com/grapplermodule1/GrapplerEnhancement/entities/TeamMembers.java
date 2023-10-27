@@ -25,7 +25,22 @@ public class TeamMembers {
     @JoinColumn(name = "user_id")
     private Users user;
 
-    @OneToMany(mappedBy = "teamMembers")
+    public TeamMembers() {
+    }
+
+    public TeamMembers(Team team, Users user) {
+        this.team = team;
+        this.user = user;
+    }
+
+    public TeamMembers(Long id, Team team, Users user, List<Permission> permission) {
+        this.id = id;
+        this.team = team;
+        this.user = user;
+        this.permission = permission;
+    }
+
+    @OneToMany(mappedBy = "teamMembers", cascade = CascadeType.ALL)
     private List<Permission> permission;
 
     public Long getId() {

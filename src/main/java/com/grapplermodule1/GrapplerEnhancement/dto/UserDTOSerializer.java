@@ -1,4 +1,4 @@
-package com.grapplermodule1.GrapplerEnhancement.dtos;
+package com.grapplermodule1.GrapplerEnhancement.dto;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
@@ -9,6 +9,7 @@ public class UserDTOSerializer extends JsonSerializer<UsersDTO> {
     @Override
     public void serialize(UsersDTO usersDTO, JsonGenerator jsonGenerator, SerializerProvider serializers)
             throws IOException {
+
         jsonGenerator.writeStartObject();
         jsonGenerator.writeNumberField("id", usersDTO.getId());
         jsonGenerator.writeStringField("name", usersDTO.getName());

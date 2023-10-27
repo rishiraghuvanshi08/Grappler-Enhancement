@@ -130,8 +130,7 @@ public class TeamService {
                 teamMembers.setTeam(team);
             });
 
-            Team newTeam = teamRepository.save(team);
-            return newTeam;
+            return teamRepository.save(team);
         }
         catch (Exception e) {
             log.error("Exception In Create Teams Exception {}", e.getMessage());
@@ -156,7 +155,7 @@ public class TeamService {
             }
             else {
                 log.error("Delete Team throws TeamNotFoundException");
-                throw new TeamNotFoundException("User Not Found With ID : " + teamId);
+                throw new TeamNotFoundException("Team Not Found With ID : " + teamId);
             }
         }
         catch (Exception e) {
