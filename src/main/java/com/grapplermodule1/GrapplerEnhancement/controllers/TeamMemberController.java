@@ -104,7 +104,7 @@ public class TeamMemberController {
             log.info("Add New Member API Called, UUID {}", debugUuid);
             TeamMembers teamMember = teamMembersService.addNewMember(teamId, userId);
 
-            return new ResponseEntity<>(new CustomResponseMessage(true, "New Member Add Successfully."), HttpStatus.OK);
+            return new ResponseEntity<>(new CustomResponseMessage(true, "New Member Added Successfully."), HttpStatus.OK);
         }
         catch (UserNotFoundException e) {
             log.error("UUID {} UserNotFoundException In Add New Member API, Exception {}", debugUuid, e.getMessage());

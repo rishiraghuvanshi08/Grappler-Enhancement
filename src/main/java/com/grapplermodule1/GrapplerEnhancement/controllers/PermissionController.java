@@ -1,9 +1,6 @@
 package com.grapplermodule1.GrapplerEnhancement.controllers;
 
-import com.grapplermodule1.GrapplerEnhancement.customexception.CustomPermissionException;
-import com.grapplermodule1.GrapplerEnhancement.customexception.CustomResponse;
-import com.grapplermodule1.GrapplerEnhancement.customexception.ProjectNotFoundException;
-import com.grapplermodule1.GrapplerEnhancement.customexception.UserNotFoundException;
+import com.grapplermodule1.GrapplerEnhancement.customexception.*;
 import com.grapplermodule1.GrapplerEnhancement.entities.Permission;
 import com.grapplermodule1.GrapplerEnhancement.enums.PermissionType;
 import com.grapplermodule1.GrapplerEnhancement.service.PermissionService;
@@ -65,13 +62,13 @@ public class PermissionController {
     @PutMapping("/{memberId}/update-permissions/{projectId}")
     public ResponseEntity updatePermissionToMember(@PathVariable("memberId") Long memberId,
                                                    @PathVariable("projectId") Long projectId,
-                                                   @RequestBody Permission permission) {
+                                                   @Valid @RequestBody Permission permission) {
         String debugUuid = UUID.randomUUID().toString();
         try {
             log.info("UUID {} updatePermissionToMember By memberId and projectId, memberId {} ", debugUuid, memberId);
             int updateStatus = permissionService.updatePermissionToMember(memberId, projectId, permission.getPermission_type());
             log.info("Get updatePermissionToMember By memberId and projectId Returning Update status in ResponseEntity, memberId {} ", memberId);
-            return new ResponseEntity<>(permission.getPermission_type(), HttpStatus.OK);
+            return new ResponseEntity<>(new CustomResponseMessage(true,"Permission Updated successfully"), HttpStatus.OK);
         } catch (UserNotFoundException e) {
             log.error("UUID {}, UserNotFoundException in updatePermissionToMember API, Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), null), HttpStatus.NOT_FOUND);
