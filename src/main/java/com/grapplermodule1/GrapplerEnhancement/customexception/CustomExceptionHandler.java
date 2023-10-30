@@ -1,13 +1,17 @@
 package com.grapplermodule1.GrapplerEnhancement.customexception;
 
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class CustomExceptionHandler {
@@ -16,6 +20,18 @@ public class CustomExceptionHandler {
     public ResponseEntity<CustomResponse> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex) {
         String message = "Invalid input. Please provide a valid integer value in the URL.";
         return new ResponseEntity<>(new CustomResponse<>(false, message, null), HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> handleValidationException(MethodArgumentNotValidException ex) {
+        List<String> errorMessages = ex.getBindingResult()
+                .getAllErrors()
+                .stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(Collectors.toList());
+
+        String errorMessage = String.join(", ", errorMessages);
+
+        return new ResponseEntity<>(new CustomResponseMessage(false, errorMessage), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(NoSuchElementException.class)

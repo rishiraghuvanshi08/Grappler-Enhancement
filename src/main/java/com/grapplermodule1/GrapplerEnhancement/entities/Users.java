@@ -47,7 +47,7 @@
         private List<Users> subordinates;
 
         @JsonBackReference
-        @ManyToOne
+        @ManyToOne(cascade =CascadeType.ALL)
         @JoinColumn(name = "reporting_id")
         @NotNull(groups = {PostValidation.class, PutValidation.class}, message = "Reporting User ID is required")
         private Users reportingUser;
