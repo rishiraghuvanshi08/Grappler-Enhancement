@@ -1,8 +1,5 @@
 package com.grapplermodule1.GrapplerEnhancement.controllers;
-import com.grapplermodule1.GrapplerEnhancement.customexception.CustomResponse;
-import com.grapplermodule1.GrapplerEnhancement.customexception.CustomResponseMessage;
-import com.grapplermodule1.GrapplerEnhancement.customexception.DuplicateEmailException;
-import com.grapplermodule1.GrapplerEnhancement.customexception.UserNotFoundException;
+import com.grapplermodule1.GrapplerEnhancement.customexception.*;
 import com.grapplermodule1.GrapplerEnhancement.dtos.UsersDTO;
 import com.grapplermodule1.GrapplerEnhancement.validations.PostValidation;
 import com.grapplermodule1.GrapplerEnhancement.validations.PutValidation;
@@ -78,6 +75,10 @@ public class UserController {
         catch (DuplicateEmailException e) {
             log.error("UUID {} DuplicateEmailException In Create User API Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.CONFLICT);
+        }
+        catch (DataIntegrityViolationCustomException e) {
+            log.error("UUID {} DataIntegrityViolationCustomException In Create User API Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.BAD_REQUEST);
         }
         catch (Exception e) {
             log.error("UUID {} Exception In Create User API Exception {}", debugUuid, e.getMessage());
@@ -159,6 +160,12 @@ public class UserController {
             log.error("UUID {}, UserNotFoundException in Delete User BY Id API, Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.NOT_FOUND);
         }
+
+        catch (DataIntegrityViolationCustomException e) {
+            log.error("UUID {}, DataIntegrityViolationCustomException   in Delete User BY Id API, Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+
         catch (Exception e) {
             log.error("UUID {} Exception In Get User By Id API Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
