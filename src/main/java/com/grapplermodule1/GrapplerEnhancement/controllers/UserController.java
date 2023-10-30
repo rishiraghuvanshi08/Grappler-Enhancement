@@ -81,7 +81,7 @@ public class UserController {
         }
         catch (Exception e) {
             log.error("UUID {} Exception In Create User API Exception {}", debugUuid, e.getMessage());
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new CustomResponseMessage(false ,e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
