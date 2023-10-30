@@ -32,7 +32,7 @@ public class TeamController {
      *
      * @return ResponseEntity<?>
      */
-    @GetMapping
+    @GetMapping("/")
     public ResponseEntity<?> getAllTeams(){
         String debugUuid = UUID.randomUUID().toString();
         try {
@@ -53,7 +53,7 @@ public class TeamController {
     }
 
     /**
-     * For Getting Team By Id
+     * For Getting Team By ID
      *
      * @return ResponseEntity<?>
      */
@@ -124,7 +124,7 @@ public class TeamController {
             log.info("UUID {} Delete Team By Id Returning Boolean Value True in ResponseEntity ", debugUuid);
             return new ResponseEntity<>(new CustomResponseMessage(deleteUser, "Team Deleted Successfully."), HttpStatus.OK);
         }
-        catch (UserNotFoundException e) {
+        catch (TeamNotFoundException e) {
             log.error("UUID {}, TeamNotFoundException in Delete User BY Id API, Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.NOT_FOUND);
         }

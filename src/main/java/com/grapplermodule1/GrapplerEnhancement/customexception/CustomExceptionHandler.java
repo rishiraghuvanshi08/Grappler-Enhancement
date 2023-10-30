@@ -18,7 +18,7 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<CustomResponse> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex) {
-        String message = "Invalid input. Please provide a valid integer value in the URL.";
+        String message = "Invalid input. Please provide a valid Number value in the URL.";
         return new ResponseEntity<>(new CustomResponse<>(false, message, null), HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)

@@ -23,13 +23,11 @@ public class Permission {
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "project_id")
-    @NotNull(message = "Project is required")
     private Project project;
 
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "member_id")
-    @NotNull(message = "Team member is required")
     private TeamMembers teamMembers;
 
     public Long getId() {

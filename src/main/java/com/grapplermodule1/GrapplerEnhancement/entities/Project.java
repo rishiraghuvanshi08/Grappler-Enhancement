@@ -22,19 +22,17 @@ public class Project {
     private String name;
 
     @ManyToMany
-    @JsonManagedReference
+    @JsonBackReference
     @JoinTable(name = "project_team",
             joinColumns = @JoinColumn(name = "project_id"),
             inverseJoinColumns = @JoinColumn(name = "team_id"))
     private Set<Team> teams;
 
     @OneToMany(mappedBy = "project",cascade = CascadeType.ALL)
-    @JsonBackReference
     private List<Permission> permission;
 
 
     @OneToMany(mappedBy = "project",cascade = CascadeType.ALL)
-    @JsonBackReference
     private List<Ticket> ticket;
 
     public Long getId() {
