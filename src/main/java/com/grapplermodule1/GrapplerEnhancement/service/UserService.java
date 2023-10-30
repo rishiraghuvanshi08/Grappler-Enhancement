@@ -1,6 +1,8 @@
 package com.grapplermodule1.GrapplerEnhancement.service;
 import com.grapplermodule1.GrapplerEnhancement.cerebrus.config.UserDetailsConfig;
 import com.grapplermodule1.GrapplerEnhancement.customexception.CustomExceptionHandler;
+import com.grapplermodule1.GrapplerEnhancement.customexception.DuplicateEmailException;
+import com.grapplermodule1.GrapplerEnhancement.customexception.DuplicateProjectName;
 import com.grapplermodule1.GrapplerEnhancement.customexception.UserNotFoundException;
 import com.grapplermodule1.GrapplerEnhancement.dtos.UsersDTO;
 import com.grapplermodule1.GrapplerEnhancement.entities.Role;
@@ -74,6 +76,11 @@ public class UserService implements UserDetailsService {
     public Users addUser(Users user) {
         try {
             log.info("Add New User Service Called");
+            Optional<Users> existingUser=userRepository.findByEmail(user.getEmail());
+            if(existingUser.isPresent())
+            {
+                throw new DuplicateEmailException("A user with the email " + (user.getEmail() + " already exists"));
+            }
             user.setPassword(passwordEncoder.encode(user.getPassword()));
 
             Role role = new Role();
