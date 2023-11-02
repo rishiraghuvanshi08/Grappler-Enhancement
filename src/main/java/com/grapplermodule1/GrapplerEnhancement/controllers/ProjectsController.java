@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +37,6 @@ public class ProjectsController {
      *
      * @return ResponseEntity
      **/
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/")
     public ResponseEntity<?> getAllProjects() {
         String debugUuid = UUID.randomUUID().toString();
@@ -60,16 +58,15 @@ public class ProjectsController {
      *
      * @return ResponseEntity
      */
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/addProject")
-    public ResponseEntity<?> create(@Validated(PostValidation.class) @RequestBody Project project) {
+    @PostMapping("/")
+    public ResponseEntity<?> create(@Valid @RequestBody Project project) {
         String debugUuid = UUID.randomUUID().toString();
         try {
             Optional<Project> addProject = Optional.ofNullable(projectService.createProject(project));
             log.info("Add new project and their details with uuid{}", debugUuid);
             if (addProject.isPresent()) {
                 log.info("Add new project and their details if project details is present with uuid{}", debugUuid);
-                return new ResponseEntity<>(new CustomResponse<>(true, "User Created With Id : " + addProject.get().getId(), addProject), HttpStatus.OK);
+                return new ResponseEntity<>(new CustomResponse<>(true, "Project Created With Id : " + addProject.get().getId(), addProject), HttpStatus.OK);
             } else {
                 log.info("UUID {} Project Not Created", debugUuid);
                 return new ResponseEntity<>(new CustomResponse<>(false, "Project Not Created. Please Try Again", null), HttpStatus.BAD_GATEWAY);
@@ -92,16 +89,15 @@ public class ProjectsController {
      *
      * @return ResponseEntity<Project>
      */
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{projectId}")
     public ResponseEntity<?> getProjectById(@Valid @PathVariable Long projectId) {
         String debugUuid = UUID.randomUUID().toString();
         try {
             log.info("Inside Get Project By Id,UUID {} ", projectId);
-            Optional<Project> project = Optional.ofNullable(projectService.getProjectById(projectId));
+            Optional<ProjectDTO> project = Optional.ofNullable(projectService.getProjectById(projectId));
 
             log.info("Get project By Id API Called, UUID {}", debugUuid);
-            return new ResponseEntity<>(new CustomResponse<>(true, "Project found with id : " + projectId, project), HttpStatus.OK);
+            return new ResponseEntity<>(project, HttpStatus.OK);
 
         }catch (ProjectNotFoundException p){
             log.error("UUID {}, ProjectNotFoundException in Get User BY Id API, Exception {}", debugUuid, p.getMessage());
@@ -118,7 +114,6 @@ public class ProjectsController {
      *
      * @return ResponseEntity<Project>
      */
-    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{projectId}")
     public ResponseEntity<?> deletedById(@Valid @PathVariable Long projectId) {
         String debugUuid = UUID.randomUUID().toString();
@@ -142,9 +137,8 @@ public class ProjectsController {
      *
      * @return ResponseEntity<Project>
      */
-    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{projectId}")
-    public ResponseEntity<?> updateById(@Valid @PathVariable Long projectId, @RequestBody Project project) {
+    public ResponseEntity<?> updateById(@Valid @PathVariable Long projectId, @Valid @RequestBody Project project) {
         String debugUuid = UUID.randomUUID().toString();
         try{
             log.info("Inside Updating project with id in service with UUID{}, ", debugUuid);
@@ -168,16 +162,15 @@ public class ProjectsController {
             return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), false),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    @GetMapping("/{projectId}/teams")
-    public ResponseEntity<List<Team>> getAllTeams(@PathVariable Long id) {
+    @PostMapping("/{projectId}/teams/")
+    public ResponseEntity<?> create(@RequestBody Team team, @PathVariable Long id) {
         return null;
     }
 
-
-    @PostMapping("/{projectId}/teams/{teamId}")
-    public ResponseEntity create(@RequestBody Team team, @PathVariable Long id) {
+    @DeleteMapping("/{projectId}/teams/{teamId}")
+    public ResponseEntity<?> deletingTheTeamById(@RequestBody Team team, @PathVariable Long id) {
         return null;
     }
+
 
 }

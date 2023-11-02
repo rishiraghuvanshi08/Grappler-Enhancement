@@ -24,15 +24,11 @@ public class ProjectDTO {
         this.teams = teams;
     }
 
-    public ProjectDTO(Long id, String name, List<TeamDTO> teams) {
-        this.id = id;
-        this.name = name;
-        this.teams = teams;
-    }
     public ProjectDTO(Long id, String name) {
         this.id = id;
         this.name = name;
     }
+
     public String getName() {
         return name;
     }

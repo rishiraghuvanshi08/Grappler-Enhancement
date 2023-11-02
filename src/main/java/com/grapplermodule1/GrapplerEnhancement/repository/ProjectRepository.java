@@ -14,8 +14,10 @@ import java.util.Optional;
 public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     boolean existsByName(String name);
-    @Query("SELECT NEW com.grapplermodule1.GrapplerEnhancement.dtos.ProjectDTO(p.id, p.name) FROM Project p")
+
+    @Query("SELECT NEW com.grapplermodule1.GrapplerEnhancement.dtos.ProjectDTO(p.id, p.name) FROM Project p ")
     List<ProjectDTO> findListOfProjects();
+
     @Query("SELECT NEW com.grapplermodule1.GrapplerEnhancement.dtos.ProjectDTO(p.id, p.name) FROM Project p WHERE p.id = :projectId")
     Optional<ProjectDTO> findProjectById(Long projectId);
 }

@@ -40,7 +40,7 @@ public class TicketService {
     public List<TicketsDTO> fetchTicketsByProjectId(Long projectId) {
         try {
             log.info("Fetch Tickets By Project Id Service Called, Project Id {}", projectId);
-                Optional<Project> project = projectRepository.findById(projectId);
+            Optional<Project> project = projectRepository.findById(projectId);
             if (project.isEmpty()) {
                 log.info("Fetch Tickets By Project Throws ProjectNotFoundException, Project Id {}", projectId);
                 throw new ProjectNotFoundException("Project Not Found With Id :" + projectId);
@@ -87,6 +87,11 @@ public class TicketService {
         }
     }
 
+    /**
+     * For Creating Tickets By Project I'd
+     *
+     * @return Ticket
+     */
     public Ticket createTicketsInProject(TicketsDTO ticket) {
         try {
             log.info("Create Ticket By Project Id Service Called, Project Id {}", ticket.getProjectId());
@@ -101,17 +106,17 @@ public class TicketService {
                 throw new UserNotFoundException("User Not Found With Id :" + ticket.getCreatorId());
             }
 
-            Ticket newTicket=new Ticket();
+            Ticket newTicket = new Ticket();
             newTicket.setName(ticket.getName());
 
-            Project project1=new Project();
+            Project project1 = new Project();
             project1.setId(ticket.getProjectId());
 
-            Users user=new Users();
+            Users user = new Users();
             user.setId(ticket.getCreatorId());
             newTicket.setProject(project1);
             newTicket.setUser(user);
-            return  ticketRepository.save(newTicket);
+            return ticketRepository.save(newTicket);
 
         } catch (Exception e) {
             log.error("Exception in Fetch By Project Id Exception {}", e.getMessage());
@@ -119,22 +124,25 @@ public class TicketService {
         }
     }
 
+    /**
+     * For Deleting Tickets
+     *
+     * @return Boolean
+     */
     public Boolean deleteTicketById(Long ticketId) {
         try {
             log.info("Delete Ticket Service Called, Ticket Id {}", ticketId);
-            Optional<Ticket> ticket=ticketRepository.findById(ticketId);
+            Optional<Ticket> ticket = ticketRepository.findById(ticketId);
 
-            if(ticket.isPresent()){
+            if (ticket.isPresent()) {
                 ticketRepository.deleteById(ticketId);
                 log.info("Delete Ticket Service Returning True");
                 return true;
-            }
-            else {
+            } else {
                 log.error("Delete Ticket throws TicketNotFoundException In Service");
                 throw new TicketNotFoundException("Ticket Not Found With ID : " + ticketId);
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.error("Exception in Delete Ticket Exception In Service {}", e.getMessage());
             throw e;
         }

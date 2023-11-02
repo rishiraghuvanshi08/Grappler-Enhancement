@@ -28,7 +28,7 @@ public class TicketController {
     private TicketService ticketService;
 
     /**
-     * For Getting List Of Ticket
+     * For Getting List Of Ticket In Project
      *
      * @return ResponseEntity<?>
      */
@@ -78,6 +78,11 @@ public class TicketController {
         }
     }
 
+    /**
+     * For Creating Tickets By Project I'd
+     *
+     * @return ResponseEntity<?>
+     */
     @PostMapping("/")
     public ResponseEntity<?> createTicketsInProject(
             @Valid @RequestBody TicketsDTO ticket) {
@@ -102,6 +107,11 @@ public class TicketController {
         }
     }
 
+    /**
+     * For Deleting Tickets
+     *
+     * @return ResponseEntity<?>
+     */
     @DeleteMapping("/{ticketId}")
     public ResponseEntity<?> deleteTicketById(@Valid @PathVariable("ticketId") Long ticketId) {
         String debugUuid = UUID.randomUUID().toString();

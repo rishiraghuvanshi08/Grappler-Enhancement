@@ -60,10 +60,10 @@ public class ProjectService {
      *
      * @return List<TeamDTO>
      */
-    public List<TeamDTO> getTeamList(Long teamId) {
+    public List<TeamDTO> getTeamList(Long projectId) {
         try {
             log.info("Get Team By Id Called in Hierarchy Service");
-            List<TeamDTO> listOfTeams = teamRepository.searchTeamById(teamId);
+            List<TeamDTO> listOfTeams = teamRepository.searchTeamById(projectId);
             listOfTeams.forEach(ls->{
                 ls.setTeamMembers(teamService.getMembersList(ls.getId()));
             });
@@ -108,18 +108,19 @@ public class ProjectService {
      *
      * @return Project
      */
-    public Project getProjectById(Long id) {
+    public ProjectDTO getProjectById(Long projectId) {
         String debugUuid = UUID.randomUUID().toString();
         try{
-            log.info("Fetching Project with id : " + id);
-            Optional<Project> project = projectRepository.findById(id);
+            log.info("Fetching Project with id : " + projectId);
+            Optional<ProjectDTO> project = projectRepository.findProjectById(projectId);
             if (project.isPresent()){
-                log.info("Project found with id : " + id);
+                log.info("Project found with id : " + projectId);
+                project.get().setTeams(getTeamList(project.get().getId()));
                 return project.get();
             }
             else {
                 log.error("Throws exception because there no project found with UUID {}", debugUuid);
-                throw new ProjectNotFoundException("Project not Found");
+                throw new ProjectNotFoundException("Project not Found With Id: "+projectId);
             }
         }catch (Exception e){
             log.error("Exception In Fetching Project with id, Exception {}", e.getMessage());
@@ -159,7 +160,7 @@ public class ProjectService {
         String debugUuid = UUID.randomUUID().toString();
         try{
             log.info("Inside Updating project with id in service with uuid{}, ", debugUuid);
-            Project update = projectRepository.findById(id).orElseThrow(() -> new ProjectNotFoundException("Product not found"));
+            Project update = projectRepository.findById(id).orElseThrow(() -> new ProjectNotFoundException("Project not found"));
             update.setName(project.getName());
             if (projectRepository.existsByName(project.getName())) {
                 log.error("Duplicate Project name in, UUID {}", debugUuid);

@@ -1,15 +1,14 @@
 package com.grapplermodule1.GrapplerEnhancement.service;
 import com.grapplermodule1.GrapplerEnhancement.cerebrus.config.UserDetailsConfig;
-import com.grapplermodule1.GrapplerEnhancement.customexception.CustomExceptionHandler;
-import com.grapplermodule1.GrapplerEnhancement.customexception.UserNotFoundException;
+import com.grapplermodule1.GrapplerEnhancement.customexception.*;
 import com.grapplermodule1.GrapplerEnhancement.dtos.UsersDTO;
 import com.grapplermodule1.GrapplerEnhancement.entities.Role;
-import com.grapplermodule1.GrapplerEnhancement.entities.Team;
 import com.grapplermodule1.GrapplerEnhancement.entities.Users;
 import com.grapplermodule1.GrapplerEnhancement.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -74,6 +73,11 @@ public class UserService implements UserDetailsService {
     public Users addUser(Users user) {
         try {
             log.info("Add New User Service Called");
+            Optional<Users> existingUser=userRepository.findByEmail(user.getEmail());
+            if(existingUser.isPresent())
+            {
+                throw new DuplicateEmailException("A user with the email " + (user.getEmail() + " already exists"));
+            }
             user.setPassword(passwordEncoder.encode(user.getPassword()));
 
             Role role = new Role();
@@ -86,7 +90,12 @@ public class UserService implements UserDetailsService {
 
             log.info("Add New User Service Returning New User");
             return newUser;
-        } catch (Exception e) {
+        }  catch (DataIntegrityViolationException e) {
+            log.error("DataIntegrityViolationException in Create User Exception {}", e.getMessage());
+            throw new DataIntegrityViolationCustomException("User creation failed. Please check the provided information.");
+        }
+
+        catch (Exception e) {
             log.error("Exception In Add User Service Exception {}", e.getMessage());
             throw e;
         }
@@ -126,7 +135,6 @@ public class UserService implements UserDetailsService {
 
             if(existingOptionalUser.isPresent()){
                 Users existingUser = existingOptionalUser.get();
-
                 existingUser.setName(user.getName());
                 existingUser.setEmail(user.getEmail());
                 existingUser.setDesignation(user.getDesignation());
@@ -166,6 +174,10 @@ public class UserService implements UserDetailsService {
                 log.error("Delete User throws UserNotFoundException");
                 throw new UserNotFoundException("User Not Found With ID : " + userId);
             }
+        }
+        catch (DataIntegrityViolationException e) {
+            log.error("DataIntegrityViolationException in Delete User Exception {}", e.getMessage());
+            throw new DataIntegrityViolationCustomException("Unable to delete the user. Check for associated records before deleting.");
         }
         catch (Exception e) {
             log.error("Exception in Delete User Exception {}", e.getMessage());
