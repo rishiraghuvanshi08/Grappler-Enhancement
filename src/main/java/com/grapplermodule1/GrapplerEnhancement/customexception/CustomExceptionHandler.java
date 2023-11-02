@@ -29,7 +29,6 @@ public class CustomExceptionHandler {
                 .stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.toList());
-
         String errorMessage = String.join(", ", errorMessages);
 
         return new ResponseEntity<>(new CustomResponseMessage(false, errorMessage), HttpStatus.BAD_REQUEST);
