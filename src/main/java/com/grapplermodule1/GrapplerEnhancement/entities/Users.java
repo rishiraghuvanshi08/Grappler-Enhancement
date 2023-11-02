@@ -10,6 +10,7 @@
     import jakarta.validation.constraints.NotEmpty;
     import jakarta.validation.constraints.NotNull;
     import jakarta.validation.constraints.Size;
+
     import java.util.List;
     
     @Entity
@@ -53,7 +54,7 @@
 
         @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
         @JsonManagedReference
-        @NotNull( message = "Role is required")
+        @NotNull(groups = {PostValidation.class}, message = "Role is required")
         private Role role;
 
         @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)

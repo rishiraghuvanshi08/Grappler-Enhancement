@@ -5,6 +5,7 @@ import com.grapplermodule1.GrapplerEnhancement.customexception.TeamMembersNotFou
 import com.grapplermodule1.GrapplerEnhancement.customexception.TeamNotFoundException;
 import com.grapplermodule1.GrapplerEnhancement.customexception.UserNotFoundException;
 import com.grapplermodule1.GrapplerEnhancement.dtos.HierarchyDTO;
+import com.grapplermodule1.GrapplerEnhancement.dtos.ImmediateHierarchyDTO;
 import com.grapplermodule1.GrapplerEnhancement.dtos.TeamMembersDTO;
 import com.grapplermodule1.GrapplerEnhancement.service.HierarchyService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -51,6 +52,25 @@ public class HierarchyController {
         }
         catch (Exception e) {
             log.error("UUID {} Exception In Get Reporting Hierarchy API Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/immediate-reporting/{userId}")
+    public ResponseEntity<?> getImmediateReportingHierarchyById(@Valid @PathVariable("userId") Long userId) {
+        String debugUuid = UUID.randomUUID().toString();
+        try {
+            log.info("Get Immediate Reporting Hierarchy By Id API Called, UUID {}", debugUuid);
+            ImmediateHierarchyDTO hierarchyDTO = hierarchyService.getImmediateReportingHierarchy(userId);
+
+            return new ResponseEntity<>(hierarchyDTO, HttpStatus.OK);
+        }
+        catch (UserNotFoundException e) {
+            log.error("UUID {} UserNotFoundException In Get Immediate Reporting Hierarchy By Id API Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), null), HttpStatus.NOT_FOUND);
+        }
+        catch (Exception e) {
+            log.error("UUID {} Exception In Get Immediate Reporting Hierarchy By Id API Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

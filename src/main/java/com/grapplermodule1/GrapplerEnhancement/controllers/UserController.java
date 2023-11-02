@@ -26,7 +26,7 @@ import java.util.UUID;
 @CrossOrigin(origins="http://localhost:3000/")
 @RequestMapping("/users")
 public class UserController {
-        private static final Logger log = LoggerFactory.getLogger(UserController.class);
+    private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     UserService userService;
@@ -36,6 +36,7 @@ public class UserController {
      *
      * @return ResponseEntity<?>
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getAllUsers() {
@@ -61,6 +62,7 @@ public class UserController {
      *
      * @return ResponseEntity
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/")
     public ResponseEntity<?> createUser(@Valid @RequestBody Users user) {
         String debugUuid = UUID.randomUUID().toString();
@@ -89,7 +91,7 @@ public class UserController {
         }
         catch (Exception e) {
             log.error("UUID {} Exception In Create User API Exception {}", debugUuid, e.getMessage());
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new CustomResponseMessage(false ,e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -98,6 +100,7 @@ public class UserController {
      *
      * @return ResponseEntity<?>
      */
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/{userId}")
     public ResponseEntity<?> getUserById(@Valid @PathVariable("userId") Long userId) {
         String debugUuid = UUID.randomUUID().toString();
@@ -127,6 +130,7 @@ public class UserController {
      *
      * @return ResponseEntity
      */
+    @PreAuthorize("hasAnyRole('USER')")
     @PutMapping("/{userId}")
     public ResponseEntity<?> updateUserById(@PathVariable("userId") Long userId,
                                             @Validated(PutValidation.class) @RequestBody Users user) {
@@ -157,6 +161,7 @@ public class UserController {
      *
      * @return ResponseEntity
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{userId}")
     public ResponseEntity<?> deleteUserById(@PathVariable("userId") Long userId) {
         String debugUuid = UUID.randomUUID().toString();

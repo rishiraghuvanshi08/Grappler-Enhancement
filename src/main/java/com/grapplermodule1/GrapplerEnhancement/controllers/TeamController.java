@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,7 +33,8 @@ public class TeamController {
      *
      * @return ResponseEntity<?>
      */
-    @GetMapping("/")
+//    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping
     public ResponseEntity<?> getAllTeams(){
         String debugUuid = UUID.randomUUID().toString();
         try {
@@ -57,6 +59,7 @@ public class TeamController {
      *
      * @return ResponseEntity<?>
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{teamId}")
     public ResponseEntity<?> getTeamById(@PathVariable("teamId") Long teamId){
         String debugUuid = UUID.randomUUID().toString();
@@ -81,6 +84,7 @@ public class TeamController {
      *
      * @return ResponseEntity<?>
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/")
     public ResponseEntity<?> createNewTeam(@Valid @RequestBody Team team){
         String debugUuid = UUID.randomUUID().toString();
@@ -114,6 +118,7 @@ public class TeamController {
      * 
      * @return ResponseEntity<?>
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{teamId}")
     public ResponseEntity<?> deleteTeamById(@PathVariable("teamId") Long teamId){
         String debugUuid = UUID.randomUUID().toString();
@@ -124,7 +129,7 @@ public class TeamController {
             log.info("UUID {} Delete Team By Id Returning Boolean Value True in ResponseEntity ", debugUuid);
             return new ResponseEntity<>(new CustomResponseMessage(deleteUser, "Team Deleted Successfully."), HttpStatus.OK);
         }
-        catch (TeamNotFoundException e) {
+        catch (UserNotFoundException e) {
             log.error("UUID {}, TeamNotFoundException in Delete User BY Id API, Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.NOT_FOUND);
         }
@@ -139,6 +144,7 @@ public class TeamController {
      * 
      * @return ResponseEntity<?>
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{teamId}")
     public ResponseEntity<?> updateTeamById(@PathVariable("teamId") Long teamId,
                                             @Valid @RequestBody Team team){
