@@ -25,15 +25,13 @@ public interface UserRepository extends JpaRepository<Users, Long> {
             "FROM Users e WHERE e.id = :userId")
     Optional<UsersDTO> findUserDtoById(Long userId);
 
-//    @Query(nativeQuery = true, value = "WITH RECURSIVE EmployeeHierarchy AS ("
-//            + "SELECT u.user_id AS user_id, u.name AS name, u.designation AS designation, u.reporting_id AS reporting_id, 1 AS level "
-//            + "FROM Users u "
-//            + "WHERE u.reporting_id IS NULL " // Start from the top-level managers
-//            + "UNION ALL "
-//            + "SELECT u.user_id AS user_id, u.name AS name, u.designation AS designation, u.reporting_id AS reporting_id, eh.level + 1 AS level "
-//            + "FROM Users u "
-//            + "INNER JOIN EmployeeHierarchy eh ON u.reporting_id = eh.user_id) "
-//            + "SELECT user_id, name AS name, designation AS designation, reporting_id AS reporting_id, level FROM EmployeeHierarchy")
-//    List<HierarchyDTO> findHierarchy();
+//    @Query("SELECT NEW com.grapplermodule1.GrapplerEnhancement.dtos.UsersDTO(e.id, e.name, e.email, e.designation) " +
+//            "FROM Users e WHERE e.reportingUser.id = :reportingId")
+//    Optional<List<UsersDTO>> findAllByReportingId(Long reportingId);
+
+    @Query("SELECT NEW com.grapplermodule1.GrapplerEnhancement.dtos.UsersDTO(e.id, e.name, e.email, e.designation) " +
+            "FROM Users e WHERE e.reportingUser.id = :reportingId")
+    Optional<List<UsersDTO>> findAllByReportingId(Long reportingId);
+
 
 }

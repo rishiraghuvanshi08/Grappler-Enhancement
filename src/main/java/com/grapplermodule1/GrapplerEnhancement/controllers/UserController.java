@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ import java.util.UUID;
 @CrossOrigin(origins="http://localhost:3000/")
 @RequestMapping("/users")
 public class UserController {
-        private static final Logger log = LoggerFactory.getLogger(UserController.class);
+    private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     UserService userService;
@@ -34,6 +35,7 @@ public class UserController {
      *
      * @return ResponseEntity<?>
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/")
     public ResponseEntity<?> getAllUsers() {
         String debugUuid = UUID.randomUUID().toString();
@@ -58,6 +60,7 @@ public class UserController {
      *
      * @return ResponseEntity
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/")
     public ResponseEntity<?> createUser(@Validated(PostValidation.class) @RequestBody Users user) {
         String debugUuid = UUID.randomUUID().toString();
@@ -91,6 +94,7 @@ public class UserController {
      *
      * @return ResponseEntity<?>
      */
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/{userId}")
     public ResponseEntity<?> getUserById(@Valid @PathVariable("userId") Long userId) {
         String debugUuid = UUID.randomUUID().toString();
@@ -120,6 +124,7 @@ public class UserController {
      *
      * @return ResponseEntity
      */
+    @PreAuthorize("hasAnyRole('USER')")
     @PutMapping("/{userId}")
     public ResponseEntity<?> updateUserById(@PathVariable("userId") Long userId,
                                             @Validated(PutValidation.class) @RequestBody Users user) {
@@ -146,6 +151,7 @@ public class UserController {
      *
      * @return ResponseEntity
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{userId}")
     public ResponseEntity<?> deleteUserById(@PathVariable("userId") Long userId) {
         String debugUuid = UUID.randomUUID().toString();

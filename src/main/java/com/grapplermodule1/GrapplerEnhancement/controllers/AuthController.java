@@ -2,6 +2,7 @@ package com.grapplermodule1.GrapplerEnhancement.controllers;
 
 import com.grapplermodule1.GrapplerEnhancement.cerebrus.jwtauthentication.JwtHelper;
 import com.grapplermodule1.GrapplerEnhancement.customexception.CustomResponse;
+import com.grapplermodule1.GrapplerEnhancement.customexception.CustomResponseMessage;
 import com.grapplermodule1.GrapplerEnhancement.customexception.UserNotFoundException;
 import com.grapplermodule1.GrapplerEnhancement.entities.JwtRequest;
 import com.grapplermodule1.GrapplerEnhancement.entities.JwtResponse;
@@ -55,7 +56,7 @@ public class AuthController {
         }
         catch (Exception e) {
             log.error("UUID {} Exception In Auth Controller Login API Exception {}", debugUuid, e.getMessage());
-            throw e;
+            return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
 

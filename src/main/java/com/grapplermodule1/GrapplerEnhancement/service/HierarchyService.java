@@ -4,7 +4,9 @@ import com.grapplermodule1.GrapplerEnhancement.customexception.TeamMembersNotFou
 import com.grapplermodule1.GrapplerEnhancement.customexception.TeamNotFoundException;
 import com.grapplermodule1.GrapplerEnhancement.customexception.UserNotFoundException;
 import com.grapplermodule1.GrapplerEnhancement.dtos.HierarchyDTO;
+import com.grapplermodule1.GrapplerEnhancement.dtos.ImmediateHierarchyDTO;
 import com.grapplermodule1.GrapplerEnhancement.dtos.TeamMembersDTO;
+import com.grapplermodule1.GrapplerEnhancement.dtos.UsersDTO;
 import com.grapplermodule1.GrapplerEnhancement.entities.Team;
 import com.grapplermodule1.GrapplerEnhancement.entities.Users;
 import com.grapplermodule1.GrapplerEnhancement.repository.TeamMemberRepository;
@@ -122,6 +124,45 @@ public class HierarchyService {
         }
         catch (Exception e) {
             log.error("Exception In Convert To DTO Exception {}", e.getMessage());
+            throw e;
+        }
+    }
+
+    /**
+     * For Immediate Hierarchy By User ID
+     *
+     * @return ImmediateHierarchyDTO
+     */
+    public ImmediateHierarchyDTO getImmediateReportingHierarchy(Long userId) {
+        try {
+            Optional<Users> optionalUser = userRepository.findById(userId);
+            if (optionalUser.isPresent()) {
+                log.info("Get Immediate Reporting Hierarchy By Id Service Called");
+                Users user = optionalUser.get();
+
+                ImmediateHierarchyDTO immediateHierarchyDTO = new ImmediateHierarchyDTO(user.getId(), user.getName(), user.getDesignation());
+                List<UsersDTO> hierarchyDTOList = new ArrayList<>();
+
+                Optional<List<UsersDTO>> optionalUsersDTOS = userRepository.findAllByReportingId(userId);
+                if(optionalUsersDTOS.isPresent() && !optionalUsersDTOS.get().isEmpty()) {
+                    hierarchyDTOList.addAll(optionalUsersDTOS.get());
+
+                    immediateHierarchyDTO.setSubordinates(optionalUsersDTOS.get());
+
+                    log.info("Get Immediate Reporting Hierarchy By Id Service returning ImmediateHierarchyDTO");
+                    return immediateHierarchyDTO;
+                }
+                else {
+                    log.error("Get Immediate Reporting Hierarchy By Id Service Call UserNotFoundException");
+                    return immediateHierarchyDTO;
+                }
+            } else {
+                log.error("Get Immediate Reporting Hierarchy By Id Service Call UserNotFoundException");
+                throw new UserNotFoundException("User Not Found With Id: " + userId);
+            }
+        }
+        catch (Exception e) {
+            log.error("Exception In Get Immediate Reporting Hierarchy By Id Exception {}", e.getMessage());
             throw e;
         }
     }
