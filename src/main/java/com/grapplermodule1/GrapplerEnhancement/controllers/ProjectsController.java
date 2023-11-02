@@ -162,16 +162,15 @@ public class ProjectsController {
             return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), false),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    @GetMapping("/{projectId}/teams")
-    public ResponseEntity<List<Team>> getAllTeams(@PathVariable Long id) {
+    @PostMapping("/{projectId}/teams/")
+    public ResponseEntity<?> create(@RequestBody Team team, @PathVariable Long id) {
         return null;
     }
 
-
-    @PostMapping("/{projectId}/teams/{teamId}")
-    public ResponseEntity create(@RequestBody Team team, @PathVariable Long id) {
+    @DeleteMapping("/{projectId}/teams/{teamId}")
+    public ResponseEntity<?> deletingTheTeamById(@RequestBody Team team, @PathVariable Long id) {
         return null;
     }
+
 
 }
