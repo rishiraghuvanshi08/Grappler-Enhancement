@@ -36,9 +36,8 @@ public class UserController {
      *
      * @return ResponseEntity<?>
      */
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/")
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getAllUsers() {
         String debugUuid = UUID.randomUUID().toString();
         try {
@@ -62,15 +61,15 @@ public class UserController {
      *
      * @return ResponseEntity
      */
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/")
     public ResponseEntity<?> createUser(@Valid @RequestBody Users user) {
         String debugUuid = UUID.randomUUID().toString();
         try {
             log.info("Get Create User API Called, UUID {}", debugUuid);
-            Users newUser = userService.addUser(user);
+            UsersDTO newUser = userService.addUser(user);
             if (newUser != null) {
-                return new ResponseEntity<>(new CustomResponseMessage(true, "User Created With Id : " + newUser.getId()), HttpStatus.CREATED);
+                return new ResponseEntity<>(new CustomResponse<>(true, "User Created With Id : " + newUser.getId(),newUser), HttpStatus.CREATED);
             }
             else {
                 log.error("UUID {} User Not Created", debugUuid);
@@ -100,7 +99,7 @@ public class UserController {
      *
      * @return ResponseEntity<?>
      */
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    //@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/{userId}")
     public ResponseEntity<?> getUserById(@Valid @PathVariable("userId") Long userId) {
         String debugUuid = UUID.randomUUID().toString();
@@ -130,7 +129,7 @@ public class UserController {
      *
      * @return ResponseEntity
      */
-    @PreAuthorize("hasAnyRole('USER')")
+    //@PreAuthorize("hasAnyRole('USER')")
     @PutMapping("/{userId}")
     public ResponseEntity<?> updateUserById(@PathVariable("userId") Long userId,
                                             @Validated(PutValidation.class) @RequestBody Users user) {
@@ -161,7 +160,7 @@ public class UserController {
      *
      * @return ResponseEntity
      */
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{userId}")
     public ResponseEntity<?> deleteUserById(@PathVariable("userId") Long userId) {
         String debugUuid = UUID.randomUUID().toString();

@@ -34,7 +34,7 @@ public class TeamController {
      * @return ResponseEntity<?>
      */
 //    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping
+    @GetMapping("/")
     public ResponseEntity<?> getAllTeams(){
         String debugUuid = UUID.randomUUID().toString();
         try {
@@ -59,7 +59,7 @@ public class TeamController {
      *
      * @return ResponseEntity<?>
      */
-    @PreAuthorize("hasRole('ADMIN')")
+  //  @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{teamId}")
     public ResponseEntity<?> getTeamById(@PathVariable("teamId") Long teamId){
         String debugUuid = UUID.randomUUID().toString();
@@ -84,7 +84,7 @@ public class TeamController {
      *
      * @return ResponseEntity<?>
      */
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/")
     public ResponseEntity<?> createNewTeam(@Valid @RequestBody Team team){
         String debugUuid = UUID.randomUUID().toString();
@@ -92,7 +92,7 @@ public class TeamController {
             log.info("Get Create User API Called, UUID {}", debugUuid);
             Team newTeam = teamService.createTeam(team);
             if (newTeam != null) {
-                return new ResponseEntity<>(new CustomResponseMessage(true, "Team Created With Id : " + newTeam.getId()), HttpStatus.CREATED);
+                return new ResponseEntity<>(new CustomResponse<>(true, "Team Created With Id : " + newTeam.getId(),newTeam.getId()), HttpStatus.CREATED);
             }
             else {
                 log.error("UUID {} User Not Created", debugUuid);
@@ -118,7 +118,7 @@ public class TeamController {
      * 
      * @return ResponseEntity<?>
      */
-    @PreAuthorize("hasRole('ADMIN')")
+   // @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{teamId}")
     public ResponseEntity<?> deleteTeamById(@PathVariable("teamId") Long teamId){
         String debugUuid = UUID.randomUUID().toString();
@@ -144,7 +144,7 @@ public class TeamController {
      * 
      * @return ResponseEntity<?>
      */
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{teamId}")
     public ResponseEntity<?> updateTeamById(@PathVariable("teamId") Long teamId,
                                             @Valid @RequestBody Team team){

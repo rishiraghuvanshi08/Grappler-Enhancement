@@ -79,7 +79,7 @@ public class UserService implements UserDetailsService {
      *
      * @return Users
      */
-    public Users addUser(Users user) {
+    public UsersDTO addUser(Users user) {
         try {
             log.info("Add New User Service Called");
             Optional<Users> existingUser = userRepository.findByEmail(user.getEmail());
@@ -106,9 +106,9 @@ public class UserService implements UserDetailsService {
             role.setUser(user);
 
             Users newUser = userRepository.save(user);
-
+            Optional<UsersDTO> usersDTO=userRepository.findUserDtoById(newUser.getId());
             log.info("Add New User Service Returning New User");
-            return newUser;
+            return usersDTO.get();
         } catch (DataIntegrityViolationException e) {
             log.error("DataIntegrityViolationException in Create User Exception {}", e.getMessage());
             throw new DataIntegrityViolationCustomException("User creation failed. Please check the provided information.");
