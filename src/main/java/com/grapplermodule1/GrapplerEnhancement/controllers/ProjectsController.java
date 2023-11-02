@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +38,7 @@ public class ProjectsController {
      *
      * @return ResponseEntity
      **/
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/")
     public ResponseEntity<?> getAllProjects() {
         String debugUuid = UUID.randomUUID().toString();
@@ -58,6 +60,7 @@ public class ProjectsController {
      *
      * @return ResponseEntity
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/addProject")
     public ResponseEntity<?> create(@Validated(PostValidation.class) @RequestBody Project project) {
         String debugUuid = UUID.randomUUID().toString();
@@ -89,6 +92,7 @@ public class ProjectsController {
      *
      * @return ResponseEntity<Project>
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{projectId}")
     public ResponseEntity<?> getProjectById(@Valid @PathVariable Long projectId) {
         String debugUuid = UUID.randomUUID().toString();
@@ -114,6 +118,7 @@ public class ProjectsController {
      *
      * @return ResponseEntity<Project>
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{projectId}")
     public ResponseEntity<?> deletedById(@Valid @PathVariable Long projectId) {
         String debugUuid = UUID.randomUUID().toString();
@@ -137,6 +142,7 @@ public class ProjectsController {
      *
      * @return ResponseEntity<Project>
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{projectId}")
     public ResponseEntity<?> updateById(@Valid @PathVariable Long projectId, @RequestBody Project project) {
         String debugUuid = UUID.randomUUID().toString();
