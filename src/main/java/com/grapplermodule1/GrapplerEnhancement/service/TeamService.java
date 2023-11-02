@@ -1,8 +1,10 @@
 package com.grapplermodule1.GrapplerEnhancement.service;
 
 import com.grapplermodule1.GrapplerEnhancement.customexception.DuplicateTeamName;
+import com.grapplermodule1.GrapplerEnhancement.customexception.ResourseNotFoundException;
 import com.grapplermodule1.GrapplerEnhancement.customexception.TeamNotFoundException;
 import com.grapplermodule1.GrapplerEnhancement.customexception.UserNotFoundException;
+import com.grapplermodule1.GrapplerEnhancement.dtos.ProjectDTO;
 import com.grapplermodule1.GrapplerEnhancement.dtos.TeamDTO;
 import com.grapplermodule1.GrapplerEnhancement.dtos.TeamMembersDTO;
 import com.grapplermodule1.GrapplerEnhancement.dtos.UsersDTO;
@@ -206,6 +208,32 @@ public class TeamService {
         } catch (Exception e) {
             log.error("Exception in Update User Details Exception {}", e.getMessage());
             throw e;
+        }
+    }
+
+    public List<ProjectDTO> getAllProjects(Long teamId){
+        try {
+            log.info("Get Team By Id Service Called");
+            Optional<Team> optionalTeam = teamRepository.findById(teamId);
+
+            if(optionalTeam.isPresent()){
+                Optional<List<ProjectDTO>> projectDTO = teamRepository.findProjectsByTeamId(teamId);
+                if(projectDTO.isPresent()){
+                    return projectDTO.get();
+                }
+                else {
+                    throw new ResourseNotFoundException("Team List Not Found.");
+                }
+            }
+            else {
+                log.error("TeamNotFoundException in Get All Projects Details");
+                throw new TeamNotFoundException("Team Not Found With Id : " + teamId);
+            }
+
+        }
+        catch (Exception e) {
+            log.error("Exception In Get All Teams Exception {}", e.getMessage());
+            throw  e;
         }
     }
 }
