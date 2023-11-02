@@ -1,5 +1,6 @@
 package com.grapplermodule1.GrapplerEnhancement.controllers;
 import com.grapplermodule1.GrapplerEnhancement.customexception.*;
+import com.grapplermodule1.GrapplerEnhancement.dtos.ChangePasswordDTO;
 import com.grapplermodule1.GrapplerEnhancement.dtos.UsersDTO;
 import com.grapplermodule1.GrapplerEnhancement.validations.PostValidation;
 import com.grapplermodule1.GrapplerEnhancement.validations.PutValidation;
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +37,7 @@ public class UserController {
      * @return ResponseEntity<?>
      */
     @GetMapping("/")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getAllUsers() {
         String debugUuid = UUID.randomUUID().toString();
         try {
@@ -59,7 +62,7 @@ public class UserController {
      * @return ResponseEntity
      */
     @PostMapping("/")
-    public ResponseEntity<?> createUser(@Validated(PostValidation.class) @RequestBody Users user) {
+    public ResponseEntity<?> createUser(@Valid @RequestBody Users user) {
         String debugUuid = UUID.randomUUID().toString();
         try {
             log.info("Get Create User API Called, UUID {}", debugUuid);
@@ -72,12 +75,16 @@ public class UserController {
                 return new ResponseEntity<>(new CustomResponseMessage(false, "User Not Created. Please Try Again"), HttpStatus.BAD_GATEWAY);
             }
         }
-        catch (DuplicateEmailException e) {
+         catch (DuplicateEmailException e) {
             log.error("UUID {} DuplicateEmailException In Create User API Exception {}", debugUuid, e.getMessage());
-            return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.CONFLICT);
+             return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.CONFLICT);
         }
         catch (DataIntegrityViolationCustomException e) {
             log.error("UUID {} DataIntegrityViolationCustomException In Create User API Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+        catch (ValidationException e) {
+            log.error("UUID {} ValidationException In Create User API Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.BAD_REQUEST);
         }
         catch (Exception e) {
@@ -135,6 +142,10 @@ public class UserController {
             log.error("UUID {}, UserNotFoundException in Update User BY Id API, Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.NOT_FOUND);
         }
+        catch (DuplicateEmailException e) {
+            log.error("UUID {} DuplicateEmailException In Update User API Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.CONFLICT);
+        }
         catch (Exception e) {
             log.error("UUID {} Exception In Update User By Id API Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -171,5 +182,36 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    /**
+     * For changing User Password
+     *
+     * @return ResponseEntity
+     */
+    @PostMapping("/change-password")
+    public ResponseEntity<?> ChangePassword(@Valid @RequestBody ChangePasswordDTO changePasswordDTO)
+    {
+        String debugUuid = UUID.randomUUID().toString();
+        try {
+            log.info("UUID {} Inside ChangePassword,", debugUuid);
+            boolean status = userService.changeUserPassword(changePasswordDTO);
+
+            log.info("Change User Password Returning True in ResponseEntity ");
+            return new ResponseEntity<>(new CustomResponseMessage(true, "Password Updated Successfully."), HttpStatus.OK);
+        }
+        catch (UserNotFoundException e) {
+            log.error("UUID {}, UserNotFoundException in change User Password BY Id API, Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.NOT_FOUND);
+        }
+        catch (PasswordNotMatchException e) {
+            log.error("UUID {} PasswordNotMatchException In Change User Password API Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+        catch (Exception e) {
+            log.error("UUID {} Exception In Change User Password By Id API Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
 }

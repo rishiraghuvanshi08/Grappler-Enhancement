@@ -48,15 +48,13 @@
         @JsonBackReference
         @ManyToOne
         @JoinColumn(name = "reporting_id")
-        @NotNull(groups = {PostValidation.class, PutValidation.class}, message = "Reporting User ID is required")
+        @NotNull(groups = {PostValidation.class}, message = "Reporting User ID is required")
         private Users reportingUser;
 
         @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
         @JsonManagedReference
-        @NotNull(groups = {PostValidation.class,PutValidation.class}, message = "Role is required")
+        @NotNull( message = "Role is required")
         private Role role;
-
-
 
         @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
         private List<TeamMembers> teamMembers;
