@@ -34,6 +34,11 @@ public class ForgotPasswordController {
     private EmailService emailService;
 
 
+    /**
+     * For Sending Otp
+     *
+     * @return ResponseEntity
+     */
     @PostMapping("/send-otp")
     public ResponseEntity<?> sendOTP(@Valid @RequestBody EmailDetails emailDetails) {
         try {
@@ -53,6 +58,12 @@ public class ForgotPasswordController {
         }
     }
 
+
+    /**
+     * For Verifying Otp
+     *
+     * @return ResponseEntity
+     */
     @PostMapping("/verify-otp")
     public ResponseEntity<?> verifyOTP(@Valid @RequestBody OtpDetail otpDetail) {
         try {
@@ -70,6 +81,11 @@ public class ForgotPasswordController {
     }
 
 
+    /**
+     * For Reset User Password
+     *
+     * @return ResponseEntity
+     */
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPassword resetPassword) {
         try {
