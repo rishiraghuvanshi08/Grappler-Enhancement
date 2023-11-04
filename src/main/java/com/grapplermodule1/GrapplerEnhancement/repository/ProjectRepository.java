@@ -29,6 +29,4 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             "WHERE u.id = :userId")
     Optional<List<ProjectDTO>> findProjectsByUserId(Long userId);
 
-
-
 }

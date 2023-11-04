@@ -1,9 +1,6 @@
 package com.grapplermodule1.GrapplerEnhancement.controllers;
 
-import com.grapplermodule1.GrapplerEnhancement.customexception.CustomResponse;
-import com.grapplermodule1.GrapplerEnhancement.customexception.DataNotPresent;
-import com.grapplermodule1.GrapplerEnhancement.customexception.DuplicateProjectName;
-import com.grapplermodule1.GrapplerEnhancement.customexception.ProjectNotFoundException;
+import com.grapplermodule1.GrapplerEnhancement.customexception.*;
 import com.grapplermodule1.GrapplerEnhancement.dtos.ProjectDTO;
 import com.grapplermodule1.GrapplerEnhancement.entities.Team;
 import com.grapplermodule1.GrapplerEnhancement.entities.Project;
@@ -162,13 +159,45 @@ public class ProjectsController {
             return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), false),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @PostMapping("/{projectId}/teams/")
-    public ResponseEntity<?> create(@RequestBody Team team, @PathVariable Long id) {
-        return null;
+
+    /**
+     * For Assigning Team To A Project
+     *
+     * @return ResponseEntity<?>
+     */
+    @PostMapping("/{projectId}/teams/{teamId}")
+    public ResponseEntity<?> assignTeamToProject(@PathVariable Long projectId, @PathVariable Long teamId) {
+        String debugUuid = UUID.randomUUID().toString();
+        try {
+            log.info("Assign Team To Project API Called, UUID{}", debugUuid);
+            Boolean teamAdded = projectService.assignTeam(projectId, teamId);
+            if (teamAdded) {
+                log.info("Assign Team To Project API Returning Response Entity With OK, UUID{}", debugUuid);
+                return new ResponseEntity<>(new CustomResponseMessage(true, "Team With ID : " + teamId + " Successfully Added To Project With ID : " + projectId), HttpStatus.OK);
+            } else {
+                log.info("UUID {} Project Not Created", debugUuid);
+                return new ResponseEntity<>(new CustomResponseMessage(false, "Failed. Please Try Again"), HttpStatus.BAD_GATEWAY);
+            }
+        }catch (ProjectNotFoundException e){
+            log.error("UUID {} Getting ProjectNotFoundException In Assign Team To Project, Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()),HttpStatus.NOT_FOUND);
+        }
+        catch (TeamNotFoundException e){
+            log.error("UUID {} Getting TeamNotFoundException in Assign Team To Project API, Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()),HttpStatus.NOT_FOUND);
+        }
+        catch (TeamAlreadyPresentInTheProjectException e){
+            log.error("UUID {} Getting TeamAlreadyPresentInTheProjectException in Assign Team To Project API, Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()),HttpStatus.CONFLICT);
+        }
+        catch (Exception e) {
+            log.error("UUID {} Getting Exception in Assign Team To Project, Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), null), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @DeleteMapping("/{projectId}/teams/{teamId}")
-    public ResponseEntity<?> deletingTheTeamById(@RequestBody Team team, @PathVariable Long id) {
+    public ResponseEntity<?> deletingTheTeamFromProject(@PathVariable("projectId") Team projectId, @PathVariable Long id) {
         return null;
     }
 
