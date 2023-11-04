@@ -35,7 +35,7 @@ public class TeamController {
      *
      * @return ResponseEntity<?>
      */
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<?> getAllTeams(){
         String debugUuid = UUID.randomUUID().toString();
@@ -94,7 +94,7 @@ public class TeamController {
             log.info("Get Create User API Called, UUID {}", debugUuid);
             Team newTeam = teamService.createTeam(team);
             if (newTeam != null) {
-                return new ResponseEntity<>(new CustomResponseMessage(true, "Team Created With Id : " + newTeam.getId()), HttpStatus.CREATED);
+                return new ResponseEntity<>(new CustomResponse<>(true, "Team Created With Id : " + newTeam.getId(), newTeam.getId()), HttpStatus.CREATED);
             }
             else {
                 log.error("UUID {} User Not Created", debugUuid);
@@ -168,6 +168,11 @@ public class TeamController {
         }
     }
 
+    /**
+     * For Getting All Projects By Team ID
+     *
+     * @return ResponseEntity<?>
+     */
     @GetMapping("/get-projects/{teamId}")
     public ResponseEntity<?> getAllProjects(@PathVariable("teamId") Long teamId){
         String debugUuid = UUID.randomUUID().toString();

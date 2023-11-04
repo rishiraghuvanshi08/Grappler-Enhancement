@@ -30,6 +30,11 @@ public class EmailController {
     @Autowired
     private EmailService emailService;
 
+    /**
+     * For For Sending Mail
+     * 
+     * @return ResponseEntity<?>
+     */
     @PostMapping("/")
     public ResponseEntity<?> sendMail( @Valid @RequestBody EmailDetails emailDetails) {
         String debugUuid = UUID.randomUUID().toString();

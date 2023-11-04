@@ -69,7 +69,7 @@ public class UserController {
             log.info("Get Create User API Called, UUID {}", debugUuid);
             Users newUser = userService.addUser(user);
             if (newUser != null) {
-                return new ResponseEntity<>(new CustomResponseMessage(true, "User Created With Id : " + newUser.getId()), HttpStatus.CREATED);
+                return new ResponseEntity<>(new CustomResponse<>(true, "User Created With Id : " + newUser.getId(), newUser.getId()), HttpStatus.CREATED);
             }
             else {
                 log.error("UUID {} User Not Created", debugUuid);
@@ -129,7 +129,7 @@ public class UserController {
      *
      * @return ResponseEntity
      */
-    @PreAuthorize("hasAnyRole('USER')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{userId}")
     public ResponseEntity<?> updateUserById(@PathVariable("userId") Long userId,
                                             @Validated(PutValidation.class) @RequestBody Users user) {
@@ -151,7 +151,7 @@ public class UserController {
         }
         catch (Exception e) {
             log.error("UUID {} Exception In Update User By Id API Exception {}", debugUuid, e.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -192,6 +192,7 @@ public class UserController {
      *
      * @return ResponseEntity
      */
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping("/change-password")
     public ResponseEntity<?> ChangePassword(@Valid @RequestBody ChangePasswordDTO changePasswordDTO)
     {

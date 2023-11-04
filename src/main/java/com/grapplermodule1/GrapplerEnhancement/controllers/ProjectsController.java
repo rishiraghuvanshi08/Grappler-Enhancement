@@ -2,6 +2,7 @@ package com.grapplermodule1.GrapplerEnhancement.controllers;
 
 import com.grapplermodule1.GrapplerEnhancement.customexception.*;
 import com.grapplermodule1.GrapplerEnhancement.dtos.ProjectDTO;
+import com.grapplermodule1.GrapplerEnhancement.dtos.TeamDTO;
 import com.grapplermodule1.GrapplerEnhancement.entities.Team;
 import com.grapplermodule1.GrapplerEnhancement.entities.Project;
 import com.grapplermodule1.GrapplerEnhancement.service.ProjectService;
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +36,7 @@ public class ProjectsController {
      *
      * @return ResponseEntity
      **/
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/")
     public ResponseEntity<?> getAllProjects() {
         String debugUuid = UUID.randomUUID().toString();
@@ -55,6 +58,7 @@ public class ProjectsController {
      *
      * @return ResponseEntity
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/")
     public ResponseEntity<?> create(@Valid @RequestBody Project project) {
         String debugUuid = UUID.randomUUID().toString();
@@ -63,7 +67,7 @@ public class ProjectsController {
             log.info("Add new project and their details with uuid{}", debugUuid);
             if (addProject.isPresent()) {
                 log.info("Add new project and their details if project details is present with uuid{}", debugUuid);
-                return new ResponseEntity<>(new CustomResponse<>(true, "Project Created With Id : " + addProject.get().getId(), addProject), HttpStatus.OK);
+                return new ResponseEntity<>(new CustomResponse<>(true, "Project Created With Id : " + addProject.get().getId(), addProject.get().getId()), HttpStatus.OK);
             } else {
                 log.info("UUID {} Project Not Created", debugUuid);
                 return new ResponseEntity<>(new CustomResponse<>(false, "Project Not Created. Please Try Again", null), HttpStatus.BAD_GATEWAY);
@@ -86,6 +90,7 @@ public class ProjectsController {
      *
      * @return ResponseEntity<Project>
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{projectId}")
     public ResponseEntity<?> getProjectById(@Valid @PathVariable Long projectId) {
         String debugUuid = UUID.randomUUID().toString();
@@ -111,6 +116,7 @@ public class ProjectsController {
      *
      * @return ResponseEntity<Project>
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{projectId}")
     public ResponseEntity<?> deletedById(@Valid @PathVariable Long projectId) {
         String debugUuid = UUID.randomUUID().toString();
@@ -134,6 +140,7 @@ public class ProjectsController {
      *
      * @return ResponseEntity<Project>
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{projectId}")
     public ResponseEntity<?> updateById(@Valid @PathVariable Long projectId, @Valid @RequestBody Project project) {
         String debugUuid = UUID.randomUUID().toString();
@@ -165,15 +172,16 @@ public class ProjectsController {
      *
      * @return ResponseEntity<?>
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{projectId}/teams/{teamId}")
     public ResponseEntity<?> assignTeamToProject(@PathVariable Long projectId, @PathVariable Long teamId) {
         String debugUuid = UUID.randomUUID().toString();
         try {
             log.info("Assign Team To Project API Called, UUID{}", debugUuid);
-            Boolean teamAdded = projectService.assignTeam(projectId, teamId);
-            if (teamAdded) {
+            TeamDTO addedTeam = projectService.assignTeam(projectId, teamId);
+            if (addedTeam != null) {
                 log.info("Assign Team To Project API Returning Response Entity With OK, UUID{}", debugUuid);
-                return new ResponseEntity<>(new CustomResponseMessage(true, "Team With ID : " + teamId + " Successfully Added To Project With ID : " + projectId), HttpStatus.OK);
+                return new ResponseEntity<>(new CustomResponse<>(true, "Team With ID : " + teamId + " Successfully Added To Project With ID : " + projectId, addedTeam), HttpStatus.OK);
             } else {
                 log.info("UUID {} Project Not Created", debugUuid);
                 return new ResponseEntity<>(new CustomResponseMessage(false, "Failed. Please Try Again"), HttpStatus.BAD_GATEWAY);
@@ -196,9 +204,27 @@ public class ProjectsController {
         }
     }
 
+    /**
+     * For Delete Team From Project
+     *
+     * @return ResponseEntity<?>
+     */
     @DeleteMapping("/{projectId}/teams/{teamId}")
-    public ResponseEntity<?> deletingTheTeamFromProject(@PathVariable("projectId") Team projectId, @PathVariable Long id) {
-        return null;
+    public ResponseEntity<?> deletedTeamFromProject(@PathVariable("projectId") Long projectId, @PathVariable("teamId") Long teamId) {
+        String debugUuid = UUID.randomUUID().toString();
+        try {
+            log.info("Inside Delete Team From Project,UUID {} ", projectId);
+            boolean isDeleted = projectService.deletedTeamFromProject(projectId, teamId);
+
+            return new ResponseEntity<>(new CustomResponseMessage(true, "Team Removed Successfully"), HttpStatus.OK);
+        }catch (ProjectNotFoundException p){
+            log.error("UUID {}, ProjectNotFoundException in Delete Project BY Id API, Exception {}", debugUuid, p.getMessage());
+            return new ResponseEntity<>(new CustomResponse<>(false, p.getMessage(), false), HttpStatus.NOT_FOUND);
+        }
+        catch (Exception e) {
+            log.error("UUID {}, Getting Exception in Delete Project BY Id API, Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), false),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 

@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,6 +33,7 @@ public class TicketController {
      *
      * @return ResponseEntity<?>
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{projectId}")
     public ResponseEntity<?> getTicketsByProjectId(@Valid @PathVariable("projectId") Long projectId) {
         String debugUuid = UUID.randomUUID().toString();
@@ -58,6 +60,7 @@ public class TicketController {
      *
      * @return List<?>
      */
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("user/{userId}")
     public ResponseEntity<?> getTicketsByUserId(@Valid @PathVariable("userId") Long userId) {
         String debugUuid = UUID.randomUUID().toString();
@@ -83,6 +86,7 @@ public class TicketController {
      *
      * @return ResponseEntity<?>
      */
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping("/")
     public ResponseEntity<?> createTicketsInProject(
             @Valid @RequestBody TicketsDTO ticket) {
@@ -112,6 +116,7 @@ public class TicketController {
      *
      * @return ResponseEntity<?>
      */
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @DeleteMapping("/{ticketId}")
     public ResponseEntity<?> deleteTicketById(@Valid @PathVariable("ticketId") Long ticketId) {
         String debugUuid = UUID.randomUUID().toString();
@@ -128,7 +133,5 @@ public class TicketController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-
 
 }
