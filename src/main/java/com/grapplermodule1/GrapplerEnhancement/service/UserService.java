@@ -3,9 +3,13 @@ package com.grapplermodule1.GrapplerEnhancement.service;
 import com.grapplermodule1.GrapplerEnhancement.cerebrus.config.UserDetailsConfig;
 import com.grapplermodule1.GrapplerEnhancement.customexception.*;
 import com.grapplermodule1.GrapplerEnhancement.dtos.ChangePasswordDTO;
+import com.grapplermodule1.GrapplerEnhancement.dtos.ProjectDTO;
+import com.grapplermodule1.GrapplerEnhancement.dtos.TeamDTO;
 import com.grapplermodule1.GrapplerEnhancement.dtos.UsersDTO;
 import com.grapplermodule1.GrapplerEnhancement.entities.Role;
 import com.grapplermodule1.GrapplerEnhancement.entities.Users;
+import com.grapplermodule1.GrapplerEnhancement.repository.ProjectRepository;
+import com.grapplermodule1.GrapplerEnhancement.repository.TeamRepository;
 import com.grapplermodule1.GrapplerEnhancement.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +40,12 @@ public class UserService implements UserDetailsService {
     UserRepository userRepository;
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    @Autowired
+    ProjectRepository projectRepository;
+
+    @Autowired
+    TeamRepository teamRepository;
 
     @Autowired
     CustomExceptionHandler customExceptionHandler;
@@ -232,6 +242,64 @@ public class UserService implements UserDetailsService {
         } catch (Exception e) {
             log.error("Exception in Delete User Exception {}", e.getMessage());
             throw e;
+        }
+    }
+
+    /**
+     * For Getting Projects Of User
+     *
+     * @return ProjectDTO
+     */
+    public List<ProjectDTO> fetchProjectByUserId(Long userId) {
+
+        log.info("Fetch Project By User Id Service Called, User Id {}", userId);
+        try{
+            Optional<UsersDTO> usersDTO=userRepository.findUserDtoById(userId);
+            if(usersDTO.isEmpty())
+            {
+                log.info("Fetch Project By User Id Service Called Throw UserNotFoundException, User Id {}", userId);
+                throw  new UserNotFoundException("User Not Found");
+            }
+            Optional<List<ProjectDTO>> projectDTOS= projectRepository.findProjectsByUserId(userId);
+            if(projectDTOS.isEmpty())
+            {
+                log.info("Fetch Project By User Id Service Called Throw ProjectNotFoundException, User Id {}", userId);
+                throw  new ProjectNotFoundException("Project Not Found");
+            }
+            return projectDTOS.get();
+        }
+        catch (Exception e){
+            log.error("Exception in Fetch Project By User Exception {}", e.getMessage());
+            throw  e;
+        }
+    }
+
+    /**
+     * For Getting Projects Of User
+     *
+     * @return ProjectDTO
+     */
+    public List<TeamDTO> fetchTeamsByUserId(Long userId) {
+
+        log.info("Fetch Teams By User Id Service Called, User Id {}", userId);
+        try{
+            Optional<UsersDTO> usersDTO=userRepository.findUserDtoById(userId);
+            if(usersDTO.isEmpty())
+            {
+                log.info("Fetch Project By User Id Service Called Throw UserNotFoundException, User Id {}", userId);
+                throw  new UserNotFoundException("User Not Found");
+            }
+            Optional<List<TeamDTO>> teamDTOS= teamRepository.findTeamsByUserId(userId);
+            if(teamDTOS.isEmpty())
+            {
+                log.info("Fetch Team By User Id Service Called Throw TeamNotFoundException, User Id {}", userId);
+                throw  new TeamNotFoundException("Teams Not Found");
+            }
+            return teamDTOS.get();
+        }
+        catch (Exception e){
+            log.error("Exception in Fetch Teams By User Id Exception {}", e.getMessage());
+            throw  e;
         }
     }
 }

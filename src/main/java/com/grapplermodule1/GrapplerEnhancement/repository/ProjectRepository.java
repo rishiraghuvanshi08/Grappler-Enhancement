@@ -1,6 +1,7 @@
 package com.grapplermodule1.GrapplerEnhancement.repository;
 
 import com.grapplermodule1.GrapplerEnhancement.dtos.ProjectDTO;
+import com.grapplermodule1.GrapplerEnhancement.dtos.TeamDTO;
 import com.grapplermodule1.GrapplerEnhancement.entities.Permission;
 import com.grapplermodule1.GrapplerEnhancement.entities.Project;
 import com.grapplermodule1.GrapplerEnhancement.enums.PermissionType;
@@ -20,4 +21,14 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     @Query("SELECT NEW com.grapplermodule1.GrapplerEnhancement.dtos.ProjectDTO(p.id, p.name) FROM Project p WHERE p.id = :projectId")
     Optional<ProjectDTO> findProjectById(Long projectId);
+
+    @Query("SELECT NEW com.grapplermodule1.GrapplerEnhancement.dtos.ProjectDTO(p.id, p.name) FROM Project p " +
+            "INNER JOIN p.teams t " +
+            "INNER JOIN t.teamMembers tm " +
+            "INNER JOIN tm.user u " +
+            "WHERE u.id = :userId")
+    Optional<List<ProjectDTO>> findProjectsByUserId(Long userId);
+
+
+
 }

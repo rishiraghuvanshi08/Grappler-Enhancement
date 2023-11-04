@@ -66,7 +66,7 @@ public class ProjectsController {
             log.info("Add new project and their details with uuid{}", debugUuid);
             if (addProject.isPresent()) {
                 log.info("Add new project and their details if project details is present with uuid{}", debugUuid);
-                return new ResponseEntity<>(new CustomResponse<>(true, "Project Created With Id : " + addProject.get().getId(), addProject), HttpStatus.OK);
+                return new ResponseEntity<>(new CustomResponse<>(true, "Project Created With Id : " + addProject.get().getId(),  addProject.get().getId()), HttpStatus.OK);
             } else {
                 log.info("UUID {} Project Not Created", debugUuid);
                 return new ResponseEntity<>(new CustomResponse<>(false, "Project Not Created. Please Try Again", null), HttpStatus.BAD_GATEWAY);
