@@ -1,7 +1,9 @@
 package com.grapplermodule1.GrapplerEnhancement.repository;
 
 import com.grapplermodule1.GrapplerEnhancement.dtos.HierarchyDTO;
+import com.grapplermodule1.GrapplerEnhancement.dtos.ProjectDTO;
 import com.grapplermodule1.GrapplerEnhancement.dtos.UsersDTO;
+import com.grapplermodule1.GrapplerEnhancement.entities.Project;
 import com.grapplermodule1.GrapplerEnhancement.entities.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -32,6 +34,12 @@ public interface UserRepository extends JpaRepository<Users, Long> {
     @Query("SELECT NEW com.grapplermodule1.GrapplerEnhancement.dtos.UsersDTO(e.id, e.name, e.email, e.designation) " +
             "FROM Users e WHERE e.reportingUser.id = :reportingId")
     Optional<List<UsersDTO>> findAllByReportingId(Long reportingId);
+
+
+
+
+
+    //List<ProjectDTO> findProjectByUserId(Long userId);
 
 
 }

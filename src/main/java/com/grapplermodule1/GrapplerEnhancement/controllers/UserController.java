@@ -1,6 +1,8 @@
 package com.grapplermodule1.GrapplerEnhancement.controllers;
 import com.grapplermodule1.GrapplerEnhancement.customexception.*;
 import com.grapplermodule1.GrapplerEnhancement.dtos.ChangePasswordDTO;
+import com.grapplermodule1.GrapplerEnhancement.dtos.ProjectDTO;
+import com.grapplermodule1.GrapplerEnhancement.dtos.TeamDTO;
 import com.grapplermodule1.GrapplerEnhancement.dtos.UsersDTO;
 import com.grapplermodule1.GrapplerEnhancement.validations.PostValidation;
 import com.grapplermodule1.GrapplerEnhancement.validations.PutValidation;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -125,6 +128,37 @@ public class UserController {
     }
 
     /**
+     * For getting User project
+     *
+     * @return ResponseEntity<?>
+     */
+    //@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @GetMapping("project/{userId}")
+    public ResponseEntity<?> getProjectsById(@Valid @PathVariable("userId") Long userId) {
+        String debugUuid = UUID.randomUUID().toString();
+        try {
+            log.info("UUID {} Inside Get Project By User Id, User Id {} ", debugUuid, userId);
+           List<ProjectDTO> listOptional= userService.fetchProjectByUserId(userId);
+            log.info("Get Project By User Id, Returning User in ResponseEntity, User Id  " );
+            return new ResponseEntity<>(new CustomResponse<>(true,"Projects Of User",listOptional), HttpStatus.OK);
+        }
+        catch (UserNotFoundException e) {
+            log.error("UUID {}, UserNotFoundException in Project By User Id, API, Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.NOT_FOUND);
+        }
+
+        catch (ProjectNotFoundException e) {
+            log.error("UUID {}, ProjectNotFoundException in Project By User Id, API, Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.NOT_FOUND);
+        }
+        catch (Exception e) {
+            log.error("UUID {} Exception In Project By User Id, API Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    /**
      * For Update User By Id
      *
      * @return ResponseEntity
@@ -216,7 +250,35 @@ public class UserController {
             log.error("UUID {} Exception In Change User Password By Id API Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
+   }
+
+    /**
+     * For Getting Teams of User
+     *
+     * @return ResponseEntity<?>
+     */
+    //@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @GetMapping("teams/{userId}")
+    public ResponseEntity<?> getTeamsById(@Valid @PathVariable("userId") Long userId) {
+        String debugUuid = UUID.randomUUID().toString();
+        try {
+            log.info("UUID {} Inside Get Project By User Id, User Id {} ", debugUuid, userId);
+            List<TeamDTO> listOptional= userService.fetchTeamsByUserId(userId);
+            log.info("Get Project By User Id, Returning User in ResponseEntity, User Id  " );
+            return new ResponseEntity<>(new CustomResponse<>(true,"Teams Of User",listOptional), HttpStatus.OK);
+        }
+        catch (UserNotFoundException e) {
+            log.error("UUID {}, UserNotFoundException in Project By User Id, API, Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.NOT_FOUND);
+        }
+        catch (TeamNotFoundException e) {
+            log.error("UUID {}, TeamNotFoundException in Project By User Id, API, Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.NOT_FOUND);
+        }
+        catch (Exception e) {
+            log.error("UUID {} Exception In Project By User Id, API Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
-
-
 }
