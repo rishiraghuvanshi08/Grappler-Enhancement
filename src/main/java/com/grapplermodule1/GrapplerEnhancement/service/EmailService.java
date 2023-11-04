@@ -32,6 +32,12 @@ public class EmailService {
     PasswordEncoder passwordEncoder;
 
     @Value("${spring.mail.username}") private String sender;
+
+    /**
+     * For Sending Otp
+     *
+     * @return Boolean
+     */
     public Boolean sendSimpleMail(String email)
     {
        log.info("Send Email Service called");
@@ -59,6 +65,11 @@ public class EmailService {
        }
     }
 
+    /**
+     * For Verifying Otp
+     *
+     * @return Boolean
+     */
     public Boolean verifyOtp(OtpDetail otpDetail) {
         log.info("Verify Otp Email Service called");
         try{
@@ -80,6 +91,11 @@ public class EmailService {
 
     }
 
+    /**
+     * For Reset User Password
+     *
+     * @return Boolean
+     */
     public Boolean resetUserPassword(ResetPassword resetPassword) {
 
         log.info("Reset User Password  Service called");

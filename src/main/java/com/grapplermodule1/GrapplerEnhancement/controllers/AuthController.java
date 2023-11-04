@@ -56,7 +56,7 @@ public class AuthController {
             }
             catch (Exception e) {
                 log.error("UUID {} Exception In Auth Controller Login API Exception {}", debugUuid, e.getMessage());
-                throw e;
+                return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), null), HttpStatus.BAD_REQUEST);
             }
     }
 

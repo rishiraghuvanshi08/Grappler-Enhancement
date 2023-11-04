@@ -31,9 +31,9 @@ public class EmailController {
     private EmailService emailService;
 
     /**
-     * For For Sending Mail
-     * 
-     * @return ResponseEntity<?>
+     * For Sending Mail
+     *
+     * @return  ResponseEntity
      */
     @PostMapping("/")
     public ResponseEntity<?> sendMail( @Valid @RequestBody EmailDetails emailDetails) {
