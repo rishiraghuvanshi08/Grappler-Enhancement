@@ -1,8 +1,10 @@
 package com.grapplermodule1.GrapplerEnhancement.controllers;
 
 import com.grapplermodule1.GrapplerEnhancement.customexception.*;
+import com.grapplermodule1.GrapplerEnhancement.dtos.ProjectDTO;
 import com.grapplermodule1.GrapplerEnhancement.dtos.TeamDTO;
 import com.grapplermodule1.GrapplerEnhancement.dtos.TeamMembersDTO;
+import com.grapplermodule1.GrapplerEnhancement.entities.Project;
 import com.grapplermodule1.GrapplerEnhancement.entities.Team;
 import com.grapplermodule1.GrapplerEnhancement.entities.Users;
 import com.grapplermodule1.GrapplerEnhancement.repository.TeamRepository;
@@ -166,5 +168,32 @@ public class TeamController {
         }
     }
 
+    /**
+     * For Getting All Projects By Team ID
+     *
+     * @return ResponseEntity<?>
+     */
+    @GetMapping("/get-projects/{teamId}")
+    public ResponseEntity<?> getAllProjects(@PathVariable("teamId") Long teamId){
+        String debugUuid = UUID.randomUUID().toString();
+        try {
+            log.info("Get All Project API Called, UUID {}", debugUuid);
+            List<ProjectDTO> projectDTOList = teamService.getAllProjects(teamId);
 
+            log.info("Get All Project API Returning Teams in ResponseEntity, UUID {}", debugUuid);
+            return new ResponseEntity<>(projectDTOList, HttpStatus.OK);
+        }
+        catch (TeamNotFoundException e) {
+            log.error("UUID {} TeamNotFoundException Get All Project API, Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.NOT_FOUND);
+        }
+        catch (ResourseNotFoundException e) {
+            log.error("UUID {} ResourseNotFoundException Get All Project API, Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.NOT_FOUND);
+        }
+        catch (Exception e) {
+            log.error("UUID {} Exception In Get All Projects API, Exception {} ", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

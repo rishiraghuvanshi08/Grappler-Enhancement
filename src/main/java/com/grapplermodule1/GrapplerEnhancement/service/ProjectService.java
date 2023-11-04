@@ -1,11 +1,10 @@
 package com.grapplermodule1.GrapplerEnhancement.service;
 
-import com.grapplermodule1.GrapplerEnhancement.customexception.DataNotPresent;
-import com.grapplermodule1.GrapplerEnhancement.customexception.DuplicateProjectName;
-import com.grapplermodule1.GrapplerEnhancement.customexception.ProjectNotFoundException;
+import com.grapplermodule1.GrapplerEnhancement.customexception.*;
 import com.grapplermodule1.GrapplerEnhancement.dtos.ProjectDTO;
 import com.grapplermodule1.GrapplerEnhancement.dtos.TeamDTO;
 import com.grapplermodule1.GrapplerEnhancement.entities.Project;
+import com.grapplermodule1.GrapplerEnhancement.entities.Team;
 import com.grapplermodule1.GrapplerEnhancement.repository.ProjectRepository;
 import com.grapplermodule1.GrapplerEnhancement.repository.TeamRepository;
 import org.slf4j.Logger;
@@ -13,10 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectService {
@@ -177,7 +174,59 @@ public class ProjectService {
             log.error("Exception In Deleting Project with id, Exception {}", e.getMessage());
             throw  e;
         }
+    }
 
+    /**
+     * For Assigning Team
+     *
+     * @return Boolean
+     */
+    public TeamDTO assignTeam(Long projectId, Long teamId) {
+        String debugUuid = UUID.randomUUID().toString();
+        try{
+            log.info("Inside Assign Team in Project service with UUID{}, ", debugUuid);
+            Project project = projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("Project not found With ID : " + projectId));
+
+            Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamNotFoundException("Team Not Found With ID : " + teamId));
+
+            Set<Team> projectTeams = project.getTeams();
+
+            if (projectTeams.contains(team)) {
+                throw new TeamAlreadyPresentInTheProjectException("Team Is Already Present In The Project");
+            }
+
+            projectTeams.add(team);
+
+            project.setTeams(projectTeams);
+            projectRepository.save(project);
+            return teamRepository.findTeamById(teamId).orElseThrow(() -> new ResourseNotFoundException(("Team Not Found With ID : " + teamId)));
+
+        }catch (Exception e){
+            log.error("Exception In Assign Team Service, Exception {}", e.getMessage());
+            throw  e;
+        }
+    }
+
+    public Boolean deletedTeamFromProject(Long projectId, Long teamId) {
+        try{
+            log.info("Deleting project with id in service is called, project Id {}", projectId);
+
+            Project project = projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("Project not found With ID : " + projectId));
+
+            Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamNotFoundException("Team Not Found With ID : " + teamId));
+
+            Set<Team> projectTeams = project.getTeams();
+
+            projectTeams = projectTeams.stream().filter((t) -> t.getId() != teamId).collect(Collectors.toSet());
+
+            project.setTeams(projectTeams);
+            projectRepository.save(project);
+
+            return true;
+        }catch (Exception e){
+            log.error("Exception In Deleting Project with id, Exception {}", e.getMessage());
+            throw  e;
+        }
     }
 
 }

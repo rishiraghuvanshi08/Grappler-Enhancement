@@ -33,7 +33,6 @@ public class ForgotPasswordController {
     @Autowired
     private EmailService emailService;
 
-
     /**
      * For Sending Otp
      *

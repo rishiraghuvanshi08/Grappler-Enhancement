@@ -1,5 +1,6 @@
 package com.grapplermodule1.GrapplerEnhancement.repository;
 
+import com.grapplermodule1.GrapplerEnhancement.dtos.ProjectDTO;
 import com.grapplermodule1.GrapplerEnhancement.dtos.TeamDTO;
 import com.grapplermodule1.GrapplerEnhancement.entities.Team;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -29,5 +30,7 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
             "WHERE u.id = :userId")
     Optional<List<TeamDTO>> findTeamsByUserId(Long userId);
 
+    @Query("SELECT NEW com.grapplermodule1.GrapplerEnhancement.dtos.ProjectDTO(p.id, p.name) FROM Project p JOIN p.teams t WHERE t.id = :teamId")
+    Optional<List<ProjectDTO>> findProjectsByTeamId(Long teamId);
 
 }

@@ -1,10 +1,8 @@
 package com.grapplermodule1.GrapplerEnhancement.controllers;
 
-import com.grapplermodule1.GrapplerEnhancement.customexception.CustomResponse;
-import com.grapplermodule1.GrapplerEnhancement.customexception.DataNotPresent;
-import com.grapplermodule1.GrapplerEnhancement.customexception.DuplicateProjectName;
-import com.grapplermodule1.GrapplerEnhancement.customexception.ProjectNotFoundException;
+import com.grapplermodule1.GrapplerEnhancement.customexception.*;
 import com.grapplermodule1.GrapplerEnhancement.dtos.ProjectDTO;
+import com.grapplermodule1.GrapplerEnhancement.dtos.TeamDTO;
 import com.grapplermodule1.GrapplerEnhancement.entities.Team;
 import com.grapplermodule1.GrapplerEnhancement.entities.Project;
 import com.grapplermodule1.GrapplerEnhancement.service.ProjectService;
@@ -15,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +36,7 @@ public class ProjectsController {
      *
      * @return ResponseEntity
      **/
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/")
     public ResponseEntity<?> getAllProjects() {
         String debugUuid = UUID.randomUUID().toString();
@@ -58,6 +58,7 @@ public class ProjectsController {
      *
      * @return ResponseEntity
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/")
     public ResponseEntity<?> create(@Valid @RequestBody Project project) {
         String debugUuid = UUID.randomUUID().toString();
@@ -89,6 +90,7 @@ public class ProjectsController {
      *
      * @return ResponseEntity<Project>
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{projectId}")
     public ResponseEntity<?> getProjectById(@Valid @PathVariable Long projectId) {
         String debugUuid = UUID.randomUUID().toString();
@@ -114,6 +116,7 @@ public class ProjectsController {
      *
      * @return ResponseEntity<Project>
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{projectId}")
     public ResponseEntity<?> deletedById(@Valid @PathVariable Long projectId) {
         String debugUuid = UUID.randomUUID().toString();
@@ -137,6 +140,7 @@ public class ProjectsController {
      *
      * @return ResponseEntity<Project>
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{projectId}")
     public ResponseEntity<?> updateById(@Valid @PathVariable Long projectId, @Valid @RequestBody Project project) {
         String debugUuid = UUID.randomUUID().toString();
@@ -162,14 +166,65 @@ public class ProjectsController {
             return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), false),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @PostMapping("/{projectId}/teams/")
-    public ResponseEntity<?> create(@RequestBody Team team, @PathVariable Long id) {
-        return null;
+
+    /**
+     * For Assigning Team To A Project
+     *
+     * @return ResponseEntity<?>
+     */
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/{projectId}/teams/{teamId}")
+    public ResponseEntity<?> assignTeamToProject(@PathVariable Long projectId, @PathVariable Long teamId) {
+        String debugUuid = UUID.randomUUID().toString();
+        try {
+            log.info("Assign Team To Project API Called, UUID{}", debugUuid);
+            TeamDTO addedTeam = projectService.assignTeam(projectId, teamId);
+            if (addedTeam != null) {
+                log.info("Assign Team To Project API Returning Response Entity With OK, UUID{}", debugUuid);
+                return new ResponseEntity<>(new CustomResponse<>(true, "Team With ID : " + teamId + " Successfully Added To Project With ID : " + projectId, addedTeam), HttpStatus.OK);
+            } else {
+                log.info("UUID {} Project Not Created", debugUuid);
+                return new ResponseEntity<>(new CustomResponseMessage(false, "Failed. Please Try Again"), HttpStatus.BAD_GATEWAY);
+            }
+        }catch (ProjectNotFoundException e){
+            log.error("UUID {} Getting ProjectNotFoundException In Assign Team To Project, Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()),HttpStatus.NOT_FOUND);
+        }
+        catch (TeamNotFoundException e){
+            log.error("UUID {} Getting TeamNotFoundException in Assign Team To Project API, Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()),HttpStatus.NOT_FOUND);
+        }
+        catch (TeamAlreadyPresentInTheProjectException e){
+            log.error("UUID {} Getting TeamAlreadyPresentInTheProjectException in Assign Team To Project API, Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()),HttpStatus.CONFLICT);
+        }
+        catch (Exception e) {
+            log.error("UUID {} Getting Exception in Assign Team To Project, Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), null), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
+    /**
+     * For Delete Team From Project
+     *
+     * @return ResponseEntity<?>
+     */
     @DeleteMapping("/{projectId}/teams/{teamId}")
-    public ResponseEntity<?> deletingTheTeamById(@RequestBody Team team, @PathVariable Long id) {
-        return null;
+    public ResponseEntity<?> deletedTeamFromProject(@PathVariable("projectId") Long projectId, @PathVariable("teamId") Long teamId) {
+        String debugUuid = UUID.randomUUID().toString();
+        try {
+            log.info("Inside Delete Team From Project,UUID {} ", projectId);
+            boolean isDeleted = projectService.deletedTeamFromProject(projectId, teamId);
+
+            return new ResponseEntity<>(new CustomResponseMessage(true, "Team Removed Successfully"), HttpStatus.OK);
+        }catch (ProjectNotFoundException p){
+            log.error("UUID {}, ProjectNotFoundException in Delete Project BY Id API, Exception {}", debugUuid, p.getMessage());
+            return new ResponseEntity<>(new CustomResponse<>(false, p.getMessage(), false), HttpStatus.NOT_FOUND);
+        }
+        catch (Exception e) {
+            log.error("UUID {}, Getting Exception in Delete Project BY Id API, Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), false),HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 
