@@ -28,7 +28,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             "INNER JOIN t.teamMembers tm " +
             "INNER JOIN tm.user u " +
             "WHERE u.id = :userId")
-    Optional<List<ProjectDTO>> findProjectsByUserId(Long userId)
+    Optional<List<ProjectDTO>> findProjectsByUserId(Long userId);
 
 
 }

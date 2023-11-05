@@ -35,7 +35,9 @@ public interface UserRepository extends JpaRepository<Users, Long> {
             "FROM Users e WHERE e.reportingUser.id = :reportingId")
     Optional<List<UsersDTO>> findAllByReportingId(Long reportingId);
 
-
+    @Query("SELECT NEW com.grapplermodule1.GrapplerEnhancement.dtos.UsersDTO(e.id, e.name, e.email, e.designation) " +
+            "FROM Users e WHERE e.email = :email")
+    Optional<UsersDTO> findUserDtoByEmail(String email);
 
 
 
