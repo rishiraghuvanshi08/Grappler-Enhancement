@@ -302,4 +302,26 @@ public class UserService implements UserDetailsService {
             throw  e;
         }
     }
+
+    /**
+     * For Fetching User By Email
+     * 
+     * @return UsersDTO
+     */
+    public UsersDTO fetchUserByEmail(String email) {
+        try {
+            log.info("Fetch User By ID Service Called, email {}", email);
+            Optional<UsersDTO> usersDTO = userRepository.findUserDtoByEmail(email);
+            if (usersDTO.isPresent()) {
+                log.info("Fetch User By ID Service Returning UsersDTO");
+                return usersDTO.get();
+            } else {
+                log.error("Fetch User By Id throws UserNotFoundException");
+                throw new UserNotFoundException("User Not Found With Email : " + email);
+            }
+        } catch (Exception e) {
+            log.error("Exception in Fetch User By Id Exception {}", e.getMessage());
+            throw e;
+        }
+    }
 }
