@@ -35,7 +35,7 @@ public class TeamController {
      *
      * @return ResponseEntity<?>
      */
-//    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/")
     public ResponseEntity<?> getAllTeams(){
         String debugUuid = UUID.randomUUID().toString();

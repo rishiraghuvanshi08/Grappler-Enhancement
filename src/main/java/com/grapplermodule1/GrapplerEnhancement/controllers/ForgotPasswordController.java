@@ -38,71 +38,22 @@ public class ForgotPasswordController {
      *
      * @return ResponseEntity
      */
-    @PostMapping("/send-otp")
-    public ResponseEntity<?> sendOTP(@Valid @RequestBody EmailDetails emailDetails) {
+    @PostMapping("/send-Password")
+    public ResponseEntity<?> sendPassword(@Valid @RequestBody EmailDetails emailDetails) {
         try {
-            log.info("ForgotPassword Controller Send OTP API Called {}", emailDetails.getEmail());
+            log.info("ForgotPassword Controller Send Password On Email API Called {}", emailDetails.getEmail());
             Optional<Users> user = userRepository.findByEmail(emailDetails.getEmail());
             if (user.isPresent()) {
                 Boolean status = emailService.sendSimpleMail(emailDetails.getEmail());
-                log.info("OTP sent successfully to {}", emailDetails.getEmail());
-                return new ResponseEntity<>(new CustomResponseMessage(status, "OTP sent successfully"), HttpStatus.OK);
+                log.info("Send Password On Email  Returning Status {}", status);
+                return new ResponseEntity<>(new CustomResponseMessage(status, "Reset password link sent to email"), HttpStatus.OK);
             } else {
                 log.error("User not found for email: {}", emailDetails.getEmail());
                 return new ResponseEntity<>(new CustomResponseMessage(false, "User not found"), HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
-            log.error("Exception in Send OTP API: {}", e.getMessage());
-            return new ResponseEntity<>(new CustomResponseMessage(false, "Failed to send OTP"), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-
-    /**
-     * For Verifying Otp
-     *
-     * @return ResponseEntity
-     */
-    @PostMapping("/verify-otp")
-    public ResponseEntity<?> verifyOTP(@Valid @RequestBody OtpDetail otpDetail) {
-        try {
-            log.info("ForgotPassword Controller Verify OTP API Called");
-            Boolean status = emailService.verifyOtp(otpDetail);
-                log.info("OTP verified for email: {}", otpDetail.getOtp());
-                return new ResponseEntity<>(new CustomResponseMessage(true, "OTP verified"), HttpStatus.OK);
-        } catch (PasswordNotMatchException e) {
-            log.error("PasswordNotMatchException in Verify OTP API: {}", e.getMessage());
-            return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (Exception e) {
-            log.error("Exception in Verify OTP API: {}", e.getMessage());
-            return new ResponseEntity<>(new CustomResponseMessage(false, "Failed to verify OTP"), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-
-    /**
-     * For Reset User Password
-     *
-     * @return ResponseEntity
-     */
-    @PostMapping("/reset-password")
-    public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPassword resetPassword) {
-        try {
-            log.info("ForgotPassword Controller Reset Password API Called");
-            Boolean status = emailService.resetUserPassword(resetPassword);
-            log.info("Password Reset New Password Is ,{}", resetPassword.getNewPassword());
-            return new ResponseEntity<>(new CustomResponseMessage(true, "Password Reset Successfully"), HttpStatus.OK);
-        }
-        catch (UserNotFoundException e) {
-            log.error("UserNotFoundException in Reset Password Api: {}", e.getMessage());
-            return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.NOT_FOUND);
-        }
-        catch (PasswordNotMatchException e) {
-            log.error("PasswordNotMatchException in Reset Password Api: {}", e.getMessage());
-            return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (Exception e) {
-            log.error("Exception in Verify OTP API: {}", e.getMessage());
-            return new ResponseEntity<>(new CustomResponseMessage(false, "Failed to verify OTP"), HttpStatus.INTERNAL_SERVER_ERROR);
+            log.error("Exception in Send Password On Email  API: {}", e.getMessage());
+            return new ResponseEntity<>(new CustomResponseMessage(false, "Failed to send email"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

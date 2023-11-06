@@ -18,5 +18,7 @@ public class ChangePasswordDTO {
     private String oldPassword;
     @NotEmpty( message = "New Password is required")
     private String newPassword;
+    @NotEmpty( message = "Confirm Password is required")
+    private String confirmPassword;
 
 }

@@ -1,4 +1,5 @@
 package com.grapplermodule1.GrapplerEnhancement.service;
+
 import com.grapplermodule1.GrapplerEnhancement.customexception.PasswordNotMatchException;
 import com.grapplermodule1.GrapplerEnhancement.customexception.UserNotFoundException;
 import com.grapplermodule1.GrapplerEnhancement.entities.*;
@@ -12,8 +13,10 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.util.Optional;
 import java.util.Random;
+
 @Service
 public class EmailService {
 
@@ -31,95 +34,54 @@ public class EmailService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    @Value("${spring.mail.username}") private String sender;
+    @Value("${spring.mail.username}")
+    private String sender;
+
 
     /**
-     * For Sending Otp
+     * For Generating Password
      *
-     * @return Boolean
+     * @return String
      */
-    public Boolean sendSimpleMail(String email)
-    {
-       log.info("Send Email Service called");
-       try{
-           Random random = new Random();
-           int otp = 100000 + random.nextInt(900000);
-           otpRepository.deleteAll();
-           OtpStore otpStore=new OtpStore();
-           otpStore.setOtp(otp);
-           otpStore.setEmail(email);
-           otpRepository.save(otpStore);
-           SimpleMailMessage simpleMailMessage=new SimpleMailMessage();
-           simpleMailMessage.setFrom(sender);
-           simpleMailMessage.setTo(email);
-           simpleMailMessage.setText("Your Otp Is:"+ otp);
-           simpleMailMessage.setSubject("For Forgot Password");
-           javaMailSender.send(simpleMailMessage);
-           log.info("Send Email Service Returning True ");
-           return  true;
-       }
-       catch (Exception e)
-       {
-           log.error("Exception In Send Email Service Exception {}", e.getMessage());
-           throw e;
-       }
+    public static String generateRandomPassword() {
+        String charset = "abcdefghijklmnopqrstuvwxyz0123456789";
+        Random random = new Random();
+        StringBuilder password = new StringBuilder();
+        for (int i = 0; i < 8; i++) {
+            int randomIndex = random.nextInt(charset.length());
+            password.append(charset.charAt(randomIndex));
+        }
+
+        return password.toString();
     }
 
     /**
-     * For Verifying Otp
+     * For Sending Email
      *
      * @return Boolean
      */
-    public Boolean verifyOtp(OtpDetail otpDetail) {
-        log.info("Verify Otp Email Service called");
-        try{
-            Optional<OtpStore> storedOtp = otpRepository.findByOtp(otpDetail.getOtp());
-            if (storedOtp.isPresent()) {
-                log.info("OTP Verified  {}", otpDetail.getOtp());
-                otpRepository.deleteAll();
-                return true;
-            } else {
-                log.error("Verify Otp Email Service Throw PasswordNotMatchException Exception");
-                throw new PasswordNotMatchException("Invalid Otp "+otpDetail.getOtp());
-            }
-        }
-        catch (Exception e)
-        {
+    public Boolean sendSimpleMail(String email) {
+        log.info("Send Email Service called");
+        try {
+            String password = generateRandomPassword();
+            Optional<Users> user = userRepository.findByEmail(email);
+            user.get().setPassword(passwordEncoder.encode(password));
+            userRepository.save(user.get());
+            String emailContent = "Hi!\n\nYour password for the Grappler-Enhancement application has been updated. Below are your new credentials:\n\n"
+                    + "Grappler -Enhancement\n\nJoin using the following credentials:\n\n"
+                    + "Email:  " + email + "\nPassword:  " + password;
+            SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+            simpleMailMessage.setFrom(sender);
+            simpleMailMessage.setTo(email);
+            simpleMailMessage.setText(emailContent);
+            simpleMailMessage.setSubject("Reset Password");
+            javaMailSender.send(simpleMailMessage);
+            log.info("Send Email Service Returning True ");
+            return true;
+        } catch (Exception e) {
             log.error("Exception In Send Email Service Exception {}", e.getMessage());
             throw e;
         }
-
     }
 
-    /**
-     * For Reset User Password
-     *
-     * @return Boolean
-     */
-    public Boolean resetUserPassword(ResetPassword resetPassword) {
-
-        log.info("Reset User Password  Service called");
-        try{
-            Optional<Users> usersOptional = userRepository.findByEmail(resetPassword.getEmail());
-            if (usersOptional.isPresent()) {
-                 if(!resetPassword.getNewPassword().equals(resetPassword.getConfirmPassword()))
-                 {
-                     throw new PasswordNotMatchException("New Password And Confirm Password Is Not Matching");
-                 }
-                 usersOptional.get().setPassword(passwordEncoder.encode(resetPassword.getNewPassword()));
-                 userRepository.save(usersOptional.get());
-                  log.info("Reset User Password Successfully In Service ");
-                return true;
-            } else {
-                log.error("Reset User Password Service Throw  UserNotFoundException");
-                throw new UserNotFoundException("User Not Found");
-            }
-        }
-        catch (Exception e)
-        {
-            log.error("Exception In Reset User Password Service Exception {}", e.getMessage());
-            throw e;
-        }
-
-    }
 }

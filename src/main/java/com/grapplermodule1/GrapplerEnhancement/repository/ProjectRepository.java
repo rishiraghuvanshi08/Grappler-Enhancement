@@ -1,7 +1,6 @@
 package com.grapplermodule1.GrapplerEnhancement.repository;
 
 import com.grapplermodule1.GrapplerEnhancement.dtos.ProjectDTO;
-import com.grapplermodule1.GrapplerEnhancement.dtos.TeamDTO;
 import com.grapplermodule1.GrapplerEnhancement.entities.Permission;
 import com.grapplermodule1.GrapplerEnhancement.entities.Project;
 import com.grapplermodule1.GrapplerEnhancement.enums.PermissionType;

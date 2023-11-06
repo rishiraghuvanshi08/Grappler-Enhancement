@@ -1,5 +1,4 @@
 package com.grapplermodule1.GrapplerEnhancement.controllers;
-
 import com.grapplermodule1.GrapplerEnhancement.customexception.*;
 import com.grapplermodule1.GrapplerEnhancement.dtos.ChangePasswordDTO;
 import com.grapplermodule1.GrapplerEnhancement.dtos.ProjectDTO;
@@ -49,10 +48,12 @@ public class UserController {
             List<UsersDTO> usersList = userService.fetchAllUsers();
 
             return new ResponseEntity<>(usersList, HttpStatus.OK);
-        } catch (UserNotFoundException e) {
+        }
+        catch (UserNotFoundException e) {
             log.error("UUID {} UserNotFoundException In Get All Users API Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), null), HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("UUID {} Exception In Get All Users API Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -71,23 +72,28 @@ public class UserController {
             log.info("Get Create User API Called, UUID {}", debugUuid);
             UsersDTO newUser = userService.addUser(user);
             if (newUser != null) {
-                return new ResponseEntity<>(new CustomResponse<>(true, "User Created With Id : " + newUser.getId(), newUser), HttpStatus.CREATED);
-            } else {
+                return new ResponseEntity<>(new CustomResponse<>(true, "User Created With Id : " + newUser.getId(),newUser), HttpStatus.CREATED);
+            }
+            else {
                 log.error("UUID {} User Not Created", debugUuid);
                 return new ResponseEntity<>(new CustomResponseMessage(false, "User Not Created. Please Try Again"), HttpStatus.BAD_GATEWAY);
             }
-        } catch (DuplicateEmailException e) {
+        }
+         catch (DuplicateEmailException e) {
             log.error("UUID {} DuplicateEmailException In Create User API Exception {}", debugUuid, e.getMessage());
-            return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.CONFLICT);
-        } catch (DataIntegrityViolationCustomException e) {
+             return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.CONFLICT);
+        }
+        catch (DataIntegrityViolationCustomException e) {
             log.error("UUID {} DataIntegrityViolationCustomException In Create User API Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.BAD_REQUEST);
-        } catch (ValidationException e) {
+        }
+        catch (ValidationException e) {
             log.error("UUID {} ValidationException In Create User API Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("UUID {} Exception In Create User API Exception {}", debugUuid, e.getMessage());
-            return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(new CustomResponseMessage(false ,e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -106,13 +112,16 @@ public class UserController {
 
             log.info("Get User By Id Returning User in ResponseEntity, User Id {} ", user.getId());
             return new ResponseEntity<>(user, HttpStatus.OK);
-        } catch (UserNotFoundException e) {
+        }
+        catch (UserNotFoundException e) {
             log.error("UUID {}, UserNotFoundException in Get User BY Id API, Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.NOT_FOUND);
-        } catch (DuplicateEmailException e) {
+        }
+        catch (DuplicateEmailException e) {
             log.error("UUID {}, DuplicateEmailException in Get User BY Id API, Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.CONFLICT);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("UUID {} Exception In Get User By Id API Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -164,10 +173,12 @@ public class UserController {
         } catch (UserNotFoundException e) {
             log.error("UUID {}, UserNotFoundException in Update User BY Id API, Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.NOT_FOUND);
-        } catch (DuplicateEmailException e) {
+        }
+        catch (DuplicateEmailException e) {
             log.error("UUID {} DuplicateEmailException In Update User API Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.CONFLICT);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("UUID {} Exception In Update User By Id API Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -188,13 +199,18 @@ public class UserController {
 
             log.info("UUID {} Delete User By Id Returning Boolean Value True in ResponseEntity ", debugUuid);
             return new ResponseEntity<>(new CustomResponseMessage(deleteUser, "User Deleted Successfully."), HttpStatus.OK);
-        } catch (UserNotFoundException e) {
+        }
+        catch (UserNotFoundException e) {
             log.error("UUID {}, UserNotFoundException in Delete User BY Id API, Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.NOT_FOUND);
-        } catch (DataIntegrityViolationCustomException e) {
+        }
+
+        catch (DataIntegrityViolationCustomException e) {
             log.error("UUID {}, DataIntegrityViolationCustomException   in Delete User BY Id API, Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
+        }
+
+        catch (Exception e) {
             log.error("UUID {} Exception In Get User By Id API Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -207,7 +223,8 @@ public class UserController {
      */
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping("/change-password")
-    public ResponseEntity<?> ChangePassword(@Valid @RequestBody ChangePasswordDTO changePasswordDTO) {
+    public ResponseEntity<?> ChangePassword(@Valid @RequestBody ChangePasswordDTO changePasswordDTO)
+    {
         String debugUuid = UUID.randomUUID().toString();
         try {
             log.info("UUID {} Inside ChangePassword,", debugUuid);
@@ -215,18 +232,25 @@ public class UserController {
 
             log.info("Change User Password Returning True in ResponseEntity ");
             return new ResponseEntity<>(new CustomResponseMessage(true, "Password Updated Successfully."), HttpStatus.OK);
-        } catch (UserNotFoundException e) {
+        }
+        catch (UserNotFoundException e) {
             log.error("UUID {}, UserNotFoundException in change User Password BY Id API, Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.NOT_FOUND);
-        } catch (PasswordNotMatchException e) {
+        }
+        catch (PasswordNotMatchException e) {
             log.error("UUID {} PasswordNotMatchException In Change User Password API Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
+        }
+        catch (SamePasswordException e)
+        {
+            log.error("UUID {} SamePasswordException In Change User Password API Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.CONFLICT);
+        }
+        catch (Exception e) {
             log.error("UUID {} Exception In Change User Password By Id API Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-    }
+   }
 
     /**
      * For Getting Teams of User
@@ -234,21 +258,24 @@ public class UserController {
      * @return ResponseEntity<?>
      */
     //@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-    @GetMapping("/teams/{userId}")
+    @GetMapping("teams/{userId}")
     public ResponseEntity<?> getTeamsById(@Valid @PathVariable("userId") Long userId) {
         String debugUuid = UUID.randomUUID().toString();
         try {
             log.info("UUID {} Inside Get Project By User Id, User Id {} ", debugUuid, userId);
-            List<TeamDTO> listOptional = userService.fetchTeamsByUserId(userId);
-            log.info("Get Project By User Id, Returning User in ResponseEntity, User Id  ");
-            return new ResponseEntity<>(new CustomResponse<>(true, "Teams Of User", listOptional), HttpStatus.OK);
-        } catch (UserNotFoundException e) {
+            List<TeamDTO> listOptional= userService.fetchTeamsByUserId(userId);
+            log.info("Get Project By User Id, Returning User in ResponseEntity, User Id  " );
+            return new ResponseEntity<>(new CustomResponse<>(true,"Teams Of User",listOptional), HttpStatus.OK);
+        }
+        catch (UserNotFoundException e) {
             log.error("UUID {}, UserNotFoundException in Project By User Id, API, Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.NOT_FOUND);
-        } catch (TeamNotFoundException e) {
+        }
+        catch (TeamNotFoundException e) {
             log.error("UUID {}, TeamNotFoundException in Project By User Id, API, Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("UUID {} Exception In Project By User Id, API Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
