@@ -26,7 +26,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@CrossOrigin(origins="http://localhost:3000/")
+@CrossOrigin(origins = "http://localhost:3000/")
 @RequestMapping("/users")
 public class UserController {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
@@ -102,7 +102,7 @@ public class UserController {
      *
      * @return ResponseEntity<?>
      */
-    //@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/{userId}")
     public ResponseEntity<?> getUserById(@Valid @PathVariable("userId") Long userId) {
         String debugUuid = UUID.randomUUID().toString();
@@ -132,26 +132,22 @@ public class UserController {
      *
      * @return ResponseEntity<?>
      */
-    //@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-    @GetMapping("project/{userId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @GetMapping("/project/{userId}")
     public ResponseEntity<?> getProjectsById(@Valid @PathVariable("userId") Long userId) {
         String debugUuid = UUID.randomUUID().toString();
         try {
             log.info("UUID {} Inside Get Project By User Id, User Id {} ", debugUuid, userId);
-           List<ProjectDTO> listOptional= userService.fetchProjectByUserId(userId);
-            log.info("Get Project By User Id, Returning User in ResponseEntity, User Id  " );
-            return new ResponseEntity<>(new CustomResponse<>(true,"Projects Of User",listOptional), HttpStatus.OK);
-        }
-        catch (UserNotFoundException e) {
+            List<ProjectDTO> listOptional = userService.fetchProjectByUserId(userId);
+            log.info("Get Project By User Id, Returning User in ResponseEntity, User Id  ");
+            return new ResponseEntity<>(new CustomResponse<>(true, "Projects Of User", listOptional), HttpStatus.OK);
+        } catch (UserNotFoundException e) {
             log.error("UUID {}, UserNotFoundException in Project By User Id, API, Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.NOT_FOUND);
-        }
-
-        catch (ProjectNotFoundException e) {
+        } catch (ProjectNotFoundException e) {
             log.error("UUID {}, ProjectNotFoundException in Project By User Id, API, Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.NOT_FOUND);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.error("UUID {} Exception In Project By User Id, API Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -174,8 +170,7 @@ public class UserController {
 
             log.info("Update User By Id Returning User in ResponseEntity, Updated User Id {} ", updatedUser.getId());
             return new ResponseEntity<>(new CustomResponseMessage(true, "User Updated Successfully."), HttpStatus.OK);
-        }
-        catch (UserNotFoundException e) {
+        } catch (UserNotFoundException e) {
             log.error("UUID {}, UserNotFoundException in Update User BY Id API, Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.NOT_FOUND);
         }
@@ -282,6 +277,32 @@ public class UserController {
         }
         catch (Exception e) {
             log.error("UUID {} Exception In Project By User Id, API Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * For Getting User By Email
+     *
+     * @return ResponseEntity<?>
+     */
+    @GetMapping
+    public ResponseEntity<?> getUserByEmail(@RequestParam String email) {
+        String debugUuid = UUID.randomUUID().toString();
+        try {
+            log.info("UUID {} Inside Get User By Id, Email {} ", debugUuid, email);
+            UsersDTO user = userService.fetchUserByEmail(email);
+
+            log.info("Get User By Id Returning User in ResponseEntity, User Id {} ", user.getId());
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } catch (UserNotFoundException e) {
+            log.error("UUID {}, UserNotFoundException in Get User BY Id API, Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.NOT_FOUND);
+        } catch (DuplicateEmailException e) {
+            log.error("UUID {}, DuplicateEmailException in Get User BY Id API, Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.CONFLICT);
+        } catch (Exception e) {
+            log.error("UUID {} Exception In Get User By Id API Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
