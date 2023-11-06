@@ -66,6 +66,7 @@ public class TeamMemberController {
      * 
      * @return ResponseEntity<?>
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{teamId}/member/{userId}")
     public ResponseEntity<?> getTeamMemberDetails(@PathVariable("teamId") Long teamId, @PathVariable("userId") Long userId){
         String debugUuid = UUID.randomUUID().toString();
@@ -98,6 +99,7 @@ public class TeamMemberController {
      *
      * @return ResponseEntity<?>
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{teamId}/add-new-member/{userId}")
     public ResponseEntity<?> addNewMember(@PathVariable("userId") Long userId,
                                             @PathVariable("teamId") Long teamId){
@@ -131,6 +133,7 @@ public class TeamMemberController {
      *
      * @return ResponseEntity<?>
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{teamId}/delete-member/{userId}")
     public ResponseEntity<?> deleteMember(@PathVariable("teamId") Long teamId,
                                        @PathVariable("userId") Long userId){

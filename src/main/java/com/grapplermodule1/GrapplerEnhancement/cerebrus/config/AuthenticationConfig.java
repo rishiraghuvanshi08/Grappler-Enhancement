@@ -34,8 +34,8 @@ public class AuthenticationConfig {
                 .csrf((c) -> c.disable())
                 .authorizeHttpRequests((authorize) ->
                         authorize
-//                                .requestMatchers("/auth/login").permitAll()
-                                .requestMatchers("/**").permitAll()
+                                //.requestMatchers("/auth/login").permitAll()
+                              .requestMatchers("/**").permitAll()
 //                                .anyRequest()
 //                                .authenticated()
                 )

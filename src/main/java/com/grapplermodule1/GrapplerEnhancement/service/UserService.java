@@ -222,12 +222,23 @@ public class UserService implements UserDetailsService {
             log.info("Change User Password Service Called");
             String email = SecurityContextHolder.getContext().getAuthentication().getName();
             log.info("Change User Password Service Called {}", email);
+            if(!changePasswordDTO.getNewPassword().equals(changePasswordDTO.getConfirmPassword()))
+            {
+                log.info("Change User Password Not Matching With New Password ");
+                throw new PasswordNotMatchException("Passwords should match.");
+            }
             Optional<Users> user = userRepository.findByEmail(email);
             if (user.isPresent()) {
                 if (!passwordEncoder.matches(changePasswordDTO.getOldPassword(), user.get().getPassword())) {
                     log.info("Change User Password Not Matching With Current User");
-                    throw new PasswordNotMatchException("Old password does not match.");
+                    throw new PasswordNotMatchException("Password Reset Failed: Invalid request or invalid password.");
                 }
+                if(passwordEncoder.matches(changePasswordDTO.getNewPassword(), user.get().getPassword()))
+                {
+                    log.info("Change User Password Service Returning SamePasswordException");
+                    throw new SamePasswordException("Cannot be same as old Password");
+                }
+
                 user.get().setPassword(passwordEncoder.encode(changePasswordDTO.getNewPassword()));
                 userRepository.save(user.get());
                 log.info("Change User Password ,Password changed successfully.");

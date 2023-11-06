@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -29,6 +30,7 @@ public class PermissionController {
      *
      * @return ResponseEntity<?>
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{memberId}/project-permission/{projectId}")
     public ResponseEntity<?> getMemberPermission
     (@PathVariable("memberId") Long memberId,
@@ -59,6 +61,7 @@ public class PermissionController {
      *
      * @return ResponseEntity
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{memberId}/update-permissions/{projectId}")
     public ResponseEntity updatePermissionToMember(@PathVariable("memberId") Long memberId,
                                                    @PathVariable("projectId") Long projectId,
@@ -68,7 +71,7 @@ public class PermissionController {
             log.info("UUID {} updatePermissionToMember By memberId and projectId, memberId {} ", debugUuid, memberId);
             int updateStatus = permissionService.updatePermissionToMember(memberId, projectId, permission.getPermission_type());
             log.info("Get updatePermissionToMember By memberId and projectId Returning Update status in ResponseEntity, memberId {} ", memberId);
-            return new ResponseEntity<>(new CustomResponseMessage(true,"Permission Updated successfully"), HttpStatus.OK);
+            return new ResponseEntity<>(new CustomResponseMessage(true, "Permission Updated successfully"), HttpStatus.OK);
         } catch (UserNotFoundException e) {
             log.error("UUID {}, UserNotFoundException in updatePermissionToMember API, Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), null), HttpStatus.NOT_FOUND);

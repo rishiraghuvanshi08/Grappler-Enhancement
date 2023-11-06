@@ -216,7 +216,7 @@ public class TeamService {
             log.info("Get Team By Id Service Called");
             Optional<Team> optionalTeam = teamRepository.findById(teamId);
             if(optionalTeam.isPresent()){
-                Optional<List<ProjectDTO>> projectDTO =null ;// teamRepository.findProjectsByTeamId(teamId);
+                Optional<List<ProjectDTO>> projectDTO =teamRepository.findProjectsByTeamId(teamId);
                 if(projectDTO.isPresent()){
                     return projectDTO.get();
                 }

@@ -23,6 +23,11 @@ import java.util.UUID;
 public class InvalidUrlExceptionHandlerController {
     private static final Logger log = LoggerFactory.getLogger(InvalidUrlExceptionHandlerController.class);
 
+    /**
+     * For Handling Invalid URL
+     * 
+     * @return ResponseEntity<CustomResponse<String>>
+     */
 //    @RequestMapping("/**")
 //    public ResponseEntity<CustomResponse<String>> handleInvalidUrl() {
 //        String debugUuid = UUID.randomUUID().toString();

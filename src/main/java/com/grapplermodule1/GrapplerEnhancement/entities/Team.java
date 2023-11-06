@@ -25,7 +25,7 @@ public class Team {
     private String name;
 
     @ManyToMany
-    @JsonManagedReference
+    @JsonIgnore
     private Set<Project> projectSet;
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)

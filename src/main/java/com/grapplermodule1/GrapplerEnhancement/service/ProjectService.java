@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectService {
@@ -180,7 +181,7 @@ public class ProjectService {
      *
      * @return Boolean
      */
-    public Boolean assignTeam(Long projectId, Long teamId) {
+    public TeamDTO assignTeam(Long projectId, Long teamId) {
         String debugUuid = UUID.randomUUID().toString();
         try{
             log.info("Inside Assign Team in Project service with UUID{}, ", debugUuid);
@@ -198,10 +199,32 @@ public class ProjectService {
 
             project.setTeams(projectTeams);
             projectRepository.save(project);
-            log.info("Assign Team in Project service returning true Boolean Value");
-            return true;
+            return teamRepository.findTeamById(teamId).orElseThrow(() -> new ResourseNotFoundException(("Team Not Found With ID : " + teamId)));
+
         }catch (Exception e){
             log.error("Exception In Assign Team Service, Exception {}", e.getMessage());
+            throw  e;
+        }
+    }
+
+    public Boolean deletedTeamFromProject(Long projectId, Long teamId) {
+        try{
+            log.info("Deleting project with id in service is called, project Id {}", projectId);
+
+            Project project = projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("Project not found With ID : " + projectId));
+
+            Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamNotFoundException("Team Not Found With ID : " + teamId));
+
+            Set<Team> projectTeams = project.getTeams();
+
+            projectTeams = projectTeams.stream().filter((t) -> t.getId() != teamId).collect(Collectors.toSet());
+
+            project.setTeams(projectTeams);
+            projectRepository.save(project);
+
+            return true;
+        }catch (Exception e){
+            log.error("Exception In Deleting Project with id, Exception {}", e.getMessage());
             throw  e;
         }
     }

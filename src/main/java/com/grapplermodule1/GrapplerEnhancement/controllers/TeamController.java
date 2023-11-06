@@ -35,7 +35,7 @@ public class TeamController {
      *
      * @return ResponseEntity<?>
      */
-//    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/")
     public ResponseEntity<?> getAllTeams(){
         String debugUuid = UUID.randomUUID().toString();
@@ -168,6 +168,11 @@ public class TeamController {
         }
     }
 
+    /**
+     * For Getting All Projects By Team ID
+     *
+     * @return ResponseEntity<?>
+     */
     @GetMapping("/get-projects/{teamId}")
     public ResponseEntity<?> getAllProjects(@PathVariable("teamId") Long teamId){
         String debugUuid = UUID.randomUUID().toString();
