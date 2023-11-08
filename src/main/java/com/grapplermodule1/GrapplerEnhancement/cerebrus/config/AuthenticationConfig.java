@@ -2,7 +2,11 @@ package com.grapplermodule1.GrapplerEnhancement.cerebrus.config;
 
 import com.grapplermodule1.GrapplerEnhancement.cerebrus.jwtauthentication.JwtAuthenticationEntryPoint;
 import com.grapplermodule1.GrapplerEnhancement.cerebrus.jwtauthentication.JwtAuthenticationFilter;
+import com.grapplermodule1.GrapplerEnhancement.dtos.TeamMembersDTO;
+import com.grapplermodule1.GrapplerEnhancement.entities.TeamMembers;
 import com.grapplermodule1.GrapplerEnhancement.service.UserService;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -72,5 +76,23 @@ public class AuthenticationConfig {
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
 
         return daoAuthenticationProvider;
+    }
+
+
+    @Bean
+    public ModelMapper modelMapper() {
+        ModelMapper modelMapper = new ModelMapper();
+
+        // Define a property map for the nested mappings
+        modelMapper.addMappings(new PropertyMap<TeamMembers, TeamMembersDTO>() {
+            @Override
+            protected void configure() {
+                map().setName(source.getUser().getName());
+                map().setEmail(source.getUser().getEmail());
+                map().setDesignation(source.getUser().getDesignation());
+            }
+        });
+
+        return modelMapper;
     }
 }

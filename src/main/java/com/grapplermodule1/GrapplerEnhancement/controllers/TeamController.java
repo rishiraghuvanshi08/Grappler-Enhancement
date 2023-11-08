@@ -35,7 +35,7 @@ public class TeamController {
      *
      * @return ResponseEntity<?>
      */
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/")
     public ResponseEntity<?> getAllTeams(){
         String debugUuid = UUID.randomUUID().toString();
@@ -61,7 +61,7 @@ public class TeamController {
      *
      * @return ResponseEntity<?>
      */
-  //  @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{teamId}")
     public ResponseEntity<?> getTeamById(@PathVariable("teamId") Long teamId){
         String debugUuid = UUID.randomUUID().toString();
@@ -86,7 +86,7 @@ public class TeamController {
      *
      * @return ResponseEntity<?>
      */
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/")
     public ResponseEntity<?> createNewTeam(@Valid @RequestBody Team team){
         String debugUuid = UUID.randomUUID().toString();
@@ -120,7 +120,7 @@ public class TeamController {
      * 
      * @return ResponseEntity<?>
      */
-   // @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{teamId}")
     public ResponseEntity<?> deleteTeamById(@PathVariable("teamId") Long teamId){
         String debugUuid = UUID.randomUUID().toString();
@@ -146,7 +146,7 @@ public class TeamController {
      * 
      * @return ResponseEntity<?>
      */
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{teamId}")
     public ResponseEntity<?> updateTeamById(@PathVariable("teamId") Long teamId,
                                             @Valid @RequestBody Team team){
@@ -174,6 +174,7 @@ public class TeamController {
      * @return ResponseEntity<?>
      */
     @GetMapping("/get-projects/{teamId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getAllProjects(@PathVariable("teamId") Long teamId){
         String debugUuid = UUID.randomUUID().toString();
         try {

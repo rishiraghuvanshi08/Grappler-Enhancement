@@ -116,7 +116,7 @@ public class TicketController {
      *
      * @return ResponseEntity<?>
      */
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{ticketId}")
     public ResponseEntity<?> deleteTicketById(@Valid @PathVariable("ticketId") Long ticketId) {
         String debugUuid = UUID.randomUUID().toString();

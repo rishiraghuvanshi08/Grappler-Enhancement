@@ -4,7 +4,6 @@ import com.grapplermodule1.GrapplerEnhancement.customexception.MemberAlreadyPres
 import com.grapplermodule1.GrapplerEnhancement.customexception.MemberNotPresentInTeamException;
 import com.grapplermodule1.GrapplerEnhancement.customexception.TeamNotFoundException;
 import com.grapplermodule1.GrapplerEnhancement.customexception.UserNotFoundException;
-import com.grapplermodule1.GrapplerEnhancement.dtos.TeamDTO;
 import com.grapplermodule1.GrapplerEnhancement.dtos.TeamMembersDTO;
 import com.grapplermodule1.GrapplerEnhancement.dtos.UsersDTO;
 import com.grapplermodule1.GrapplerEnhancement.entities.Team;
@@ -13,6 +12,7 @@ import com.grapplermodule1.GrapplerEnhancement.entities.Users;
 import com.grapplermodule1.GrapplerEnhancement.repository.TeamMemberRepository;
 import com.grapplermodule1.GrapplerEnhancement.repository.TeamRepository;
 import com.grapplermodule1.GrapplerEnhancement.repository.UserRepository;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TeamMembersService {
@@ -33,6 +34,9 @@ public class TeamMembersService {
 
     @Autowired
     private UserRepository userRepository;
+
+@Autowired
+private ModelMapper modelMapper;
 
     /**
      * For Adding New Team Member
@@ -148,6 +152,28 @@ public class TeamMembersService {
         }
         catch (Exception e) {
             log.error("Exception In Delete Team Member Exception {}", e.getMessage());
+            throw e;
+        }
+    }
+
+    /**
+     * For Get Member Details
+     *
+     * @return UserDTO
+     */
+    public List<TeamMembersDTO> fetchMembersByProjectId( Long projectId) {
+        try {
+
+            List<TeamMembers> teamMembers = teamMemberRepository.findTeamMembersByProjectId(projectId);
+            log.info("Team members {},", teamMembers);
+            List<TeamMembersDTO> teamMembersDTOs = teamMembers.stream()
+                    .map(teamMember -> modelMapper.map(teamMember, TeamMembersDTO.class))
+                    .toList();
+
+            return teamMembersDTOs;
+
+        } catch (Exception e) {
+            log.error("Exception in Fetch User By Id Exception {}", e.getMessage());
             throw e;
         }
     }

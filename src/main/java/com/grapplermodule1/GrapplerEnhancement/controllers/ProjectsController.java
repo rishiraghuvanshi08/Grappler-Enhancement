@@ -210,6 +210,7 @@ public class ProjectsController {
      * @return ResponseEntity<?>
      */
     @DeleteMapping("/{projectId}/teams/{teamId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deletedTeamFromProject(@PathVariable("projectId") Long projectId, @PathVariable("teamId") Long teamId) {
         String debugUuid = UUID.randomUUID().toString();
         try {
