@@ -29,5 +29,8 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             "WHERE u.id = :userId")
     Optional<List<ProjectDTO>> findProjectsByUserId(Long userId);
 
+    @Query("SELECT p FROM Project p JOIN p.teams t WHERE t.id = :teamId")
+    List<Project> findProjectsByTeamId(@Param("teamId") Long teamId);
+
 
 }

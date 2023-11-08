@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -20,6 +21,22 @@ public class Ticket {
     @Column(name = "name")
     @NotEmpty(message = "Ticket name is required")
     private String name;
+
+    @Column(name = "createdDate")
+    private LocalDate createdDate;
+
+    @Column(name = "endDate")
+    private LocalDate endDate;
+
+    @Column(name = "assignee")
+    private String assignee;
+
+    @Column(name = "status")
+    private String status;
+
+    @Column(name = "priority")
+    private String priority;
+
 
     @ManyToOne
     @JsonManagedReference

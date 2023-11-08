@@ -40,7 +40,7 @@ public class UserController {
      * @return ResponseEntity<?>
      */
     @GetMapping("/")
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getAllUsers() {
         String debugUuid = UUID.randomUUID().toString();
         try {
@@ -64,7 +64,7 @@ public class UserController {
      *
      * @return ResponseEntity
      */
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/")
     public ResponseEntity<?> createUser(@Valid @RequestBody Users user) {
         String debugUuid = UUID.randomUUID().toString();
@@ -72,7 +72,7 @@ public class UserController {
             log.info("Get Create User API Called, UUID {}", debugUuid);
             UsersDTO newUser = userService.addUser(user);
             if (newUser != null) {
-                return new ResponseEntity<>(new CustomResponse<>(true, "User Created With Id : " + newUser.getId(),newUser), HttpStatus.CREATED);
+                return new ResponseEntity<>(new CustomResponse<>(true, "User Created With Id : " + newUser.getId(),newUser.getId()), HttpStatus.CREATED);
             }
             else {
                 log.error("UUID {} User Not Created", debugUuid);
@@ -159,7 +159,7 @@ public class UserController {
      *
      * @return ResponseEntity
      */
-    //@PreAuthorize("hasAnyRole('USER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PutMapping("/{userId}")
     public ResponseEntity<?> updateUserById(@PathVariable("userId") Long userId,
                                             @Validated(PutValidation.class) @RequestBody Users user) {
@@ -189,7 +189,7 @@ public class UserController {
      *
      * @return ResponseEntity
      */
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{userId}")
     public ResponseEntity<?> deleteUserById(@PathVariable("userId") Long userId) {
         String debugUuid = UUID.randomUUID().toString();
@@ -204,7 +204,6 @@ public class UserController {
             log.error("UUID {}, UserNotFoundException in Delete User BY Id API, Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.NOT_FOUND);
         }
-
         catch (DataIntegrityViolationCustomException e) {
             log.error("UUID {}, DataIntegrityViolationCustomException   in Delete User BY Id API, Exception {}", debugUuid, e.getMessage());
             return new ResponseEntity<>(new CustomResponseMessage(false, e.getMessage()), HttpStatus.BAD_REQUEST);
@@ -257,7 +256,7 @@ public class UserController {
      *
      * @return ResponseEntity<?>
      */
-    //@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("teams/{userId}")
     public ResponseEntity<?> getTeamsById(@Valid @PathVariable("userId") Long userId) {
         String debugUuid = UUID.randomUUID().toString();
@@ -287,6 +286,7 @@ public class UserController {
      * @return ResponseEntity<?>
      */
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<?> getUserByEmail(@RequestParam String email) {
         String debugUuid = UUID.randomUUID().toString();
         try {

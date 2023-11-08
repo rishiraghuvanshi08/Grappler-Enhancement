@@ -37,7 +37,7 @@ public class TeamMemberController {
      *
      * @return ResponseEntity<?>
      */
-    // @PreAuthorize("hasRole('ADMIN')")
+     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{teamId}")
     public ResponseEntity<?> getTeamMembers(@PathVariable("teamId") Long teamId){
         String debugUuid = UUID.randomUUID().toString();
@@ -161,5 +161,42 @@ public class TeamMemberController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    /**
+     * For Delete Member By Team ID and User ID
+     *
+     * @return ResponseEntity<?>
+     */
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    @GetMapping("/team-member/{projectId}")
+    public ResponseEntity<?> findMembersByProjectId(
+                                          @PathVariable("projectId") Long projectId){
+        String debugUuid = UUID.randomUUID().toString();
+        try {
+            log.info("Get Team Member Details API Called, UUID {}", debugUuid);
+            List<TeamMembersDTO> teamMembers=teamMembersService.fetchMembersByProjectId(projectId);
+
+            return new ResponseEntity<>(new CustomResponse<>(true,"Member Is Deleted Successfully.",teamMembers), HttpStatus.OK);
+        }
+        catch (MemberNotPresentInTeamException e) {
+            log.error("UUID {} MemberNotPresentInTeamException In Delete Member API, Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), null), HttpStatus.NOT_FOUND);
+        }
+        catch (UserNotFoundException e) {
+            log.error("UUID {} UserNotFoundException In Add Delete API, Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), null), HttpStatus.NOT_FOUND);
+        }
+        catch (TeamNotFoundException e) {
+            log.error("UUID {} TeamNotFoundException In Delete Member API, Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), null), HttpStatus.NOT_FOUND);
+        }
+        catch (Exception e) {
+            log.error("UUID {} Exception In Delete Member API, Exception {} ", debugUuid, e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+
 
 }

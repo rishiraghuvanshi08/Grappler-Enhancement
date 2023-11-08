@@ -8,9 +8,11 @@ import com.grapplermodule1.GrapplerEnhancement.dtos.ProjectDTO;
 import com.grapplermodule1.GrapplerEnhancement.dtos.TeamDTO;
 import com.grapplermodule1.GrapplerEnhancement.dtos.TeamMembersDTO;
 import com.grapplermodule1.GrapplerEnhancement.dtos.UsersDTO;
+import com.grapplermodule1.GrapplerEnhancement.entities.Project;
 import com.grapplermodule1.GrapplerEnhancement.entities.Team;
 import com.grapplermodule1.GrapplerEnhancement.entities.TeamMembers;
 import com.grapplermodule1.GrapplerEnhancement.entities.Users;
+import com.grapplermodule1.GrapplerEnhancement.repository.ProjectRepository;
 import com.grapplermodule1.GrapplerEnhancement.repository.TeamMemberRepository;
 import com.grapplermodule1.GrapplerEnhancement.repository.TeamRepository;
 import com.grapplermodule1.GrapplerEnhancement.repository.UserRepository;
@@ -38,6 +40,9 @@ public class TeamService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    ProjectRepository projectRepository;
 
     /**
      * For Getting All The Teams
@@ -166,7 +171,15 @@ public class TeamService {
             Optional<Team> team = teamRepository.findById(teamId);
 
             if(team.isPresent()){
-                teamRepository.deleteById(teamId);
+                //teamRepository.removeTeamFromProjects(team.get());
+                List<Project> projects=projectRepository.findProjectsByTeamId(teamId);
+                for (Project project : projects) {
+                    project.getTeams().remove(team.get());
+                    projectRepository.save(project);
+                }
+                teamRepository.deleteTeamMembersByTeam(team.get());
+                teamRepository.deleteTeamById(teamId);
+               // teamRepository.deleteById(teamId);
                 log.info("Delete Team Service Returning True Boolean Value");
                 return true;
             }
