@@ -1,0 +1,8 @@
+# Grappler RBAC & Hierarchies (Backend - Spring-Boot)
+During my internship, I played a pivotal role in a comprehensive project tracking tool development, akin to popular platforms like Asana and Jira. The project was divided into six modules, and my team, comprising three members, took charge of the first module. Specifically, our focus was on Role-Based Access Control (RBAC) and Teams and Hierarchy functionalities.
+
+In my role, I spearheaded the backend development, crafting numerous APIs for hierarchies, teams, members, and users. Collaborating with a team member, I contributed significantly to the implementation of Spring Security and JWT Authentication, crucial components for RBAC. Following best practices, we encapsulated this functionality into a reusable package named "CEREBRUS," designed to seamlessly integrate with future projects, providing a turnkey solution for RBAC implementation.
+
+On the frontend, my responsibilities included implementing the Login feature and establishing private routing for two distinct roles: ADMIN and USER. Leveraging JWT tokens received from the backend, we decoded roles on the frontend, facilitating dynamic role-based routing. This not only streamlined access control but also enhanced user experience.
+
+This project showcases my proficiency in full-stack development, particularly my expertise in backend API creation, security implementation, and frontend functionality for role-based access control. The "CEREBRUS" package stands as a testament to our commitment to scalable, reusable solutions, making it a valuable asset for future projects.
