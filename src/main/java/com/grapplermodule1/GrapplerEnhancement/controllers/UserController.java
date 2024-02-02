@@ -72,7 +72,7 @@ public class UserController {
             log.info("Get Create User API Called, UUID {}", debugUuid);
             UsersDTO newUser = userService.addUser(user);
             if (newUser != null) {
-                return new ResponseEntity<>(new CustomResponse<>(true, "User Created With Id : " + newUser.getId(),newUser), HttpStatus.CREATED);
+                return new ResponseEntity<>(new CustomResponse<>(true, "User Created With Id : " + newUser.getId(), newUser.getId()), HttpStatus.CREATED);
             }
             else {
                 log.error("UUID {} User Not Created", debugUuid);

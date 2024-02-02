@@ -1,12 +1,10 @@
 package com.grapplermodule1.GrapplerEnhancement.controllers;
 
-import com.grapplermodule1.GrapplerEnhancement.customexception.CustomResponse;
-import com.grapplermodule1.GrapplerEnhancement.customexception.TeamMembersNotFoundException;
-import com.grapplermodule1.GrapplerEnhancement.customexception.TeamNotFoundException;
-import com.grapplermodule1.GrapplerEnhancement.customexception.UserNotFoundException;
+import com.grapplermodule1.GrapplerEnhancement.customexception.*;
 import com.grapplermodule1.GrapplerEnhancement.dtos.HierarchyDTO;
 import com.grapplermodule1.GrapplerEnhancement.dtos.ImmediateHierarchyDTO;
 import com.grapplermodule1.GrapplerEnhancement.dtos.TeamMembersDTO;
+import com.grapplermodule1.GrapplerEnhancement.entities.HierarchyUpdate;
 import com.grapplermodule1.GrapplerEnhancement.service.HierarchyService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -16,10 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -136,5 +132,29 @@ public class HierarchyController {
         }
     }
 
+    /**
+     * For Hierarchy Updation
+     * 
+     * @return ResponseEntity<?>
+     */
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/update-reporting-hierarchy")
+    public ResponseEntity<?> updateHierarchy(@Valid @RequestBody HierarchyUpdate hierarchyUpdate) {
+        String debugUuid = UUID.randomUUID().toString();
+        try {
+            log.info("Update Reporting Hierarchy API Called, UUID {}", debugUuid);
+            Boolean updated = hierarchyService.updateHierarchy(hierarchyUpdate);
+
+            return new ResponseEntity<>(new CustomResponseMessage(updated, "Hierary Updated Successfully."), HttpStatus.OK);
+        }
+        catch (UserNotFoundException e) {
+            log.error("UUID {} UserNotFoundException In Update Hierarchy API, Exception {}", debugUuid, e.getMessage());
+            return new ResponseEntity<>(new CustomResponse<>(false, e.getMessage(), null), HttpStatus.NOT_FOUND);
+        }
+        catch (Exception e) {
+            log.error("UUID {} Exception In Update Hierarchy API Exception {} ", debugUuid, e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
 

@@ -193,9 +193,14 @@ public class UserService implements UserDetailsService {
     public Boolean deleteUser(Long userId) {
         try {
             log.info("Delete User Service Called, User Id {}", userId);
+            String email = SecurityContextHolder.getContext().getAuthentication().getName();
             Optional<Users> user = userRepository.findById(userId);
-
             if (user.isPresent()) {
+                if(user.get().getEmail().equals(email))
+                {
+                    log.error("Delete User throws DataIntegrityViolationCustomException");
+                    throw new DataIntegrityViolationCustomException("You can not delete yourself");
+                }
                 userRepository.deleteById(userId);
                 log.info("Delete User Service Returning True User");
                 return true;

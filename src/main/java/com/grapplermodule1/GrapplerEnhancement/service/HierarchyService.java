@@ -7,6 +7,7 @@ import com.grapplermodule1.GrapplerEnhancement.dtos.HierarchyDTO;
 import com.grapplermodule1.GrapplerEnhancement.dtos.ImmediateHierarchyDTO;
 import com.grapplermodule1.GrapplerEnhancement.dtos.TeamMembersDTO;
 import com.grapplermodule1.GrapplerEnhancement.dtos.UsersDTO;
+import com.grapplermodule1.GrapplerEnhancement.entities.HierarchyUpdate;
 import com.grapplermodule1.GrapplerEnhancement.entities.Team;
 import com.grapplermodule1.GrapplerEnhancement.entities.Users;
 import com.grapplermodule1.GrapplerEnhancement.repository.TeamMemberRepository;
@@ -197,6 +198,36 @@ public class HierarchyService {
         }
         catch (Exception e) {
             log.error("Exception In Get Team Hierarchy By Id Service Exception {}", e.getMessage());
+            throw e;
+        }
+    }
+
+    public Boolean updateHierarchy(HierarchyUpdate hierarchyUpdate) {
+        try {
+            log.info("Update Hierarchy Service Called");
+
+            Optional<Users> optionalUserDragged = userRepository.findById(hierarchyUpdate.getDraggedId());
+            Optional<Users> optionalUserDropped = userRepository.findById(hierarchyUpdate.getDroppedId());
+            if (optionalUserDragged.isPresent() && optionalUserDropped.isPresent()){
+                Users draggedUser = optionalUserDragged.get();
+
+                draggedUser.setReportingUser(optionalUserDropped.get());
+
+                Users droppedUser = optionalUserDropped.get();
+                List<Users> subordinates = droppedUser.getSubordinates();
+                subordinates.add(draggedUser);
+                droppedUser.setSubordinates(subordinates);
+
+                userRepository.save(droppedUser);
+                return true;
+            }
+            else {
+                log.error("Update Hierarchy Service Call UserNotFoundException");
+                throw new TeamNotFoundException("Users Not Found");
+            }
+        }
+        catch (Exception e) {
+            log.error("Exception In Update Hierarchy Service Exception {}", e.getMessage());
             throw e;
         }
     }

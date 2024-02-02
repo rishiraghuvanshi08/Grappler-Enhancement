@@ -34,10 +34,11 @@ public class AuthenticationConfig {
                 .csrf((c) -> c.disable())
                 .authorizeHttpRequests((authorize) ->
                         authorize
-                                //.requestMatchers("/auth/login").permitAll()
+                                .requestMatchers("/auth/login").permitAll()
+                                .requestMatchers("/forgot-password/send-Password").permitAll()
                               .requestMatchers("/**").permitAll()
-//                                .anyRequest()
-//                                .authenticated()
+                                .anyRequest()
+                                .authenticated()
                 )
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(point))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

@@ -39,8 +39,6 @@ public interface UserRepository extends JpaRepository<Users, Long> {
             "FROM Users e WHERE e.email = :email")
     Optional<UsersDTO> findUserDtoByEmail(String email);
 
-
-
     //List<ProjectDTO> findProjectByUserId(Long userId);
 
 
